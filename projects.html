@@ -1,24 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic Meta -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="SynexiAI is a visionary AI initiative building future-focused platforms, tools, and innovations in tech, AI, microservices, and infrastructure.">
-    <meta name="keywords" content="SynexiAI, Artificial Intelligence, AI Projects, AI Startup, Microservices, React, Spring Boot, Tech Company">
-    <meta name="author" content="Venkat Sai Prasanth Kunchanapalli">
-    <meta property="og:title" content="SynexiAI - Futuristic AI Company" />
-    <meta property="og:description" content="Explore the official SynexiAI portal. Learn about our mission, projects, and future goals." />
+    <meta name="description" content="Explore SynexiAI’s powerful, futuristic AI projects — built with microservices, Spring Boot, Kafka, React, and more." />
+    <meta name="keywords" content="SynexiAI Projects, AI Dashboard, Inventory System, JWT Auth, Microservices, Kafka, Spring Boot, React, Redis" />
+    <meta name="author" content="Venkat Sai Prasanth Kunchanapalli" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Projects | SynexiAI" />
+    <meta property="og:description" content="Discover innovative, real-world solutions from SynexiAI — MindMap AI, Inventory Systems, Auth Microservices, and more." />
+    <meta property="og:image" content="https://www.synexiai.online/assets/banner.png" />
+    <meta property="og:url" content="https://www.synexiai.online/projects.html" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.synexiai.online/" />
-    <meta property="og:image" content="https://www.synexiai.online/assets/logo.png" />
-    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SynexiAI Projects — Live, Scalable AI Systems" />
+    <meta name="twitter:description" content="Check out the live AI-powered tools and backend systems from SynexiAI." />
+    <meta name="twitter:image" content="https://www.synexiai.online/assets/banner.png" />
+
     <title>Projects | SynexiAI</title>
     <link rel="stylesheet" href="styles/main.css" />
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+
     <!-- AOS CSS -->
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-
 </head>
+
 <body>
 <header>
     <h1>SynexiAI Projects</h1>
@@ -31,31 +43,31 @@
 </header>
 
 <main>
-    <section>
+    <section data-aos="fade-up">
         <h2>Featured Projects</h2>
 
-        <div class="project-card">
+        <div class="project-card" data-aos="fade-right">
             <h3>🧠 MindMap AI Dashboard</h3>
-            <p>An interactive platform to organize ideas using AI and topic-based memory graphs. Built using React + Spring Boot + MongoDB.</p>
-            <a href="#">View Demo</a>
+            <p>An interactive platform to visualize thoughts and questions with topic-based memory mapping. Powered by React, Spring Boot, and MongoDB.</p>
+            <a href="#" class="btn">🔗 View Demo</a>
         </div>
 
-        <div class="project-card">
+        <div class="project-card" data-aos="fade-left">
             <h3>📦 Inventory Management System</h3>
-            <p>A real-time stock tracking system with email alerts, role-based dashboard, and microservices architecture. Built using Spring Boot, JWT, React, Kafka, Redis.</p>
-            <a href="#">Explore System</a>
+            <p>Track stock, place orders, send alerts, and analyze inventory data using a scalable microservices backend. Includes JWT auth, Kafka, Redis.</p>
+            <a href="#" class="btn">📘 Explore System</a>
         </div>
 
-        <div class="project-card">
+        <div class="project-card" data-aos="fade-up">
             <h3>🔐 Auth Microservice with JWT</h3>
-            <p>Robust authentication service using Spring Security, token validation, and user-role mapping. Used across all internal tools.</p>
-            <a href="#">Learn More</a>
+            <p>Secure login and role-based access using Spring Security, JWT tokens, and user management APIs. Fully tested with JUnit + Mockito.</p>
+            <a href="#" class="btn">📄 Learn More</a>
         </div>
 
-        <div class="project-card">
+        <div class="project-card" data-aos="fade-up">
             <h3>🛰️ SynexiAI Messaging Layer</h3>
-            <p>Kafka-powered messaging layer for decoupled service communication and real-time logging.</p>
-            <a href="#">View Architecture</a>
+            <p>Kafka-based event-driven messaging infrastructure enabling audit logs, async jobs, and real-time microservice communication.</p>
+            <a href="#" class="btn">🧩 View Architecture</a>
         </div>
     </section>
 </main>
@@ -63,6 +75,7 @@
 <footer>
     <p>© 2025 SynexiAI. Future-ready solutions built today.</p>
 </footer>
+
 <!-- AOS Script -->
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
@@ -72,6 +85,5 @@
       once: true,
     });
 </script>
-
 </body>
 </html>
