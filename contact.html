@@ -1,10 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Contact Us | SynexiAI</title>
+    <link rel="stylesheet" href="styles/main.css" />
 </head>
 <body>
+<header>
+    <h1>Contact SynexiAI</h1>
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="about.html">About</a> |
+        <a href="vision.html">Vision</a>
+    </nav>
+</header>
 
+<main>
+    <section>
+        <h2>We'd love to hear from you!</h2>
+        <p>Whether you're a developer, investor, partner, or dreamer — reach out and let's connect.</p>
+
+        <form action="https://formspree.io/f/xyzpgkbo" method="POST">
+            <label for="name">Name</label><br />
+            <input type="text" id="name" name="name" required><br /><br />
+
+            <label for="email">Email</label><br />
+            <input type="email" id="email" name="_replyto" required><br /><br />
+
+            <label for="message">Message</label><br />
+            <textarea id="message" name="message" rows="6" required></textarea><br /><br />
+
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <p>© 2025 SynexiAI. Let's build the future together.</p>
+</footer>
 </body>
 </html>

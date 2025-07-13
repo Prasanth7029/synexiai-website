@@ -21,3 +21,39 @@ main {
 section {
   margin-bottom: 3rem;
 }
+
+form {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #00f7ff44;
+}
+
+input, textarea, button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+input, textarea {
+  background-color: #333;
+  color: #fff;
+}
+
+button {
+  background-color: #00f7ff;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #0ff;
+}
+
