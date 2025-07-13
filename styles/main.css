@@ -117,5 +117,30 @@ button:hover {
   text-decoration: underline;
 }
 
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.tech-item {
+  background-color: #1a1a1a;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #00f7ff66;
+  box-shadow: 0 0 8px #00f7ff22;
+  transition: all 0.3s ease-in-out;
+  font-weight: bold;
+  color: #0ff;
+}
+
+.tech-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00f7ff88;
+}
+
+
 
 

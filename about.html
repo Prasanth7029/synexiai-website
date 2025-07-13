@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>About Us | SynexiAI</title>
     <link rel="stylesheet" href="styles/main.css" />
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
 </head>
 <body>
 <header>
@@ -33,6 +36,25 @@
         </ul>
     </section>
 
+    <section data-aos="fade-up">
+        <h2>Our Mission</h2>
+        <p>We exist to build a smarter, ethical, and AI-powered future.</p>
+    </section>
+
+    <section data-aos="fade-right">
+        <h2>Our Principles</h2>
+        <ul>
+            <li>Innovation with Purpose</li>
+            <li>Ethics and Trust in AI</li>
+        </ul>
+    </section>
+
+    <section data-aos="fade-left">
+        <h2>Meet Our Founder</h2>
+        <p>Venkat Sai Prasanth Kunchanapalli is the visionary behind SynexiAI...</p>
+    </section>
+
+
     <section>
         <h2>Meet Our Founder</h2>
         <p><strong>Venkat Sai Prasanth Kunchanapalli</strong> — Visionary technologist, AI engineer, and the force behind SynexiAI. He believes in blending ethical innovation with real-world solutions that last for decades.</p>
@@ -42,5 +64,14 @@
 <footer>
     <p>© 2025 SynexiAI. All rights reserved.</p>
 </footer>
+<!-- AOS Script -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init({
+      duration: 1000,
+      offset: 120,
+      once: true,
+    });
+</script>
 </body>
 </html>
