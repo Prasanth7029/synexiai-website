@@ -31,16 +31,22 @@
 </head>
 
 <body>
-<header>
-    <h1>Our Technology Stack</h1>
-    <nav>
-        <a href="index.html">Home</a> |
-        <a href="about.html">About</a> |
-        <a href="projects.html">Projects</a> |
-        <a href="blog.html">Blog</a> |
-        <a href="contact.html">Contact</a>
-    </nav>
+<header class="site-header">
+    <div class="container">
+        <div class="logo">SynexiAI</div>
+        <nav class="main-nav" id="mainNav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="vision.html">Vision</a>
+            <a href="projects.html">Projects</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+            <a href="tech.html" class="active">Tech Stack</a>
+        </nav>
+        <div class="hamburger" id="hamburger">&#9776;</div>
+    </div>
 </header>
+
 
 <main>
     <section data-aos="fade-up">
@@ -117,5 +123,14 @@
 <script>
     AOS.init({ duration: 1000, offset: 120, once: true });
 </script>
+<script>
+    const hamburger = document.getElementById("hamburger");
+    const mainNav = document.getElementById("mainNav");
+
+    hamburger.addEventListener("click", () => {
+      mainNav.classList.toggle("show");
+    });
+</script>
+
 </body>
 </html>
