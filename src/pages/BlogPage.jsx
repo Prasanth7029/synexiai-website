@@ -1,109 +1,72 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import matter from "front-matter";
+import Layout from "../components/Layout";
 
-const blogPosts = [
-  {
-    title: "⚙️ Behind the Build: Inventory System Microservices",
-    date: "July 12, 2025",
-    summary:
-      "How we architected SynexiAI’s Inventory System with Spring Boot, RabbitMQ, Redis, and JWT-based auth.",
-    link: "#", // placeholder – can point to a Markdown, PDF, or post page
-  },
-  {
-    title: "🧠 The Vision of SynexiAI: 2025 → 2045",
-    date: "July 5, 2025",
-    summary:
-      "A peek into our 20-year roadmap — from AI dashboards to cities powered by renewable tech + intelligence.",
-    link: "#",
-  },
-  {
-    title: "🚀 Our Stack in Action: React + Vite + GitHub Pages",
-    date: "June 29, 2025",
-    summary:
-      "Why we chose React with Vite for blazing-fast performance, modular growth, and future AI integrations.",
-    link: "#",
-  },
-];
+// Auto-import all markdown files
+const markdownFiles = import.meta.glob("../posts/*.md", { eager: true });
+
+const blogPosts = Object.entries(markdownFiles)
+  .map(([filePath, module]) => {
+    const slug = filePath.split("/").pop().replace(".md", "");
+    const { attributes } = matter(module.default);
+    return {
+      slug,
+      title: attributes.title,
+      date: attributes.date,
+      summary: attributes.summary,
+    };
+  })
+  .sort((a, b) => new Date(b.date) - new Date(a.date)); // newest first
 
 export default function BlogPage() {
   return (
-    <main
-      style={{
-        padding: "3rem 1rem",
-        color: "#ffffff",
-        backgroundColor: "#0a0a0a",
-        minHeight: "100vh",
-        maxWidth: "1100px",
-        margin: "0 auto",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "2.5rem",
-          marginBottom: "1rem",
-          color: "#00f7ff",
-        }}
-        data-aos="fade-up"
-      >
-        📝 SynexiAI Blog & Updates
-      </h1>
-      <p
-        style={{
-          fontSize: "1.2rem",
-          color: "#ccc",
-          marginBottom: "2rem",
-        }}
-        data-aos="fade-up"
-        data-aos-delay="100"
-      >
-        Thoughts, research, releases, breakthroughs, and more — directly from the heart of innovation.
-      </p>
+    <Layout>
+      <div className="w-full max-w-6xl mx-auto px-6 py-20 text-white">
+        {/* Page Title */}
+        <h1
+          className="text-4xl md:text-5xl font-bold text-cyan-400 mb-4 text-center"
+          data-aos="fade-up"
+        >
+          📝 SynexiAI Blog & Updates
+        </h1>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "2rem",
-        }}
-      >
-        {blogPosts.map((post, index) => (
-          <div
-            key={index}
-            style={{
-              background: "#1a1a1a",
-              borderRadius: "1rem",
-              padding: "1.5rem",
-              boxShadow: "0 0 20px #00f7ff33",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-            data-aos="fade-up"
-            data-aos-delay={200 * index}
-          >
-            <div>
-              <h2 style={{ color: "#00f7ff", fontSize: "1.5rem", marginBottom: "0.5rem" }}>
-                {post.title}
-              </h2>
-              <p style={{ fontSize: "0.9rem", color: "#999", marginBottom: "1rem" }}>
-                📅 {post.date}
-              </p>
-              <p style={{ fontSize: "1rem", lineHeight: "1.6", color: "#ddd" }}>{post.summary}</p>
-            </div>
-            <a
-              href={post.link}
-              style={{
-                marginTop: "1.5rem",
-                color: "#00f7ff",
-                textDecoration: "underline",
-                fontWeight: "bold",
-                alignSelf: "flex-start",
-              }}
+        {/* Subtext */}
+        <p
+          className="text-lg md:text-xl text-gray-300 text-center mb-12 max-w-3xl mx-auto"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          Thoughts, research, releases, breakthroughs, and more — directly from the heart of innovation.
+        </p>
+
+        {/* Blog Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {blogPosts.map((post, index) => (
+            <div
+              key={post.slug}
+              className="bg-[#1a1a1a] rounded-xl p-6 shadow-lg shadow-cyan-500/10 flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300"
+              data-aos="fade-up"
+              data-aos-delay={200 * index}
             >
-              Read more →
-            </a>
-          </div>
-        ))}
+              <div>
+                <h2 className="text-xl font-semibold text-cyan-400 mb-2">
+                  {post.title}
+                </h2>
+                <p className="text-sm text-gray-500 mb-3">📅 {post.date}</p>
+                <p className="text-base text-gray-300">{post.summary}</p>
+              </div>
+
+              <Link
+                to={`/blog/${post.slug}`}
+                className="mt-6 text-cyan-400 font-semibold underline hover:text-white transition duration-200"
+              >
+                Read more →
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
-    </main>
+    </Layout>
   );
 }

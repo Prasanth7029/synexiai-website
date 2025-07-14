@@ -1,68 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------ Global Theme & Typography ------------------ */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
+  font-family: 'Segoe UI', system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: light dark;
+  background-color: #0a0a0a;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* ------------------ Base Reset ------------------ */
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  padding: 0;
+  background: radial-gradient(ellipse at bottom, #0f0f0f 0%, #000000 100%);
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ------------------ Typography ------------------ */
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-
+a {
+  font-weight: 500;
+  color: #00f7ff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #00c2e0;
+}
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
   background-color: #1a1a1a;
+  color: #fff;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #00f7ff;
 }
-button:focus,
-button:focus-visible {
+button:focus {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* ------------------ Logo Animation ------------------ */
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  transition: filter 300ms;
+  will-change: filter;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+/* ------------------ Hero Section ------------------ */
+.hero-banner-container {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  overflow: hidden;
+}
+.video-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.3);
+}
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+  padding: 1rem;
+}
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #00f7ff;
+  animation: fadeInUp 1.2s ease-out;
+}
+.hero-subtext {
+  font-size: 1.25rem;
+  max-width: 700px;
+  margin-bottom: 2rem;
+  color: #ccc;
+  animation: fadeInUp 1.4s ease-out;
+}
+.hero-button {
+  padding: 0.75rem 2rem;
+  background-color: #00f7ff;
+  color: #000;
+  font-weight: bold;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  animation: fadeInUp 1.6s ease-out;
+}
+.hero-button:hover {
+  background-color: #0ff;
+  transform: scale(1.05);
+}
+.glow {
+  text-shadow: 0 0 15px #00f7ff;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ------------------ Home Page Background Glow ------------------ */
+.homepage::before {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #00f7ff33 0%, transparent 80%);
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  filter: blur(100px);
+}
+
+/* ------------------ Card Component ------------------ */
+.card {
+  padding: 2em;
+}
+.read-the-docs {
+  color: #888;
+}
+
+/* ------------------ Light Mode Support ------------------ */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
+  a {
+    color: #007acc;
+  }
   a:hover {
-    color: #747bff;
+    color: #005fa3;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #f0f0f0;
+    color: #000;
   }
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import Layout from "../components/Layout";
 
 const projects = [
   {
@@ -13,7 +14,7 @@ const projects = [
     description:
       "Microservices-based inventory platform with real-time stock updates, order tracking, and email alerts.",
     tech: "React + Vite, Spring Boot, RabbitMQ, Redis",
-    link: "https://github.com/Prasanth7029/inventory-management-system", // replace with real
+    link: "https://github.com/Prasanth7029/inventory-management-system",
   },
   {
     title: "🔔 Social Media Website",
@@ -26,90 +27,49 @@ const projects = [
 
 export default function ProjectsPage() {
   return (
-    <main
-      style={{
-        padding: "3rem 1rem",
-        color: "#ffffff",
-        backgroundColor: "#0a0a0a",
-        minHeight: "100vh",
-        textAlign: "center",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "2.5rem",
-          marginBottom: "1rem",
-          color: "#00f7ff",
-        }}
-        data-aos="fade-up"
-      >
-        🚀 SynexiAI Project Showcase
-      </h1>
-      <p
-        style={{
-          fontSize: "1.2rem",
-          maxWidth: "700px",
-          margin: "0 auto 3rem",
-          color: "#cccccc",
-        }}
-        data-aos="fade-up"
-        data-aos-delay="100"
-      >
-        Explore our AI-powered systems, microservice architectures, and
-        futuristic solutions that shape tomorrow’s digital experience.
-      </p>
+    <Layout>
+      <div className="w-full max-w-6xl mx-auto px-6 py-20 text-white text-center">
+        {/* Page Title */}
+        <h1 className="text-4xl md:text-5xl font-bold text-cyan-400 mb-6" data-aos="fade-up">
+          🚀 SynexiAI Project Showcase
+        </h1>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "2rem",
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}
-      >
-        {projects.map((project, index) => (
-          <div
-            key={index}
-            data-aos="fade-up"
-            data-aos-delay={200 * index}
-            style={{
-              background: "#1a1a1a",
-              padding: "2rem",
-              borderRadius: "1rem",
-              boxShadow: "0 0 25px #00f7ff33",
-              transition: "transform 0.3s ease",
-              textAlign: "left",
-            }}
-            className="hover:scale-105"
-          >
-            <h3 style={{ fontSize: "1.5rem", marginBottom: "0.5rem", color: "#00f7ff" }}>
-              {project.title}
-            </h3>
-            <p style={{ marginBottom: "1rem" }}>{project.description}</p>
-            <p style={{ fontSize: "0.9rem", color: "#aaa" }}>
-              <strong>Tech:</strong> {project.tech}
-            </p>
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-block",
-                marginTop: "1rem",
-                padding: "0.5rem 1rem",
-                backgroundColor: "#00f7ff",
-                color: "#0a0a0a",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                textDecoration: "none",
-              }}
+        {/* Page Description */}
+        <p
+          className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-16 leading-relaxed"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          Explore our AI-powered systems, microservice architectures, and futuristic solutions
+          that shape tomorrow’s digital experience.
+        </p>
+
+        {/* Project Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" data-aos="fade-up" data-aos-delay="150">
+          {projects.map((project, index) => (
+            <div
+              key={index}
+              className="bg-[#1a1a1a] rounded-xl p-6 shadow-lg hover:scale-105 transition-transform duration-300 border border-cyan-500/10"
+              data-aos="fade-up"
+              data-aos-delay={200 * index}
             >
-              🔗 View Project
-            </a>
-          </div>
-        ))}
+              <h3 className="text-xl font-semibold text-cyan-400 mb-2">{project.title}</h3>
+              <p className="text-gray-300 mb-4">{project.description}</p>
+              <p className="text-sm text-gray-400">
+                <strong>Tech:</strong> {project.tech}
+              </p>
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-4 px-4 py-2 bg-cyan-500 text-black font-semibold rounded-lg hover:bg-cyan-400 transition"
+              >
+                🔗 View Project
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
-    </main>
+    </Layout>
   );
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import Layout from "../components/Layout";
 
 const roadmap = [
   {
@@ -32,63 +33,44 @@ const roadmap = [
 
 export default function VisionPage() {
   return (
-    <main
-      style={{
-        padding: "3rem 1.5rem",
-        color: "#ffffff",
-        backgroundColor: "#0a0a0a",
-        minHeight: "100vh",
-        maxWidth: "1000px",
-        margin: "0 auto",
-      }}
-    >
-      <h1
-        style={{ fontSize: "2.5rem", marginBottom: "1rem", color: "#00f7ff" }}
-        data-aos="fade-up"
-      >
-        🌠 Vision & Future Goals
-      </h1>
-      <p
-        style={{
-          fontSize: "1.2rem",
-          color: "#ccc",
-          marginBottom: "3rem",
-        }}
-        data-aos="fade-up"
-        data-aos-delay="100"
-      >
-        Our 5, 10, and 20-year roadmap to revolutionize technology, cities, and the human-AI experience.
-      </p>
-
-      {roadmap.map((milestone, index) => (
-        <section
-          key={index}
-          style={{
-            marginBottom: "3rem",
-            padding: "2rem",
-            background: "#1a1a1a",
-            borderRadius: "1rem",
-            boxShadow: "0 0 20px #00f7ff22",
-          }}
+    <Layout>
+      <div className="w-full max-w-5xl mx-auto px-6 py-20 text-white">
+        {/* Title */}
+        <h1
+          className="text-4xl md:text-5xl font-bold text-cyan-400 mb-6 text-center"
           data-aos="fade-up"
-          data-aos-delay={150 * (index + 1)}
         >
-          <h2
-            style={{
-              fontSize: "1.5rem",
-              color: "#00f7ff",
-              marginBottom: "1rem",
-            }}
+          🌠 Vision & Future Goals
+        </h1>
+
+        {/* Subtitle */}
+        <p
+          className="text-lg md:text-xl text-gray-300 text-center mb-16 max-w-3xl mx-auto"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          Our 5, 10, and 20-year roadmap to revolutionize technology, cities, and the human-AI experience.
+        </p>
+
+        {/* Milestones */}
+        {roadmap.map((milestone, index) => (
+          <section
+            key={index}
+            className="mb-10 p-6 bg-[#1a1a1a] rounded-xl shadow-lg shadow-cyan-500/10"
+            data-aos="fade-up"
+            data-aos-delay={150 * (index + 1)}
           >
-            📅 {milestone.year}
-          </h2>
-          <ul style={{ paddingLeft: "1.5rem", fontSize: "1.05rem", lineHeight: "1.9" }}>
-            {milestone.goals.map((goal, idx) => (
-              <li key={idx}>{goal}</li>
-            ))}
-          </ul>
-        </section>
-      ))}
-    </main>
+            <h2 className="text-2xl font-semibold text-cyan-400 mb-4">
+              📅 {milestone.year}
+            </h2>
+            <ul className="list-disc pl-6 text-gray-200 space-y-2 text-base leading-7">
+              {milestone.goals.map((goal, idx) => (
+                <li key={idx}>{goal}</li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </Layout>
   );
 }

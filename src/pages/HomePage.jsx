@@ -1,25 +1,16 @@
 import React from "react";
-import { Typewriter } from "react-simple-typewriter";
+import Layout from "../components/Layout";
 import HeroBanner from "../components/HeroBanner";
+import { Typewriter } from "react-simple-typewriter";
 
 export default function HomePage() {
   return (
-    <div className="homepage relative min-h-screen flex flex-col items-center justify-center text-center px-6">
-    <HeroBanner />
-      <main
-        style={{
-          padding: "3rem 1rem",
-          color: "#ffffff",
-          backgroundColor: "#0a0a0a",
-          minHeight: "100vh",
-          width: "100%",
-          maxWidth: "1200px",
-        }}
-        data-aos="fade-up"
-      >
+    <Layout>
+      <HeroBanner />
+      <div className="w-full max-w-7xl mx-auto px-6 py-20 text-white">
         {/* Hero Section */}
-        <section style={{ marginBottom: "4rem" }}>
-          <h1 className="text-5xl md:text-6xl font-bold text-cyan-400 mb-6">
+        <section className="mb-24 text-center" data-aos="fade-up">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-6 leading-tight">
             <Typewriter
               words={[
                 "Welcome to SynexiAI",
@@ -35,51 +26,26 @@ export default function HomePage() {
             />
           </h1>
 
-          <p
-            style={{
-              fontSize: "1.25rem",
-              lineHeight: "1.8",
-              maxWidth: "800px",
-              margin: "0 auto 2rem",
-              textAlign: "center",
-            }}
-          >
-            SynexiAI is the next-generation innovation hub where Artificial
-            Intelligence, futuristic IT, and bold ideas come together to build
-            a better digital future. From visionary projects to mission-driven
-            development, we are building from <strong>zero to forever</strong>.
+          <p className="text-lg md:text-xl text-gray-300 leading-8 max-w-3xl mx-auto">
+            SynexiAI is the next-generation innovation hub where Artificial Intelligence,
+            futuristic IT, and bold ideas come together to build a better digital future.
+            From visionary projects to mission-driven development, we are building from <strong>zero to forever</strong>.
           </p>
 
           <a
             href="/about"
-            className="inline-block mt-6 px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-lg shadow-xl transition-all duration-300 hover:scale-105 animate-pulse"
+            className="inline-block mt-8 px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-lg shadow-lg transition-all duration-300 hover:scale-105 animate-pulse"
           >
             Learn More →
           </a>
         </section>
 
         {/* What We're Building Section */}
-        <section>
-          <h2
-            style={{
-              color: "#00f7ff",
-              fontSize: "2rem",
-              marginBottom: "1.5rem",
-            }}
-          >
+        <section data-aos="fade-up" data-aos-delay="100" className="text-center">
+          <h2 className="text-3xl font-semibold text-cyan-400 mb-6">
             ✨ What We’re Building
           </h2>
-          <ul
-            style={{
-              listStyle: "disc",
-              paddingLeft: "2rem",
-              fontSize: "1.1rem",
-              lineHeight: "2",
-              textAlign: "left",
-              maxWidth: "800px",
-              margin: "0 auto",
-            }}
-          >
+          <ul className="list-disc text-left text-lg leading-8 max-w-3xl mx-auto pl-6 text-gray-200">
             <li>⚙️ Modular React + Vite Website Architecture</li>
             <li>📂 AI-Powered Dashboards & Microservices</li>
             <li>🌐 Real-Time Notification & Integration Layers</li>
@@ -87,7 +53,7 @@ export default function HomePage() {
             <li>🧠 The Digital Brain of SynexiAI's Innovation Journey</li>
           </ul>
         </section>
-      </main>
-    </div>
+      </div>
+    </Layout>
   );
 }
