@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore the powerful technology stack behind SynexiAI — from microservices to AI tooling and cloud automation." />
+    <meta name="keywords" content="SynexiAI, Tech Stack, AI Tools, Spring Boot, Kafka, React, GitHub Actions, TensorFlow" />
+    <meta name="author" content="Venkat Sai Prasanth Kunchanapalli" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Technology Stack | SynexiAI" />
+    <meta property="og:description" content="The futuristic stack powering SynexiAI — Microservices, AI, DevOps, and more." />
+    <meta property="og:image" content="https://www.synexiai.online/assets/banner.png" />
+    <meta property="og:url" content="https://www.synexiai.online/tech.html" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SynexiAI — Our Tech Stack" />
+    <meta name="twitter:description" content="HTML, React, Spring Boot, Kafka, Docker, TensorFlow and more behind SynexiAI." />
+    <meta name="twitter:image" content="https://www.synexiai.online/assets/banner.png" />
+
+    <title>Technology Stack | SynexiAI</title>
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+</head>
+
+<body>
+<header class="site-header">
+    <div class="container">
+        <div class="logo">SynexiAI</div>
+        <nav class="main-nav" id="mainNav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="vision.html">Vision</a>
+            <a href="projects.html">Projects</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+            <a href="tech.html" class="active">Tech Stack</a>
+        </nav>
+        <div class="hamburger" id="hamburger">&#9776;</div>
+    </div>
+</header>
+
+
+<main>
+    <section data-aos="fade-up">
+        <h2>Frontend</h2>
+        <div class="tech-grid">
+            <div class="tech-item">HTML5</div>
+            <div class="tech-item">CSS3</div>
+            <div class="tech-item">JavaScript</div>
+            <div class="tech-item">React.js (future)</div>
+            <div class="tech-item">Vite</div>
+            <div class="tech-item">Tailwind CSS</div>
+        </div>
+    </section>
+
+    <section data-aos="fade-up">
+        <h2>Backend & Microservices</h2>
+        <div class="tech-grid">
+            <div class="tech-item">Java</div>
+            <div class="tech-item">Spring Boot</div>
+            <div class="tech-item">Spring Security</div>
+            <div class="tech-item">JWT Auth</div>
+            <div class="tech-item">REST APIs</div>
+            <div class="tech-item">GraphQL (future)</div>
+        </div>
+    </section>
+
+    <section data-aos="fade-up">
+        <h2>Messaging & Caching</h2>
+        <div class="tech-grid">
+            <div class="tech-item">Apache Kafka</div>
+            <div class="tech-item">RabbitMQ</div>
+            <div class="tech-item">Redis</div>
+        </div>
+    </section>
+
+    <section data-aos="fade-up">
+        <h2>Databases</h2>
+        <div class="tech-grid">
+            <div class="tech-item">PostgreSQL</div>
+            <div class="tech-item">MongoDB</div>
+            <div class="tech-item">MySQL</div>
+        </div>
+    </section>
+
+    <section data-aos="fade-up">
+        <h2>DevOps & Deployment</h2>
+        <div class="tech-grid">
+            <div class="tech-item">GitHub Actions</div>
+            <div class="tech-item">Docker</div>
+            <div class="tech-item">Kubernetes</div>
+            <div class="tech-item">GitHub Pages</div>
+            <div class="tech-item">Nginx (future)</div>
+        </div>
+    </section>
+
+    <section data-aos="fade-up">
+        <h2>AI & Tools</h2>
+        <div class="tech-grid">
+            <div class="tech-item">OpenAI API</div>
+            <div class="tech-item">TensorFlow</div>
+            <div class="tech-item">LangChain</div>
+            <div class="tech-item">Python</div>
+            <div class="tech-item">Scikit-learn</div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>© 2025 SynexiAI. Powered by creativity and code.</p>
+</footer>
+
+<!-- AOS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init({ duration: 1000, offset: 120, once: true });
+</script>
+<script>
+    const hamburger = document.getElementById("hamburger");
+    const mainNav = document.getElementById("mainNav");
+
+    hamburger.addEventListener("click", () => {
+      mainNav.classList.toggle("show");
+    });
+</script>
+
+</body>
+</html>

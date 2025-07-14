@@ -1,98 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Basic Meta -->
     <meta charset="UTF-8" />
+    <link rel="icon" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="SynexiAI is a visionary AI initiative building future-focused platforms, tools, and innovations in tech, AI, microservices, and infrastructure." />
-    <meta name="keywords" content="SynexiAI, Artificial Intelligence, AI Startup, Microservices, React, Spring Boot, Tech Company, Futuristic Innovation" />
-    <meta name="author" content="Venkat Sai Prasanth Kunchanapalli" />
-
-    <!-- Open Graph (Facebook/LinkedIn) -->
-    <meta property="og:title" content="About Us - SynexiAI" />
-    <meta property="og:description" content="Learn more about the SynexiAI mission, our values, and the people behind the vision." />
-    <meta property="og:image" content="https://www.synexiai.online/assets/banner.png" />
-    <meta property="og:url" content="https://www.synexiai.online/about.html" />
-    <meta property="og:type" content="website" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="About SynexiAI — Futuristic AI Company" />
-    <meta name="twitter:description" content="Explore the mission, principles, and founder behind SynexiAI." />
-    <meta name="twitter:image" content="https://www.synexiai.online/assets/banner.png" />
-
-    <title>About Us | SynexiAI</title>
-    <link rel="stylesheet" href="styles/main.css" />
-    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
-
-    <!-- AOS CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <title>SynexiAI</title>
 </head>
-
 <body>
-<header class="site-header">
-    <div class="container">
-        <div class="logo">SynexiAI</div>
-        <nav class="main-nav" id="mainNav">
-            <a href="index.html" class="active">Home</a>
-            <a href="about.html">About</a>
-            <a href="vision.html">Vision</a>
-            <a href="projects.html">Projects</a>
-            <a href="blog.html">Blog</a>
-            <a href="contact.html">Contact</a>
-            <a href="tech.html">Tech Stack</a>
-        </nav>
-        <div class="hamburger" id="hamburger">&#9776;</div>
-    </div>
-</header>
-
-
-<main>
-    <section>
-        <h2>Our Mission</h2>
-        <p>SynexiAI exists to build a smarter, ethical, and AI-powered future. We are passionate technologists, dreamers, and creators working to design systems that solve real-world problems and empower humanity.</p>
-    </section>
-
-    <section data-aos="fade-up">
-        <h2>Our Principles</h2>
-        <ul>
-            <li>🌐 Innovation with Purpose</li>
-            <li>🤝 Ethics and Trust in AI</li>
-            <li>💡 Open Collaboration</li>
-            <li>⚙️ High-Quality Engineering</li>
-            <li>🌱 Sustainable Impact</li>
-        </ul>
-    </section>
-
-    <section data-aos="fade-left">
-        <h2>Meet Our Founder</h2>
-        <p><strong>Venkat Sai Prasanth Kunchanapalli</strong> — Visionary technologist, AI engineer, and the driving force behind SynexiAI. He believes in building ethical, long-lasting, and human-centered solutions through the power of technology.</p>
-    </section>
-</main>
-
-<footer>
-    <p>© 2025 SynexiAI. All rights reserved.</p>
-</footer>
-
-<!-- AOS Script -->
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script>
-    AOS.init({
-      duration: 1000,
-      offset: 120,
-      once: true,
-    });
-</script>
-<script>
-    const hamburger = document.getElementById("hamburger");
-    const mainNav = document.getElementById("mainNav");
-
-    hamburger.addEventListener("click", () => {
-      mainNav.classList.toggle("show");
-    });
-</script>
-
+<div id="root"></div>
+<script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
