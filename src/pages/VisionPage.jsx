@@ -52,24 +52,32 @@ export default function VisionPage() {
           Our 5, 10, and 20-year roadmap to revolutionize technology, cities, and the human-AI experience.
         </p>
 
-        {/* Milestones */}
-        {roadmap.map((milestone, index) => (
-          <section
-            key={index}
-            className="mb-10 p-6 bg-[#1a1a1a] rounded-xl shadow-lg shadow-cyan-500/10"
-            data-aos="fade-up"
-            data-aos-delay={150 * (index + 1)}
-          >
-            <h2 className="text-2xl font-semibold text-cyan-400 mb-4">
-              📅 {milestone.year}
-            </h2>
-            <ul className="list-disc pl-6 text-gray-200 space-y-2 text-base leading-7">
-              {milestone.goals.map((goal, idx) => (
-                <li key={idx}>{goal}</li>
-              ))}
-            </ul>
-          </section>
-        ))}
+        {/* Vertical Timeline Container */}
+        <div className="relative border-l-4 border-cyan-500 pl-8">
+          {roadmap.map((milestone, index) => (
+            <div
+              key={index}
+              className="mb-16 relative"
+              data-aos="fade-up"
+              data-aos-delay={150 * (index + 1)}
+            >
+              {/* Dot */}
+              <div className="absolute -left-5 top-1 w-4 h-4 bg-cyan-500 rounded-full shadow-lg"></div>
+
+              {/* Card */}
+              <div className="bg-[#1a1a1a] dark:bg-[#111] p-6 rounded-xl shadow-lg shadow-cyan-500/10">
+                <h2 className="text-2xl font-semibold text-cyan-300 mb-4">
+                  📅 {milestone.year}
+                </h2>
+                <ul className="list-disc pl-6 text-gray-300 space-y-2 text-base leading-7">
+                  {milestone.goals.map((goal, idx) => (
+                    <li key={idx}>{goal}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </Layout>
   );

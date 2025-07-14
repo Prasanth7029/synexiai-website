@@ -7,10 +7,14 @@ import ProjectsPage from "./pages/ProjectsPage.jsx";
 import BlogPage from "./pages/BlogPage.jsx";
 import VisionPage from "./pages/VisionPage.jsx";
 import BlogPostPage from "./pages/BlogPostPage.jsx";
+import NotFound from "./pages/NotFound";
+import ContactPage from "./pages/ContactPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <Router>
+    <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -18,7 +22,8 @@ function App() {
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/vision" element={<VisionPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
-        <Route path="*" element={<div style={{ padding: "2rem", color: "#fff" }}>404 - Page Not Found</div>} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

@@ -30,6 +30,7 @@ export default function Header() {
           <Link to="/projects" className="hover:text-white transition duration-200">Projects</Link>
           <Link to="/blog" className="hover:text-white transition duration-200">Blog</Link>
           <Link to="/vision" className="hover:text-white transition duration-200">Vision</Link>
+          <Link to="/contact" className="hover:text-white transition duration-200">Contact</Link>
         </div>
 
         <button
