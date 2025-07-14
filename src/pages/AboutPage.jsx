@@ -12,7 +12,7 @@ const teamMembers = [
     role: "Founder & Visionary",
     bio: "Full-stack engineer, AI researcher, and future entrepreneur building systems that matter.",
     expertise: ["Microservices", "AI Architecture", "Strategic Vision"],
-    image: "/assets/team/prasanth.jpg"
+    image: "assets/team/prasanth.jpg"
   }
 ];
 
@@ -83,12 +83,12 @@ export default function AboutPage() {
               <div className="flex justify-center">
                 <div className="relative w-64 h-64 rounded-full overflow-hidden border-4 border-cyan-400/30 shadow-lg">
                   <img
-                    src="src/assets/team/prasanth.jpg"
+                    src="assets/team/prasanth.jpg"
                     alt="Venkat Sai Prasanth Kunchanapalli"
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = "src/assets/team/placeholder.jpg";
+                      e.target.src = "assets/team/placeholder.jpg";
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />

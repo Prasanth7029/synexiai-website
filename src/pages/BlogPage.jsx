@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import matter from "front-matter";
 import Layout from "../components/Layout";
 import { Helmet } from "react-helmet-async";
-import placeholderImage from "../assets/covers/synexiai-banner.jpg";
+
+
+const placeholderImage = "/assets/covers/synexiai-banner.jpg";
 
 // Auto-import all markdown files (as raw strings)
 const markdownFiles = import.meta.glob("../posts/*.md", {
