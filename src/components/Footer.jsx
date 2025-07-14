@@ -8,12 +8,12 @@ export default function Footer() {
     <footer className="bg-[#111] dark:bg-black text-white dark:text-gray-300 py-10 px-6">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Branding */}
-        <div className="text-lg font-semibold text-cyan-400">
+        <div className="text-center md:text-left text-lg font-semibold text-cyan-400">
           SynexiAI
         </div>
 
         {/* Navigation Links */}
-        <div className="flex flex-wrap gap-4 justify-center text-sm">
+        <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm">
           <Link to="/" className="hover:text-cyan-300 transition">Home</Link>
           <Link to="/about" className="hover:text-cyan-300 transition">About</Link>
           <Link to="/projects" className="hover:text-cyan-300 transition">Projects</Link>

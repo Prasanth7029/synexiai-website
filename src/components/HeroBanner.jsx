@@ -30,6 +30,8 @@ export default function HeroBanner() {
 
   return (
     <div className="relative w-full h-screen min-h-[700px] overflow-hidden">
+    <div className="absolute z-0 w-[500px] h-[500px] bg-cyan-500/20 blur-[120px] rounded-full left-[10%] top-[20%]" />
+    <div className="absolute z-0 w-[600px] h-[600px] bg-blue-600/10 blur-[160px] rounded-full right-[5%] bottom-[10%]" />
       {/* 🔹 Video Background with Fallback */}
       <div className="absolute inset-0 z-0">
         <video
