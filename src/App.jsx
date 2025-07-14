@@ -9,6 +9,7 @@ import VisionPage from "./pages/VisionPage.jsx";
 import BlogPostPage from "./pages/BlogPostPage.jsx";
 import NotFound from "./pages/NotFound";
 import ContactPage from "./pages/ContactPage";
+import TechStackPage from "./pages/TechStackPage";
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/vision" element={<VisionPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/tech" element={<TechStackPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

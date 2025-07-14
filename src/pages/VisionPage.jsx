@@ -65,18 +65,32 @@ export default function VisionPage() {
               <div className="absolute -left-5 top-1 w-4 h-4 bg-cyan-500 rounded-full shadow-lg"></div>
 
               {/* Card */}
-              <div className="bg-[#1a1a1a] dark:bg-[#111] p-6 rounded-xl shadow-lg shadow-cyan-500/10">
+              <div className="bg-[#1a1a1a] dark:bg-[#111] p-6 rounded-xl shadow-lg shadow-cyan-500/10 hover:shadow-cyan-500/30 transition duration-300">
                 <h2 className="text-2xl font-semibold text-cyan-300 mb-4">
                   📅 {milestone.year}
                 </h2>
                 <ul className="list-disc pl-6 text-gray-300 space-y-2 text-base leading-7">
                   {milestone.goals.map((goal, idx) => (
-                    <li key={idx}>{goal}</li>
+                    <li key={`${milestone.year}-${idx}`} data-aos="fade-right" data-aos-delay={100 * idx}>
+                      {goal}
+                    </li>
                   ))}
                 </ul>
               </div>
             </div>
           ))}
+        </div>
+        <div className="mt-20 text-center" data-aos="fade-up" data-aos-delay="100">
+          <h3 className="text-2xl text-cyan-400 font-semibold mb-4">🚀 Join the Future</h3>
+          <p className="text-gray-300 text-lg mb-6">
+            Ready to be part of SynexiAI’s journey? Let’s build the future — together.
+          </p>
+          <a
+            href="/contact"
+            className="inline-block px-6 py-3 bg-cyan-500 text-black font-semibold rounded-lg hover:bg-cyan-400 transition"
+          >
+            💬 Contact Us
+          </a>
         </div>
       </div>
     </Layout>

@@ -1,8 +1,10 @@
 ---
 title: "Inventory Management System with Microservices Architecture"
-date: 2025-07-13
+date: "2025-07-13"
 summary: "Explore how SynexiAI built a scalable, modular Inventory Management System using Spring Boot microservices, React, MongoDB, RabbitMQ, and more."
+coverImage: "/assets/covers/synexiai-banner.jpg"
 ---
+
 
 # 🧠 Inventory Management System – A Microservices Case Study
 

@@ -1,12 +1,11 @@
 ---
 title: "🎉 Welcome to SynexiAI"
-date: "July 13, 2025"
+date: "2025-07-13"
 author: "Prashanth Kunchanapalli"
 summary: "Introducing the SynexiAI initiative — where software, AI, and vision combine to create something extraordinary."
+coverImage: "/assets/covers/synexiai-banner.jpg"
 ---
 
 Welcome to the future.
 
-At SynexiAI, we're building the digital heart of intelligence — one microservice, one dashboard, and one dream at a time.
-
-Stay tuned for breakthroughs, blog updates, and vision logs right here.
+At SynexiAI, we're building the digital heart of intelligence...
