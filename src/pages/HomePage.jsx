@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <Layout>
       <HeroBanner />
-      <div className="w-full max-w-7xl mx-auto px-6 py-20 text-white">
+      <div className="w-full max-w-7xl mx-auto px-6 py-20 text-black dark:text-white">
         {/* Hero Section */}
         <section className="mb-24 text-center" data-aos="fade-up">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-6 leading-tight">

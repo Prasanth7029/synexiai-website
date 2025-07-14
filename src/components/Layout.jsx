@@ -4,7 +4,7 @@ import Footer from "./Footer";
 
 export default function Layout({ children }) {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-black via-[#0a0a0a] to-[#111] text-white">
+    <div className="min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors duration-300">
       {/* Header */}
       <Header />
 
