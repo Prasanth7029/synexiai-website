@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
+import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const [isDark, setIsDark] = useState(() => {
@@ -8,8 +9,8 @@ export default function Header() {
       (!("theme" in localStorage) &&
         window.matchMedia("(prefers-color-scheme: dark)").matches);
   });
-
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation(); // Close menu on route change
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -21,6 +22,10 @@ export default function Header() {
       localStorage.setItem("theme", "light");
     }
   }, [isDark]);
+
+  useEffect(() => {
+    closeMenu(); // close menu when route changes
+  }, [location.pathname]);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const closeMenu = () => setMenuOpen(false);
@@ -36,50 +41,74 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-[#111] dark:bg-black shadow-md sticky top-0 z-50">
-      <nav className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-black/80 shadow shadow-cyan-500/10 border-b border-cyan-400/10 transition-all duration-300">
+      <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <div className="text-cyan-400 text-xl font-bold">SynexiAI</div>
+        <Link
+          to="/"
+          className="text-cyan-400 text-2xl font-bold tracking-wide hover:glow focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        >
+          SynexiAI
+        </Link>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex gap-6 text-[#00f7ff] font-medium text-base">
+        <div className="hidden md:flex gap-6 text-cyan-300 font-medium text-base">
           {navLinks.map(({ label, path }) => (
-            <Link key={label} to={path} className="hover:text-white transition">{label}</Link>
+            <Link
+              key={label}
+              to={path}
+              className="hover:text-white transition-colors duration-200 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            >
+              {label}
+            </Link>
           ))}
         </div>
 
         {/* Right-side buttons */}
-        <div className="flex items-center gap-4">
-          {/* Theme toggle */}
+        <div className="flex items-center gap-3">
+          {/* Theme Toggle Button */}
           <button
             onClick={() => setIsDark(!isDark)}
-            className="text-white bg-[#222] dark:bg-gray-800 px-3 py-2 rounded transition hover:bg-[#333] dark:hover:bg-gray-700 text-sm"
+            className="p-2 rounded-full bg-gray-800 text-white hover:bg-cyan-500 hover:text-black transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
           >
-            {isDark ? "☀️ Light" : "🌙 Dark"}
+            {isDark ? <FaSun className="text-lg" /> : <FaMoon className="text-lg" />}
           </button>
 
           {/* Hamburger */}
-          <button onClick={toggleMenu} className="text-cyan-400 md:hidden text-2xl">
+          <button
+            onClick={toggleMenu}
+            className="text-cyan-400 md:hidden text-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            aria-label="Toggle Navigation Menu"
+          >
             {menuOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
       </nav>
 
       {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-[#111] dark:bg-black px-6 pb-6 pt-2 space-y-4 text-[#00f7ff] text-base animate-slideDown">
-          {navLinks.map(({ label, path }) => (
-            <Link
-              key={label}
-              to={path}
-              onClick={closeMenu}
-              className="block py-2 px-3 rounded hover:bg-cyan-800/10"
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden bg-[#111] dark:bg-black px-6 pb-6 pt-2 text-cyan-300"
+          >
+            {navLinks.map(({ label, path }) => (
+              <Link
+                key={label}
+                to={path}
+                onClick={closeMenu}
+                className="block py-2 px-3 rounded hover:bg-cyan-700/10 transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+              >
+                {label}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

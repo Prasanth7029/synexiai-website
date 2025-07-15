@@ -12,6 +12,8 @@ import ContactPage from "./pages/ContactPage";
 import TechStackPage from "./pages/TechStackPage";
 import ScrollToTop from "./components/ScrollToTop";
 
+
+
 function App() {
   return (
     <Router>

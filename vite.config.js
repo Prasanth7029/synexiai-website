@@ -4,5 +4,19 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: '/',
   plugins: [react()],
-  assetsInclude: ['**/*.md'], // ✅ Required for raw .md import
+  server: {
+    fs: {
+      strict: false
+    }
+  },
+  build: {
+    chunkSizeWarningLimit: 1000, // Reduced from 3000
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom']
+        }
+      }
+    }
+  }
 });
