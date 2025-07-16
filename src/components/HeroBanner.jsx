@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaArrowDown } from "react-icons/fa";
 import { Typewriter } from "react-simple-typewriter";
+import { Link } from 'react-router-dom';
 
 
+const MotionLink = motion(Link);
 export default function HeroBanner() {
   const [loaded, setLoaded] = useState(false);
   const [scrollPrompt, setScrollPrompt] = useState(true);
+
 
   useEffect(() => {
     const video = document.querySelector(".hero-video");
@@ -92,23 +95,23 @@ export default function HeroBanner() {
           </motion.div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-            <motion.a
-              href="/about"
+            <MotionLink
+              to="/about"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-lg font-medium shadow-lg shadow-cyan-500/30 transition-all duration-300"
             >
               Explore Our Vision →
-            </motion.a>
+            </MotionLink>
 
-            <motion.a
-              href="/projects"
+            <MotionLink
+              to="/projects"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 rounded-xl text-lg font-medium transition-all duration-300"
             >
               View Projects
-            </motion.a>
+            </MotionLink>
           </div>
         </motion.div>
 
