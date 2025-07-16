@@ -1,14 +1,17 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import fm from "front-matter";
 import { Helmet } from "react-helmet-async";
+import { motion } from "framer-motion";
+
+// Motion-wrapped Link for optional animations
+const MotionLink = motion(Link);
 
 // Import all markdown files as raw text
 const markdownFiles = import.meta.glob("../posts/*.md", {
   eager: true,
-  import: "default",
-  query: "?raw",
+  as: "raw"
 });
 
 export default function BlogPostPage() {
@@ -24,13 +27,17 @@ export default function BlogPostPage() {
     );
   }
 
+  // Parse front-matter and body
   const { attributes, body } = fm(rawContent);
   const formattedDate = attributes?.date
-    ? new Date(attributes.date).toLocaleDateString()
+    ? new Date(attributes.date).toLocaleDateString(undefined, {
+        year: 'numeric', month: 'long', day: 'numeric'
+      })
     : "Unknown date";
 
   return (
     <>
+      {/* Dynamic HTML head */}
       {attributes?.title && (
         <Helmet>
           <title>{`${attributes.title} | SynexiAI`}</title>
@@ -42,11 +49,21 @@ export default function BlogPostPage() {
       )}
 
       <article className="max-w-3xl mx-auto px-6 py-20 text-white">
+        {/* Back to blog listing */}
+        <MotionLink
+          to="/blog"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="inline-block text-cyan-400 hover:underline mb-8"
+        >
+          ← Back to Blog
+        </MotionLink>
+
         {/* Cover Image */}
         {attributes?.coverImage && (
           <img
             src={attributes.coverImage}
-            alt="Cover"
+            alt={attributes.title}
             className="w-full rounded-xl mb-8 shadow-lg"
             data-aos="fade-up"
           />
