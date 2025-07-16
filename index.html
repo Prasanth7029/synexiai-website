@@ -2,28 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <!-- Ensure all “/foo” assets resolve from the root -->
+    <base href="/" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="SynexiAI - Your AI-powered assistant for seamless task management, innovation, and future tech." />
 
-    <!-- 🔐 Final CSP: Fonts, Scripts, Google Fonts, Base64 support -->
+    <!-- 🔐 CSP: lock down eval; allow inline where needed -->
     <meta
             http-equiv="Content-Security-Policy"
             content="
-    default-src 'self';
-    script-src 'self' 'unsafe-inline';
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    font-src 'self' https://fonts.gstatic.com data:;
-    img-src 'self' data:;
-    connect-src 'self';
-    object-src 'none';
-    base-uri 'self';
-  "
-    >
+      default-src 'self';
+      script-src  'self' 'unsafe-inline';
+      style-src   'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src    'self' https://fonts.gstatic.com data:;
+      img-src     'self' data:;
+      connect-src 'self';
+      object-src  'none';
+      base-uri    'self';
+    "
+    />
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
 
     <!-- ✅ SEO -->
     <meta name="robots" content="index, follow" />

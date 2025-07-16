@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <!-- Immediately redirect back to the SPA root -->
-    <meta http-equiv="refresh" content="0; url=/" />
+    <meta charset="UTF-8" />
+    <title>Redirecting…</title>
+    <script>
+        // Grab the full path+query, and re-anchor it after the “#”
+        const fullPath = window.location.pathname + window.location.search;
+        window.location.replace(window.location.origin + '/#' + fullPath);
+    </script>
 </head>
 <body>
 Redirecting…
