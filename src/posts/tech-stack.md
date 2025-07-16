@@ -1,9 +1,11 @@
 ---
 title: "Our Technology Stack at SynexiAI"
 date: "2025-07-13"
+author: "SynexiAI Engineering Team"
 summary: "Explore the tools and technologies that power SynexiAI — from Spring Boot microservices to React, Vite, RabbitMQ, and GitHub Actions."
 coverImage: "/assets/covers/synexiai-banner.jpg"
 ---
+
 
 # 💻 The SynexiAI Tech Stack
 

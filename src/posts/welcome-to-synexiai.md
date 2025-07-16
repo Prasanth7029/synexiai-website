@@ -1,9 +1,9 @@
 ---
 title: "Welcome to SynexiAI"
 date: "2025-07-13"
-summary: "Explore SynexiAI’s mission, projects, and long-term vision for humanity."
 author: "Venkat Sai Prasanth Kunchanapalli"
-coverImage: "/covers/synexiai-banner.jpg"
+summary: "Explore SynexiAI’s mission, projects, and long-term vision for humanity."
+coverImage: "/assets/covers/synexiai-banner.jpg"
 ---
 
 ## 👋 Hello Innovators!

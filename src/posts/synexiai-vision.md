@@ -1,8 +1,11 @@
 ---
 title: "The Vision Behind SynexiAI: 5, 10, and 20 Years into the Future"
-date: 2025-07-13
+date: "2025-07-13"
+author: "Prashanth Kunchanapalli"
 summary: "SynexiAI is not just a tech initiative. It's a mission to redefine how AI, data, and futuristic solutions can reshape humanity’s future — one innovation at a time."
+coverImage: "/assets/covers/synexiai-banner.jpg"
 ---
+
 
 # 🌌 The Vision Behind SynexiAI
 

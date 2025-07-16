@@ -21,17 +21,14 @@ const parseBlogPosts = () => {
         try {
           if (!rawContent) throw new Error("No content found");
 
-          // Extract slug safely
-          const slug = filePath
-            .replace(/^.*[\\\/]/, '')
-            .replace(/\.md$/, '');
-
-          // Parse front matter
+          const slug = filePath.replace(/^.*[\\\/]/, '').replace(/\.md$/, '');
           const { attributes, body } = matter(rawContent);
 
-          // Process date
-          const dateObj = attributes.date ? new Date(attributes.date) : null;
-          const formattedDate = dateObj && !isNaN(dateObj)
+          // Fix date
+          let dateStr = attributes.date || "1970-01-01";
+          if (typeof dateStr !== "string") dateStr = String(dateStr);
+          const dateObj = new Date(dateStr);
+          const formattedDate = !isNaN(dateObj)
             ? dateObj.toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
@@ -39,7 +36,7 @@ const parseBlogPosts = () => {
               })
             : "Date not available";
 
-          // Extract first paragraph as summary if not provided
+          // Summary logic
           const autoSummary = body.split('\n').find(line => line.trim().length > 0) || "";
           const summary = attributes.summary || autoSummary.slice(0, 150) + (autoSummary.length > 150 ? "..." : "");
 
@@ -48,7 +45,9 @@ const parseBlogPosts = () => {
             title: attributes.title || "Untitled Post",
             date: formattedDate,
             summary,
-            coverImage: attributes.coverImage || placeholderImage,
+            coverImage: attributes.coverImage?.startsWith("/")
+              ? attributes.coverImage
+              : placeholderImage,
             readingTime: calculateReadingTime(body),
             tags: attributes.tags || [],
             author: attributes.author || "SynexiAI Team"
