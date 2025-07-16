@@ -35,6 +35,7 @@ export default function HeroBanner() {
       {/* Video Background with Fallback Gradient */}
       <div className="absolute inset-0 z-0">
         <video
+          loading="lazy"
           autoPlay
           loop
           muted
