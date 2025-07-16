@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FaArrowDown } from "react-icons/fa";
 import { Typewriter } from "react-simple-typewriter";
 
+
 export default function HeroBanner() {
   const [loaded, setLoaded] = useState(false);
   const [scrollPrompt, setScrollPrompt] = useState(true);
