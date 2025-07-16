@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../components/Layout";
+
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -53,7 +53,7 @@ export default function ContactPage() {
   };
 
   return (
-    <Layout>
+    <>
       <div className="max-w-2xl mx-auto px-6 py-20 text-white relative">
         {/* ✅ TOAST */}
         {showToast && (
@@ -140,6 +140,6 @@ export default function ContactPage() {
           </button>
         </form>
       </div>
-    </Layout>
+    </>
   );
 }

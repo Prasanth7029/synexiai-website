@@ -1,5 +1,4 @@
 import React from "react";
-import Layout from "../components/Layout";
 
 const projects = [
   {
@@ -27,7 +26,7 @@ const projects = [
 
 export default function ProjectsPage() {
   return (
-    <Layout>
+    <>
       <div className="w-full max-w-6xl mx-auto px-6 py-20 text-white text-center">
         {/* Title */}
         <h1
@@ -90,6 +89,6 @@ export default function ProjectsPage() {
           ))}
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

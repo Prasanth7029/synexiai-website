@@ -1,5 +1,4 @@
 import React from "react";
-import Layout from "../components/Layout";
 import Container from "../components/Container";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
@@ -10,7 +9,7 @@ import { coreValues, teamMembers } from "../data/aboutData";
 
 export default function AboutPage() {
   return (
-    <Layout>
+    <>
       <Helmet>
         <title>About SynexiAI | Our Vision and Values</title>
         <meta
@@ -63,10 +62,7 @@ export default function AboutPage() {
           className="mb-20"
         >
           <div className="bg-gray-900/50 rounded-2xl p-10 border border-cyan-500/20 shadow-lg shadow-cyan-500/10">
-            <h2 className="text-3xl font-bold text-cyan-400 mb-10 text-center">
-              Our Origin Story
-            </h2>
-
+            <h2 className="text-3xl font-bold text-cyan-400 mb-10 text-center">Our Origin Story</h2>
             <p className="text-lg text-center text-gray-300 leading-8 max-w-4xl mx-auto mb-10">
               SynexiAI was founded by <strong className="text-cyan-300">Venkat Sai Prasanth Kunchanapalli</strong>, a visionary engineer with a mission:{" "}
               <span className="italic">software + intelligence + purpose = impact</span>.
@@ -80,7 +76,6 @@ export default function AboutPage() {
             </div>
           </div>
         </motion.section>
-
 
         {/* Core Values */}
         <motion.section
@@ -172,6 +167,6 @@ export default function AboutPage() {
           </Link>
         </motion.section>
       </Container>
-    </Layout>
+    </>
   );
 }

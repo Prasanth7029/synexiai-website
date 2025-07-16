@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import matter from "front-matter";
-import Layout from "../components/Layout";
 import { Helmet } from "react-helmet-async";
 
 
@@ -78,7 +77,7 @@ export default function BlogPage() {
   const blogPosts = useMemo(() => parseBlogPosts(), []);
 
   return (
-    <Layout>
+    <>
       <Helmet>
         <title>SynexiAI Blog & Updates</title>
         <meta name="description" content="Latest thoughts, research, and breakthroughs from SynexiAI" />
@@ -181,6 +180,6 @@ export default function BlogPage() {
           </div>
         )}
       </div>
-    </Layout>
+    </>
   );
 }

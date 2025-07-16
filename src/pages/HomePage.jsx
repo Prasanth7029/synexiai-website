@@ -1,6 +1,4 @@
-// pages/index.js
 import React from "react";
-import Layout from "../components/Layout";
 import HeroBanner from "../components/HeroBanner";
 import { FaReact, FaServer, FaBell, FaChartLine, FaBrain } from "react-icons/fa";
 import FeatureCard from "../components/FeatureCard";
@@ -11,40 +9,40 @@ const features = [
     icon: <FaReact className="text-4xl text-cyan-400" />,
     title: "Modular Architecture",
     description: "Solutions born from the fusion of AI, cloud systems, and renewable intelligence",
-    delay: 0.1
+    delay: 0.1,
   },
   {
     icon: <FaServer className="text-4xl text-cyan-400" />,
     title: "AI Microservices",
     description: "Scalable AI-powered dashboards and microservice ecosystems",
-    delay: 0.2
+    delay: 0.2,
   },
   {
     icon: <FaBell className="text-4xl text-cyan-400" />,
     title: "Real-Time Systems",
     description: "Notification layers and seamless third-party integrations",
-    delay: 0.3
+    delay: 0.3,
   },
   {
     icon: <FaChartLine className="text-4xl text-cyan-400" />,
     title: "Data Applications",
     description: "Cloud-native, data-driven applications with actionable insights",
-    delay: 0.4
+    delay: 0.4,
   },
   {
     icon: <FaBrain className="text-4xl text-cyan-400" />,
     title: "Innovation Engine",
     description: "The digital core of SynexiAI's future technologies",
-    delay: 0.5
-  }
+    delay: 0.5,
+  },
 ];
 
 export default function HomePage() {
   return (
-    <Layout>
+    <>
       <HeroBanner />
-      
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-24 text-black dark:text-white">
+
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-white">
         {/* Features Section */}
         <section className="mb-24">
           <motion.div
@@ -66,6 +64,8 @@ export default function HomePage() {
             </div>
           </motion.div>
         </section>
+
+        {/* Extended Features */}
         <section className="mb-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -94,7 +94,6 @@ export default function HomePage() {
             ))}
           </div>
         </section>
-
 
         {/* Mission Statement */}
         <section className="py-16 px-8 bg-gradient-to-br from-gray-900 to-cyan-900/30 rounded-3xl border border-cyan-500/20 shadow-xl shadow-cyan-500/20 mb-24">
@@ -140,8 +139,7 @@ export default function HomePage() {
             </motion.a>
           </motion.div>
         </section>
-
       </div>
-    </Layout>
+    </>
   );
 }

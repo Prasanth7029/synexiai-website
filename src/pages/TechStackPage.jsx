@@ -1,13 +1,14 @@
+// src/pages/TechStackPage.jsx
 import React from "react";
-import Layout from "../components/Layout";
 import {
-  FaReact, FaNodeJs, FaJava, FaDocker, FaAws, FaPython, FaGithub, FaGitAlt, FaMicrosoft
+  FaReact, FaNodeJs, FaJava, FaDocker, FaAws, FaPython, FaGithub, FaGitAlt, FaMicrosoft,
 } from "react-icons/fa";
 import {
   SiSpringboot, SiPostgresql, SiMongodb, SiRedis, SiRabbitmq, SiApachekafka, SiVite,
-  SiTailwindcss, SiOpenai, SiGooglecloud
+  SiTailwindcss, SiOpenai, SiGooglecloud,
 } from "react-icons/si";
 import { motion } from "framer-motion";
+import Layout from "../components/Layout";
 
 const techStack = [
   {
@@ -63,7 +64,7 @@ const techStack = [
 
 export default function TechStackPage() {
   return (
-    <Layout>
+    <>
       <div className="max-w-6xl mx-auto px-6 py-20 text-white">
         <motion.h1
           className="text-4xl md:text-5xl font-bold text-cyan-400 mb-12 text-center"
@@ -92,6 +93,10 @@ export default function TechStackPage() {
               src="/assets/architecture-diagram.png"
               alt="System Architecture Diagram"
               className="rounded-xl shadow-lg border border-cyan-500/10 max-w-full h-auto hover:scale-105 transition-transform duration-300"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/assets/diagram-placeholder.png";
+              }}
             />
           </a>
         </motion.div>
@@ -131,6 +136,6 @@ export default function TechStackPage() {
           ))}
         </div>
       </div>
-    </Layout>
+    </>
   );
 }

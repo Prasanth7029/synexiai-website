@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import fm from "front-matter";
 import { Helmet } from "react-helmet-async";
-import Layout from "../components/Layout";
 
 // Import all markdown files as raw text
 const markdownFiles = import.meta.glob("../posts/*.md", {
@@ -19,19 +18,19 @@ export default function BlogPostPage() {
 
   if (!rawContent) {
     return (
-      <Layout>
-        <div className="text-white text-center py-20 text-xl">
-          ❌ 404 – Blog post not found.
-        </div>
-      </Layout>
+      <div className="text-white text-center py-20 text-xl">
+        ❌ 404 – Blog post not found.
+      </div>
     );
   }
 
   const { attributes, body } = fm(rawContent);
+  const formattedDate = attributes?.date
+    ? new Date(attributes.date).toLocaleDateString()
+    : "Unknown date";
 
   return (
-    <Layout>
-      {/* Helmet for SEO */}
+    <>
       {attributes?.title && (
         <Helmet>
           <title>{`${attributes.title} | SynexiAI`}</title>
@@ -43,7 +42,7 @@ export default function BlogPostPage() {
       )}
 
       <article className="max-w-3xl mx-auto px-6 py-20 text-white">
-        {/* Cover Image (optional) */}
+        {/* Cover Image */}
         {attributes?.coverImage && (
           <img
             src={attributes.coverImage}
@@ -67,13 +66,12 @@ export default function BlogPostPage() {
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          📅 {new Date(attributes.date).toLocaleDateString()} —{" "}
-          {attributes.author || "SynexiAI Team"}
+          📅 {formattedDate} — {attributes.author || "SynexiAI Team"}
         </p>
 
         <hr className="border-gray-700 mb-8" />
 
-        {/* Body content */}
+        {/* Markdown Body */}
         <div
           className="prose prose-invert prose-lg max-w-none text-gray-100"
           data-aos="fade-up"
@@ -82,6 +80,6 @@ export default function BlogPostPage() {
           <ReactMarkdown>{body}</ReactMarkdown>
         </div>
       </article>
-    </Layout>
+    </>
   );
 }

@@ -19,7 +19,9 @@ export default function Footer() {
       >
         {/* Branding */}
         <div className="text-center md:text-left text-2xl font-bold tracking-wide text-cyan-400 hover:glow">
+            <Link to="/" className="focus:outline-none focus:ring-2 focus:ring-cyan-500">
           SynexiAI
+            </Link>
         </div>
 
         {/* Navigation Links */}

@@ -1,4 +1,3 @@
-// components/HeroBanner.jsx
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaArrowDown } from "react-icons/fa";
@@ -26,7 +25,7 @@ export default function HeroBanner() {
   }, []);
 
   return (
-    <div className="relative w-full h-screen min-h-[800px] overflow-hidden bg-gray-900">
+    <div className="relative w-full h-screen  flex items-center justify-center">
       {/* Gradient Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute z-0 w-[500px] h-[500px] bg-cyan-500/20 blur-[120px] rounded-full left-[10%] top-[20%] animate-float-slow" />
@@ -40,7 +39,7 @@ export default function HeroBanner() {
           loop
           muted
           playsInline
-          className={`hero-video w-full h-full object-cover transition-opacity duration-1000 ${
+          className={`hero-video w-full h-full  duration-1000 ${
             loaded ? "opacity-30" : "opacity-0"
           }`}
           poster="/hero-poster.jpg"

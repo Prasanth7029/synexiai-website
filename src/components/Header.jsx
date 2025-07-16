@@ -57,7 +57,11 @@ export default function Header() {
             <Link
               key={label}
               to={path}
-              className="hover:text-white transition-colors duration-200 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className={`px-2 py-1 rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 ${
+                location.pathname === path
+                  ? "text-white bg-cyan-600/10"
+                  : "text-cyan-300 hover:text-white"
+              }`}
             >
               {label}
             </Link>
