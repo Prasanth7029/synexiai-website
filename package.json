@@ -23,8 +23,11 @@
     "react-simple-maps": "^1.0.0",
     "react-simple-typewriter": "^5.0.1",
     "react-tooltip": "^5.29.1",
+    "react-tsparticles": "^2.12.2",
+    "styled-components": "^6.1.19",
     "tailwindcss-animate": "^1.0.7",
-    "three": "^0.178.0"
+    "three": "^0.178.0",
+    "tsparticles": "^3.8.1"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.27.1",

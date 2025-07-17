@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import Hamburger from "./Hamburger";
 import { Link, useLocation } from "react-router-dom";
 import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import Switch from "./Switch";
 
 export default function Header() {
   const [isDark, setIsDark] = useState(() => {
@@ -24,7 +26,7 @@ export default function Header() {
   }, [isDark]);
 
   useEffect(() => {
-    closeMenu(); // close menu when route changes
+    closeMenu();
   }, [location.pathname]);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -80,13 +82,13 @@ export default function Header() {
           </button>
 
           {/* Hamburger */}
-          <button
-            onClick={toggleMenu}
-            className="text-cyan-400 md:hidden text-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500"
-            aria-label="Toggle Navigation Menu"
-          >
-            {menuOpen ? <FaTimes /> : <FaBars />}
-          </button>
+          <div className="md:hidden">
+                <Switch
+                  checked={menuOpen}
+                  onChange={toggleMenu}
+                  aria-label="Toggle Navigation Menu"
+                />
+              </div>
         </div>
       </nav>
 
@@ -98,7 +100,7 @@ export default function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-[#111] dark:bg-black px-6 pb-6 pt-2 text-cyan-300"
+            className="md:hidden bg-white/20 dark:bg-black/30 backdrop-blur-md px-6 pb-6 pt-2 text-cyan-300"
           >
             {navLinks.map(({ label, path }) => (
               <Link

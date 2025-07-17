@@ -44,7 +44,7 @@ export default function Footer() {
             <FaGithub />
           </a>
           <a
-            href="https://linkedin.com/company/synexiai" target="_blank" rel="noopener noreferrer"
+            href="https://www.linkedin.com/company/synexisai" target="_blank" rel="noopener noreferrer"
             className="hover:text-white transition"
           >
             <FaLinkedin />
