@@ -76,7 +76,7 @@ export default function VisionPage() {
             <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[120px] animate-float-medium" />
           </div>
 
-          {/* Hero section */}
+          {/* Hero-section */}
           <section className="relative z-10 text-center py-16 md:py-24">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
