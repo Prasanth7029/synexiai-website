@@ -12,6 +12,7 @@ import ContactPage    from "./pages/ContactPage";
 import TechStackPage  from "./pages/TechStackPage";
 import ScrollToTop    from "./components/ScrollToTop";
 import Layout         from "./components/Layout";
+import NewsPage       from './pages/NewsPage';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/blog/:slug"     element={<BlogPostPage />} />
           <Route path="/contact"        element={<ContactPage />} />
           <Route path="/tech"           element={<TechStackPage />} />
+          <Route path="/ai-news"        element={<NewsPage />} />
           <Route path="*"               element={<NotFound />} />
         </Routes>
       </Layout>

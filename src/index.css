@@ -18,7 +18,7 @@
   }
 
   :root.dark {
-    --bg-gradient: linear-gradient(-45deg, #0a0a0a, #111111, #1a1a1a, #0f0f0f);
+    --bg-gradient: linear-gradient(-45deg, #000000, #111111, #1a1a1a, #000000);
     --text-color: rgba(255, 255, 255, 0.87);
     --link-color: var(--cyan);
     --link-hover: #00c2e0;
