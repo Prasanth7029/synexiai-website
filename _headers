@@ -1,0 +1,3 @@
+# public/_headers
+/*
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https: *; frame-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https:; connect-src 'self' https: http://localhost:*;

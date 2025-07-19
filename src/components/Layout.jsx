@@ -3,6 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import ChatWidget from './ChatWidget';
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -25,6 +26,7 @@ export default function Layout({ children }) {
       >
         <Footer />
       </motion.div>
+      <ChatWidget />
     </div>
   );
 }

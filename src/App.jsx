@@ -1,4 +1,5 @@
-import React from "react";
+import { useEffect } from 'react';
+import AOS from 'aos';
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
 import HomePage       from "./pages/HomePage.jsx";
@@ -14,7 +15,17 @@ import ScrollToTop    from "./components/ScrollToTop";
 import Layout         from "./components/Layout";
 import NewsPage       from './pages/NewsPage';
 
-function App() {
+export default function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-out',
+      once: true,
+      mirror: false
+    });
+    AOS.refresh();
+      }, []);
+
   return (
     <Router>
       <ScrollToTop />
@@ -36,4 +47,4 @@ function App() {
   );
 }
 
-export default App;
+
