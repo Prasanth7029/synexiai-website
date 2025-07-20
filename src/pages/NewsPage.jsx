@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { fnUrl } from '../lib/api';
 import { motion } from 'framer-motion';
 import {
   FaRobot,
@@ -161,13 +162,13 @@ export default function NewsPage() {
       const wrap = (p) => p.catch((e) => { setErrorCount(n => n + 1); return { data: [] }; });
 
       const newsResults  = await Promise.all(categoriesToFetch.map(cat =>
-        wrap(axios.get(`/.netlify/functions/news-proxy?category=${cat}`))
+        wrap(axios.get(`${fnUrl('news-proxy')}?category=${cat}`))
       ));
       const videoResults = await Promise.all(categoriesToFetch.map(cat =>
-        wrap(axios.get(`/.netlify/functions/video-proxy?category=${cat}`))
+        wrap(axios.get(`${fnUrl('video-proxy')}?category=${cat}`))
       ));
       const rssResults   = await Promise.all(categoriesToFetch.map(cat =>
-        wrap(axios.get(`/.netlify/functions/rss-proxy?category=${cat}`))
+        wrap(axios.get(`${fnUrl('rss-proxy')}?category=${cat}`))
       ));
 
       // merge, trusting proxies for type on video/blog

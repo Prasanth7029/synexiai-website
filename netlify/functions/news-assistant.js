@@ -1,8 +1,18 @@
-// netlify/functions/news-assistant.js
 import OpenAI from "openai";
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function handler(event) {
+ if(event.httpMethod === 'OPTIONS') {
+    return {
+        statusCode: 200,
+        headers: {
+              'Access-Control-Allow-Origin':  '*',
+              'Access-Control-Allow-Headers': 'Content-Type',
+              'Access-Control-Allow-Methods': 'POST, OPTIONS'
+        },
+        body: ''
+    };
+ }
   try {
     const { messages } = JSON.parse(event.body);
     const systemMessage = {
@@ -24,7 +34,10 @@ Respond with no commentary or markdown—just pure JSON.
     const json = JSON.parse(text);      // might still throw if model mis-formats
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+      "Content-Type": "application/json",
+      'Access-Control-Allow-Origin': '*'
+       },
       body: JSON.stringify(json)
     };
 
@@ -32,6 +45,10 @@ Respond with no commentary or markdown—just pure JSON.
     console.error("News-assistant error:", error);
     return {
       statusCode: error.status || 500,
+      headers: {
+              'Content-Type':              'application/json',
+              'Access-Control-Allow-Origin': '*'
+            },
       body: JSON.stringify({ error: error.message })
     };
   }

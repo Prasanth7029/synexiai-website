@@ -5,6 +5,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaRobot, FaTimes } from 'react-icons/fa';
 import { IoMdSend } from 'react-icons/io';
+import { fnUrl } from '../lib/api';
 
 // Helper functions
 const now = () => new Date().toISOString();
@@ -108,7 +109,7 @@ export default function ChatWidget() {
     setError(null);
 
     try {
-      const { data } = await axios.post('/.netlify/functions/chat-assistant', {
+      const { data } = await axios.post(fnUrl('chat-assistant'), {
         messages: payload
       }, {
         timeout: 10000,
