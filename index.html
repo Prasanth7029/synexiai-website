@@ -2,41 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <!-- Ensure all “/foo” assets resolve from the root -->
+    <!-- KEEP this exactly as-is -->
     <base href="/" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="SynexiAI - Your AI-powered assistant for seamless task management, innovation, and future tech." />
 
-    <!-- 🔐 CSP: lock down eval; allow inline where needed; whitelist GitHub & chart hosts -->
-    <meta
-            http-equiv="Content-Security-Policy"
-            content="
-    default-src 'self';
-    script-src  'self' 'unsafe-inline';
-    style-src   'self' 'unsafe-inline' https://fonts.googleapis.com;
-    font-src    'self' https://fonts.gstatic.com data:;
-    img-src     'self' data: https://avatars.githubusercontent.com https://ghchart.rshah.org;
-    connect-src 'self' https://api.github.com https://newsapi.org;
-    frame-src   'self' https://www.youtube.com https://www.youtube-nocookie.com;
-    object-src  'none';
-    base-uri    'self';
-  "
-    />
+    <!-- Remove this meta-CSP entirely -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="…"> -->
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <!-- ✅ SEO -->
+    <!-- SEO, favicon, fonts, etc. all unchanged -->
     <meta name="robots" content="index, follow" />
-    <meta name="keywords" content="AI, SynexiAI, Task Automation, Future Tech, React App, Vite, Productivity, Innovation" />
-    <meta name="author" content="Venkat Sai Prasanth Kunchanapalli & SynexiAI Team" />
-
-    <!-- 🌐 Favicon -->
     <link rel="icon" href="/assets/favicon.ico" />
-
-    <!-- 🧠 Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
 
     <title>SynexiAI</title>

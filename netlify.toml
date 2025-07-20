@@ -1,4 +1,4 @@
-
+# netlify.toml
 [build]
 command   = "npm run build"
 publish   = "dist"
@@ -7,9 +7,16 @@ functions = "netlify/functions"
 [functions]
 node_bundler = "esbuild"
 
-
 [dev]
 command       = "npm run dev"
 targetPort    = 5173
 port          = 8888
 functionsPort = 9999
+
+# only in PROD, rewrite unknown routes to index.html
+[context.production]
+[[redirects]]
+from   = "/*"
+to     = "/index.html"
+status = 200
+force  = false
