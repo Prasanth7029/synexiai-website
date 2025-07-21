@@ -51,13 +51,13 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             className="text-center max-w-5xl mx-auto"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-green-400">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-green-400">
               The SynexiAI Tri-Force
             </h2>
             <p className="text-lg md:text-xl text-gray-400 mb-10">
               Everything we build stems from these 3 power pillars
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               <FeatureCard icon={<FaBrain className="text-4xl text-cyan-400" />} title="AI Innovation" description="Next-gen ML, LLMs, and predictive systems" delay={0.1} />
               <FeatureCard icon={<FaServer className="text-4xl text-cyan-400" />} title="Cloud & Databases" description="Self-healing, scalable, hybrid cloud" delay={0.2} />
               <FeatureCard icon={<FaChartLine className="text-4xl text-green-400" />} title="Renewable Tech" description="Energy-aware AI & green data infrastructure" delay={0.3} />
@@ -82,7 +82,7 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
             {features.map((feature, index) => (
               <FeatureCard
                 key={index}
@@ -96,7 +96,7 @@ export default function HomePage() {
         </section>
 
         {/* Mission Statement */}
-        <section className="py-16 px-8 bg-gradient-to-br from-gray-900 to-cyan-900/30 rounded-3xl border border-cyan-500/20 shadow-xl shadow-cyan-500/20 mb-24">
+        <section className="px-4 sm:px-8 py-12 sm:py-16 bg-gradient-to-br from-gray-900 to-cyan-900/30 rounded-3xl border border-cyan-500/20 shadow-xl shadow-cyan-500/20 mb-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -133,7 +133,7 @@ export default function HomePage() {
               href="/contact"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-block px-10 py-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xl font-semibold shadow-lg shadow-cyan-500/30 transition-all duration-300"
+              className="inline-block px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xl font-semibold shadow-lg shadow-cyan-500/30 transition-all duration-300"
             >
               Get Started Today
             </motion.a>

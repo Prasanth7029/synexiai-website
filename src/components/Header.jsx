@@ -41,6 +41,18 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [menuOpen]);
+
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const closeMenu = () => setMenuOpen(false);
 
@@ -67,15 +79,16 @@ export default function Header() {
         ? "bg-black/90 dark:bg-gray-900/90 shadow-lg shadow-cyan-500/10 border-b border-cyan-400/20"
         : "bg-black/70 dark:bg-gray-900/70 border-b border-transparent"
     }`}>
-      <nav className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
         {/* Logo with animation */}
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          className="min-w-[120px]"
         >
           <Link
             to="/"
-            className="text-2xl font-bold tracking-wide focus:outline-none"
+            className="text-xl sm:text-2xl font-bold tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded"
           >
             <span className="bg-gradient-to-r from-cyan-400 to-teal-500 bg-clip-text text-transparent">
               SynexiAI
@@ -91,7 +104,7 @@ export default function Header() {
               <Link
                 key={label}
                 to={path}
-                className={`relative px-1 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none ${
+                className={`relative px-1 py-2 text-sm font-medium transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded ${
                   location.pathname === path
                     ? "text-white"
                     : "text-cyan-300 hover:text-white"
@@ -118,7 +131,7 @@ export default function Header() {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 p-1"
+                  className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 p-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                   aria-label={`Social link ${index + 1}`}
                 >
                   {icon}
@@ -133,8 +146,8 @@ export default function Header() {
               aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
             >
               <motion.div
-                className={`absolute top-1/2 w-5 h-5 rounded-full flex items-center justify-center ${
-                  isDark ? "bg-yellow-300 left-6" : "bg-white left-1"
+                className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center ${
+                  isDark ? "bg-yellow-300" : "bg-white"
                 }`}
                 initial={false}
                 animate={{
@@ -153,20 +166,22 @@ export default function Header() {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <div className="md:hidden flex items-center gap-4">
+        <div className="md:hidden flex items-center gap-2">
           <button
             onClick={() => setIsDark(!isDark)}
-            className="p-2 rounded-full text-gray-300 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-full text-gray-300 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
           >
             {isDark ? <FaSun /> : <FaMoon />}
           </button>
 
-          <Hamburger
-            open={menuOpen}
-            onChange={toggleMenu}
-            aria-label="Toggle navigation menu"
-          />
+          <div className="min-w-[44px] min-h-[44px] flex items-center justify-center">
+            <Hamburger
+              open={menuOpen}
+              onChange={toggleMenu}
+              aria-label="Toggle navigation menu"
+            />
+          </div>
         </div>
       </nav>
 
@@ -180,7 +195,7 @@ export default function Header() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="md:hidden overflow-hidden"
           >
-            <div className="bg-gradient-to-b from-black/90 to-gray-900/90 backdrop-blur-lg px-6 py-4">
+            <div className="bg-gradient-to-b from-black/90 to-gray-900/90 backdrop-blur-lg px-6 py-4 max-h-[80vh] overflow-y-auto">
               {navLinks.map(({ label, path }) => (
                 <motion.div
                   key={label}
@@ -191,7 +206,7 @@ export default function Header() {
                   <Link
                     to={path}
                     onClick={closeMenu}
-                    className={`block py-3 px-2 rounded-lg text-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400 ${
+                    className={`block py-3 px-2 rounded-lg text-lg font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                       location.pathname === path
                         ? "text-white bg-cyan-500/10"
                         : "text-cyan-300 hover:text-white hover:bg-gray-800"
@@ -209,7 +224,7 @@ export default function Header() {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-2xl text-gray-400 hover:text-cyan-400 transition-colors duration-300 p-2"
+                    className="text-2xl text-gray-400 hover:text-cyan-400 transition-colors duration-300 p-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                     aria-label={`Social link ${index + 1}`}
                   >
                     {icon}
