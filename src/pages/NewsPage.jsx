@@ -1,20 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { fnUrl } from '../lib/api';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaRobot,
   FaDatabase,
   FaLeaf,
   FaSearch,
-  FaFilter,
   FaChartLine,
   FaRegNewspaper,
   FaRegClock,
   FaVideo,
   FaNewspaper,
-  FaExclamationTriangle
+  FaExclamationTriangle,
+  FaArrowRight,
+  FaChevronLeft,
+  FaChevronRight,
+  FaArrowUp,
+  FaTimes
 } from 'react-icons/fa';
+import { useMediaQuery } from 'react-responsive';
+
+// Constants
+const CATEGORIES = [
+  { id: 'all', name: 'All News', icon: <FaRegNewspaper /> },
+  { id: 'ai', name: 'AI', icon: <FaRobot /> },
+  { id: 'database', name: 'Database', icon: <FaDatabase /> },
+  { id: 'renewable', name: 'Renewable', icon: <FaLeaf /> },
+  { id: 'innovation', name: 'Innovation', icon: <FaChartLine /> }
+];
+
+const CONTENT_TYPES = [
+  { id: 'all', name: 'All' },
+  { id: 'video', name: 'Videos' },
+  { id: 'blog', name: 'Articles' }
+];
 
 // Helpers
 const formatDate = (dateString) => {
@@ -28,35 +48,41 @@ const formatDate = (dateString) => {
 };
 
 const getCategoryColor = (category) => {
-  switch (category) {
-    case 'ai': return 'bg-gradient-to-r from-purple-600 to-indigo-600';
-    case 'database': return 'bg-gradient-to-r from-cyan-600 to-blue-600';
-    case 'renewable': return 'bg-gradient-to-r from-green-600 to-emerald-600';
-    case 'innovation': return 'bg-gradient-to-r from-orange-600 to-amber-600';
-    default: return 'bg-gradient-to-r from-gray-600 to-slate-600';
-  }
+  const colors = {
+    ai: 'from-purple-500 to-indigo-500',
+    database: 'from-cyan-500 to-blue-500',
+    renewable: 'from-green-500 to-emerald-500',
+    innovation: 'from-orange-500 to-amber-500',
+    default: 'from-gray-500 to-slate-500'
+  };
+  return colors[category] || colors.default;
 };
 
-const getSourceIcon = (type) => {
-  switch (type) {
-    case 'video': return <FaVideo className="mr-1" />;
-    case 'blog': return <FaNewspaper className="mr-1" />;
-    default: return null;
-  }
+const getCategoryIcon = (categoryId) => {
+  const icons = {
+    ai: <FaRobot className="text-purple-400" />,
+    database: <FaDatabase className="text-cyan-400" />,
+    renewable: <FaLeaf className="text-green-400" />,
+    innovation: <FaChartLine className="text-orange-400" />
+  };
+  return icons[categoryId] || null;
 };
 
-// Single card component
-const ContentCard = ({ article, categories }) => {
+// Components
+const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) => {
   const [imageError, setImageError] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   return (
     <motion.div
-      whileHover={{ y: -5 }}
-      className="bg-gradient-to-br from-gray-800/30 to-gray-900 border border-cyan-500/20 rounded-2xl overflow-hidden shadow-xl shadow-cyan-500/10"
+      whileHover={{ y: layout === 'carousel' ? 0 : -5 }}
+      className={`relative bg-white/5 dark:bg-gray-900/60 backdrop-blur-sm border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-[480px]  ${
+        layout === 'carousel' ? (isMobile ? 'w-[92vw] max-w-[380px]' : 'w-[360px]') : 'w-full'
+      }`}
     >
       {/* Video */}
       {article.type === 'video' && (
-        <div className="relative pt-[56.25%]">
+        <div className="relative pt-[56.25%] bg-black flex-shrink-0">
           <iframe
             loading="lazy"
             src={article.url}
@@ -71,12 +97,12 @@ const ContentCard = ({ article, categories }) => {
 
       {/* Image for article/blog */}
       {(article.type === 'article' || article.type === 'blog') && article.imageUrl && !imageError && (
-        <div className="h-48 overflow-hidden">
+        <div className="h-48 overflow-hidden bg-gray-800">
           <img
             loading="lazy"
             src={article.imageUrl}
             alt={article.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
             onError={() => setImageError(true)}
           />
         </div>
@@ -91,14 +117,15 @@ const ContentCard = ({ article, categories }) => {
         </div>
       )}
 
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex items-center">
-            <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(article.category)}`}>
+      <div className="p-5 flex-grow flex flex-col">
+        <div className="flex justify-between items-start mb-3">
+          <div className="flex items-center space-x-2">
+            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${getCategoryColor(article.category)}`}>
               {categories.find(c => c.id === article.category)?.name || article.category}
             </span>
-            <span className="ml-2 text-xs text-cyan-400 flex items-center">
-              {getSourceIcon(article.type)}{article.type}
+            <span className="text-xs text-gray-400 flex items-center">
+              {article.type === 'video' ? <FaVideo className="mr-1" /> : <FaNewspaper className="mr-1" />}
+              {article.type}
             </span>
           </div>
           <span className="text-xs text-gray-400 flex items-center">
@@ -106,242 +133,663 @@ const ContentCard = ({ article, categories }) => {
           </span>
         </div>
 
-        <h3 className="text-xl font-bold mb-3 text-cyan-300">{article.title}</h3>
+        <h3 className="text-lg md:text-xl font-bold mb-2 text-white line-clamp-2">{article.title}</h3>
         {article.description && (
-          <p className="text-gray-300 mb-4 line-clamp-3">{article.description}</p>
+          <p className="text-gray-300 mb-3 line-clamp-2 text-sm">{article.description}</p>
         )}
 
-        <div className="flex justify-between items-center mt-6">
-          <span className="text-xs font-medium text-gray-400 bg-gray-700/50 px-2 py-1 rounded">
+        <div className="flex justify-between items-center mt-4">
+          <span className="text-xs font-medium text-gray-400 bg-gray-800/50 px-2 py-1 rounded">
             {article.source || 'Unknown source'}
           </span>
           <a
             href={article.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-cyan-400 hover:text-cyan-300 text-sm font-medium flex items-center"
+            className="text-cyan-400 hover:text-cyan-300 text-sm font-medium flex items-center group"
           >
-            {article.type === 'video' ? 'Watch' : 'Read More'}
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
+            {article.type === 'video' ? 'Watch' : 'Read'}
+            <FaArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
       </div>
     </motion.div>
   );
-};
+});
+
+const ContentCarousel = React.memo(({ items, title, onViewAll, type, categories }) => {
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const carouselRef = React.useRef(null);
+
+  const scrollLeft = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className="mb-12 relative group">
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-xl md:text-2xl font-bold text-white">{title}</h2>
+        {onViewAll && (
+          <button
+            onClick={onViewAll}
+            className="text-cyan-400 hover:text-cyan-300 flex items-center text-sm font-medium"
+          >
+            View all <FaArrowRight className="ml-1 h-3 w-3" />
+          </button>
+        )}
+      </div>
+
+      <div className="relative">
+        <div
+          ref={carouselRef}
+          className="flex space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory"
+        >
+          {items.map((item, index) => (
+            <div
+              key={`${type}-${item.id}-${index}`}
+              className="flex-shrink-0 snap-start w-[360px] h-[480px]"
+            >
+              <ContentCard
+                article={item}
+                layout="carousel"
+                categories={categories}
+              />
+            </div>
+          ))}
+        </div>
+
+        {items.length > (isMobile ? 1 : 3) && (
+          <>
+            <button
+              onClick={scrollLeft}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-gray-800 hover:bg-gray-700 rounded-full p-2 shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <FaChevronLeft className="text-white text-lg" />
+            </button>
+            <button
+              onClick={scrollRight}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-gray-800 hover:bg-gray-700 rounded-full p-2 shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <FaChevronRight className="text-white text-lg" />
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+});
+
+const CategorySection = React.memo(({
+  category,
+  articles,
+  categories,
+  onViewAll,
+  activeContentType,
+  setActiveContentType
+}) => {
+  const [filteredArticles, videos, blogs] = useMemo(() => {
+    const filtered = articles.filter(a => a.category === category.id);
+    return [
+      filtered,
+      filtered.filter(a => a.type === 'video'),
+      filtered.filter(a => a.type === 'blog' || a.type === 'article')
+    ];
+  }, [articles, category.id]);
+
+  return (
+    <section id={category.id} className="mb-16 scroll-mt-16">
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center">
+          {getCategoryIcon(category.id) && (
+            <span className="mr-3">{getCategoryIcon(category.id)}</span>
+          )}
+          <span className={`bg-gradient-to-r bg-clip-text text-transparent ${getCategoryColor(category.id)}`}>
+            {category.name}
+          </span>
+        </h2>
+        {onViewAll && (
+          <button
+            onClick={() => onViewAll(category.id)}
+            className="text-cyan-400 hover:text-cyan-300 flex items-center text-sm font-medium"
+          >
+            View all <FaArrowRight className="ml-1 h-3 w-3" />
+          </button>
+        )}
+      </div>
+
+      <div className="mb-6 flex space-x-1 bg-gray-800/50 rounded-lg p-1">
+        {CONTENT_TYPES.map(type => (
+          <button
+            key={type.id}
+            onClick={() => setActiveContentType(type.id)}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center ${
+              activeContentType === type.id
+                ? 'bg-gray-700 text-white shadow'
+                : 'text-gray-400 hover:text-gray-300 hover:bg-gray-700/30'
+            }`}
+          >
+            {type.name}
+          </button>
+        ))}
+      </div>
+
+      {activeContentType === 'all' && (
+        <>
+          {videos.length > 0 && (
+            <ContentCarousel
+              items={videos}
+              title="Featured Videos"
+              type="video"
+              categories={categories}
+            />
+          )}
+          {blogs.length > 0 && (
+            <ContentCarousel
+              items={blogs}
+              title="Latest Articles"
+              type="blog"
+              categories={categories}
+            />
+          )}
+          {filteredArticles.length === 0 && (
+            <div className="text-center py-12 text-gray-500">
+              No content found in this category
+            </div>
+          )}
+        </>
+      )}
+
+      {activeContentType === 'video' && (
+        <>
+          {videos.length > 0 ? (
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
+            >
+              {videos.map(article => (
+                <motion.div
+                  key={`video-${article.id}`}
+                  className="h-full flex"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                >
+                  <ContentCard article={article} categories={categories} />
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="text-center py-12 text-gray-500">
+              No videos found in this category
+            </div>
+          )}
+        </>
+      )}
+
+      {activeContentType === 'blog' && (
+        <>
+          {blogs.length > 0 ? (
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
+            >
+              {blogs.map(article => (
+                <motion.div
+                  key={`blog-${article.id}`}
+                  className="h-full flex"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                >
+                  <ContentCard article={article} categories={categories} />
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="text-center py-12 text-gray-500">
+              No articles found in this category
+            </div>
+          )}
+        </>
+      )}
+    </section>
+  );
+});
 
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
-  const [filteredArticles, setFilteredArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [activeContentType, setActiveContentType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [errorCount, setErrorCount] = useState(0);
-
-  const categories = [
-    { id: 'all', name: 'All News', icon: <FaRegNewspaper /> },
-    { id: 'ai', name: 'Artificial Intelligence', icon: <FaRobot /> },
-    { id: 'database', name: 'Database Tech', icon: <FaDatabase /> },
-    { id: 'renewable', name: 'Renewable Energy', icon: <FaLeaf /> },
-    { id: 'innovation', name: 'Tech Innovations', icon: <FaChartLine /> }
-  ];
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   useEffect(() => {
     const fetchNews = async () => {
       setLoading(true);
       setErrorCount(0);
 
-      // derive cat IDs sans 'all'
-      const categoriesToFetch = categories
+      const categoriesToFetch = CATEGORIES
         .filter(c => c.id !== 'all')
         .map(c => c.id);
 
-      // wrap each call in catch to count errors
-      const wrap = (p) => p.catch((e) => { setErrorCount(n => n + 1); return { data: [] }; });
+      const wrap = (p) => p.catch((e) => {
+        console.error('Fetch error:', e);
+        setErrorCount(n => n + 1);
+        return { data: [] };
+      });
 
-      const newsResults  = await Promise.all(categoriesToFetch.map(cat =>
-        wrap(axios.get(`${fnUrl('news-proxy')}?category=${cat}`))
-      ));
-      const videoResults = await Promise.all(categoriesToFetch.map(cat =>
-        wrap(axios.get(`${fnUrl('video-proxy')}?category=${cat}`))
-      ));
-      const rssResults   = await Promise.all(categoriesToFetch.map(cat =>
-        wrap(axios.get(`${fnUrl('rss-proxy')}?category=${cat}`))
-      ));
+      try {
+        const [newsResults, videoResults, rssResults] = await Promise.all([
+          Promise.all(categoriesToFetch.map(cat =>
+            wrap(axios.get(`${fnUrl('news-proxy')}?category=${cat}`))
+          )),
+          Promise.all(categoriesToFetch.map(cat =>
+            wrap(axios.get(`${fnUrl('video-proxy')}?category=${cat}`))
+          )),
+          Promise.all(categoriesToFetch.map(cat =>
+            wrap(axios.get(`${fnUrl('rss-proxy')}?category=${cat}`))
+          ))
+        ]);
 
-      // merge, trusting proxies for type on video/blog
-      const allArticles = [
-        ...newsResults.flatMap(r => r.data.map(item => ({ ...item, type: 'article' }))),
-        ...videoResults.flatMap(r => r.data),
-        ...rssResults.flatMap(r => r.data)
-      ];
+        const allArticles = [
+          ...newsResults.flatMap(r => r.data.map(item => ({ ...item, type: 'article' }))),
+          ...videoResults.flatMap(r => r.data),
+          ...rssResults.flatMap(r => r.data)
+        ].filter(Boolean);
 
-      setArticles(allArticles);
-      setFilteredArticles(allArticles);
-      setLoading(false);
+        setArticles(allArticles);
+      } catch (error) {
+        console.error('Failed to fetch articles:', error);
+        setErrorCount(prev => prev + 1);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchNews();
   }, []);
 
-  // filtering
-  useEffect(() => {
-    let result = articles;
-    if (activeCategory !== 'all') {
-      result = result.filter(a => a.category === activeCategory);
+  const filteredArticles = useMemo(() => {
+    return articles.filter(article => {
+      if (activeCategory !== 'all' && article.category !== activeCategory) {
+        return false;
+      }
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        return (
+          article.title?.toLowerCase().includes(term) ||
+          (article.description && article.description.toLowerCase().includes(term)) ||
+          (article.source && article.source.toLowerCase().includes(term))
+        );
+      }
+      return true;
+    });
+  }, [articles, activeCategory, searchTerm]);
+
+  const trendingArticles = useMemo(() => {
+    return [...articles]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 3);
+  }, [articles]);
+
+  const handleViewAll = (categoryId) => {
+    setActiveCategory(categoryId);
+    if (activeCategory === categoryId) {
+      document.getElementById(categoryId)?.scrollIntoView({ behavior: 'smooth' });
     }
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      result = result.filter(a =>
-        a.title.toLowerCase().includes(term) ||
-        (a.description && a.description.toLowerCase().includes(term)) ||
-        (a.source && a.source.toLowerCase().includes(term))
-      );
-    }
-    setFilteredArticles(result);
-  }, [activeCategory, searchTerm, articles]);
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 py-12 px-4 sm:px-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <div className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-6 py-2 rounded-full mb-6 text-sm font-medium">
-            Industry Insights
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-400">
-              Tech & Innovation Pulse
-            </span>
-          </h1>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-            Stay updated with the latest news, videos, and blogs in AI, database technologies, and renewable energy.
-          </p>
-        </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-gray-100">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col">
+            <div className="flex justify-between items-center py-4">
+              <motion.h1
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-2xl font-bold"
+              >
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400">
+                  Tech Pulse
+                </span>
+              </motion.h1>
 
+              {isMobile ? (
+                <button
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+                  aria-label="Toggle menu"
+                >
+                  {showMobileMenu ? (
+                    <FaTimes className="w-5 h-5 text-gray-300" />
+                  ) : (
+                    <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  )}
+                </button>
+              ) : (
+                <div className="hidden md:flex space-x-1 bg-gray-800 rounded-lg p-1">
+                  {CATEGORIES.map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                        activeCategory === cat.id
+                          ? 'bg-gray-700 text-white shadow'
+                          : 'text-gray-300 hover:bg-gray-700/50'
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Search bar */}
+            <div className="pb-4">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <FaSearch />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search AI, database, or renewable energy content..."
+                  className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-gray-800/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {searchTerm && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300"
+                  >
+                    <FaTimes className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {showMobileMenu && isMobile && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden bg-gray-800/50"
+            >
+              <div className="px-4 pb-4 grid grid-cols-2 gap-2">
+                {CATEGORIES.map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => {
+                      setActiveCategory(cat.id);
+                      setShowMobileMenu(false);
+                    }}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors ${
+                      activeCategory === cat.id
+                        ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    <span className="mr-2">{cat.icon}</span>
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Error Notice */}
         {errorCount > 0 && (
-          <div className="bg-yellow-900/50 border border-yellow-500/30 rounded-lg p-4 mb-6 flex items-center">
-            <FaExclamationTriangle className="text-yellow-400 mr-3 text-xl" />
-            <p className="text-yellow-300">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-yellow-900/30 border border-yellow-500/20 rounded-lg p-3 mb-6 flex items-center"
+          >
+            <FaExclamationTriangle className="text-yellow-400 mr-3 flex-shrink-0" />
+            <p className="text-yellow-300 text-sm">
               {errorCount} data source{errorCount > 1 ? 's' : ''} failed to load. Some content may be missing.
             </p>
-          </div>
+          </motion.div>
         )}
 
-        {/* Search & Filter */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-10">
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="relative flex-grow">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <FaSearch />
-              </div>
-              <input
-                type="text"
-                placeholder="Search AI, database, or renewable energy content..."
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-800/50 text-white border border-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="bg-gray-800/50 rounded-lg border border-cyan-500/20 p-3 flex items-center">
-              <FaFilter className="text-gray-400 mr-2" />
-              <select
-                className="bg-transparent text-white focus:outline-none"
-                value={activeCategory}
-                onChange={(e) => setActiveCategory(e.target.value)}
-                aria-pressed={activeCategory}
-              >
-                {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-2 justify-center">
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                aria-pressed={activeCategory === cat.id}
-                className={`flex items-center px-4 py-2 rounded-full transition-all ${
-                  activeCategory === cat.id
-                    ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white'
-                    : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
-                }`}
-              >
-                <span className="mr-2">{cat.icon}</span>
-                {cat.name}
-              </button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Content Grid */}
         {loading ? (
           <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500" />
+            <motion.div
+              animate={{
+                rotate: 360,
+                scale: [1, 1.1, 1]
+              }}
+              transition={{
+                duration: 1.2,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              className="rounded-full h-14 w-14 border-t-2 border-b-2 border-cyan-500"
+            />
           </div>
-        ) : filteredArticles.length > 0 ? (
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-            {filteredArticles.map(article => (
-              <ContentCard key={article.id} article={article} categories={categories} />
-            ))}
-          </motion.div>
         ) : (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
-            <div className="text-5xl mb-4 text-gray-500">🔍</div>
-            <h3 className="text-xl font-bold text-gray-300 mb-2">No content found</h3>
-            <p className="text-gray-500">Try adjusting your search or filter criteria</p>
-          </motion.div>
+          <>
+            {/* Hero Section */}
+            {activeCategory === 'all' && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-16 text-center"
+              >
+                <motion.div
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-5 py-1.5 rounded-full mb-5 text-xs font-medium tracking-wide"
+                >
+                  Industry Insights
+                </motion.div>
+                <h1 className="text-4xl md:text-5xl font-bold mb-5">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400">
+                    Tech & Innovation Pulse
+                  </span>
+                </h1>
+                <p className="text-gray-300 max-w-3xl mx-auto text-lg">
+                  Stay updated with the latest news, videos, and blogs in AI, database technologies, and renewable energy.
+                </p>
+              </motion.section>
+            )}
+
+            {/* Trending Section */}
+            {activeCategory === 'all' && trendingArticles.length > 0 && (
+              <motion.section
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mb-16"
+              >
+                <h2 className="text-2xl font-bold text-white mb-5">Trending Now</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {trendingArticles.map(article => (
+                    <ContentCard
+                      key={`trending-${article.id}`}
+                      article={article}
+                      categories={CATEGORIES}
+                    />
+                  ))}
+                </div>
+              </motion.section>
+            )}
+
+            {/* Category Content */}
+            {activeCategory === 'all' ? (
+              CATEGORIES.filter(cat => cat.id !== 'all').map(category => {
+                const catArticles = articles.filter(a => a.category === category.id);
+                if (catArticles.length === 0) return null;
+
+                return (
+                  <CategorySection
+                    key={category.id}
+                    category={category}
+                    articles={articles}
+                    categories={CATEGORIES}
+                    onViewAll={handleViewAll}
+                    activeContentType={activeContentType}
+                    setActiveContentType={setActiveContentType}
+                  />
+                );
+              })
+            ) : (
+              <CategorySection
+                category={CATEGORIES.find(c => c.id === activeCategory)}
+                articles={filteredArticles}
+                categories={CATEGORIES}
+                activeContentType={activeContentType}
+                setActiveContentType={setActiveContentType}
+              />
+            )}
+
+            {/* No results */}
+            {filteredArticles.length === 0 && !loading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-16"
+              >
+                <div className="text-5xl mb-3 text-gray-500">🔍</div>
+                <h3 className="text-xl font-bold text-gray-300 mb-2">No content found</h3>
+                <p className="text-gray-500 max-w-md mx-auto">
+                  {searchTerm ? 'Try a different search term' : 'No articles available for this category'}
+                </p>
+              </motion.div>
+            )}
+
+            {/* Market Insights */}
+            {activeCategory === 'all' && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-16 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 border border-gray-700 rounded-xl p-6"
+              >
+                <h3 className="text-2xl font-bold text-cyan-400 mb-5 text-center">Market Insights</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {[
+                    {
+                      title: "AI Market Growth",
+                      value: "$1.8T",
+                      description: "Projected market value by 2030 at 38% CAGR",
+                      color: "from-purple-500 to-indigo-500"
+                    },
+                    {
+                      title: "Database Industry",
+                      value: "+24%",
+                      description: "Annual growth for AI-optimized database solutions",
+                      color: "from-cyan-500 to-blue-500"
+                    },
+                    {
+                      title: "Renewable Energy",
+                      value: "$2T",
+                      description: "Global investment by 2030, mostly in solar and wind",
+                      color: "from-green-500 to-emerald-500"
+                    }
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      whileHover={{ y: -5 }}
+                      className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}
+                    >
+                      <h4 className="text-lg font-bold text-white mb-2">{item.title}</h4>
+                      <div className="text-2xl font-bold text-white mb-2">{item.value}</div>
+                      <p className="text-gray-200 text-sm">{item.description}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.section>
+            )}
+
+            {/* Newsletter */}
+            {activeCategory === 'all' && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-16 text-center"
+              >
+                <div className="bg-gradient-to-r from-cyan-900/30 to-teal-900/30 border border-gray-700 rounded-xl p-6 max-w-2xl mx-auto">
+                  <h3 className="text-2xl md:text-3xl font-bold text-cyan-300 mb-3">Stay Informed</h3>
+                  <p className="text-gray-300 mb-5">
+                    Get weekly insights on AI breakthroughs, database innovations, and renewable energy advancements.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <input
+                      type="email"
+                      placeholder="Your email address"
+                      className="px-4 py-2.5 rounded-lg bg-gray-800/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"
+                    />
+                    <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors">
+                      Subscribe
+                    </button>
+                  </div>
+                </div>
+              </motion.section>
+            )}
+          </>
         )}
 
-        {/* Market Insights Cards (unchanged) */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mt-16 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 border border-cyan-500/20 rounded-2xl p-8">
-          <h3 className="text-2xl font-bold text-cyan-400 mb-6 text-center">Market Insights</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20">
-              <h4 className="text-lg font-bold text-cyan-300 mb-3">AI Market Growth</h4>
-              <div className="text-3xl font-bold mb-2">$1.8T</div>
-              <p className="text-gray-400 text-sm">Projected market value by 2030 at 38% CAGR</p>
-            </div>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20">
-              <h4 className="text-lg font-bold text-cyan-300 mb-3">Database Industry</h4>
-              <div className="text-3xl font-bold mb-2">+24%</div>
-              <p className="text-gray-400 text-sm">Annual growth for AI-optimized database solutions</p>
-            </div>
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20">
-              <h4 className="text-lg font-bold text-cyan-300 mb-3">Renewable Energy</h4>
-              <div className="text-3xl font-bold mb-2">$2T</div>
-              <p className="text-gray-400 text-sm">Global investment by 2030, mostly in solar and wind</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Newsletter Signup (unchanged) */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-cyan-900/30 to-teal-900/30 border border-cyan-500/20 rounded-2xl p-8 max-w-3xl mx-auto">
-            <h3 className="text-2xl md:text-3xl font-bold text-cyan-300 mb-4">Stay Informed</h3>
-            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              Get weekly insights on AI breakthroughs, database innovations, and renewable energy advancements.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="px-4 py-3 rounded-lg bg-gray-800/50 text-white border border-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500 sm:w-64"
-              />
-              <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-6 py-3 rounded-lg font-medium">
-                Subscribe to Updates
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+        {/* Back to top button */}
+        {!loading && (
+          <motion.button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-6 right-6 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-full p-3 shadow-lg z-50 backdrop-blur-sm transition-all"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FaArrowUp className="text-cyan-400" />
+          </motion.button>
+        )}
+      </main>
     </div>
   );
 }

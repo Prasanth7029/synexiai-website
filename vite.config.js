@@ -8,7 +8,7 @@ export default ({ mode }) => {
 
   return defineConfig({
     base: '/',        // always serve from /
-    assetsInclude: ['**/*.html'],
+
     plugins: [react()],
 
     server: {
