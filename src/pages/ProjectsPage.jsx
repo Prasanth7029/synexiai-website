@@ -58,7 +58,7 @@ const ProjectCard = ({ repo, index }) => (
 const VisionCard = ({ title, description, icon, color }) => (
   <motion.div
     whileHover={{ y: -5 }}
-    className="p-6 rounded-xl bg-gradient-to-br from-gray-800/30 to-gray-900 border border-gray-700"
+    className="p-4 sm:p-6 md:p-8 rounded-xl bg-gradient-to-br from-gray-800/30 to-gray-900 border border-gray-700"
   >
     <div className={`text-3xl mb-4 ${color}`}>{icon}</div>
     <h3 className="text-xl font-bold mb-3">{title}</h3>
@@ -188,7 +188,7 @@ export default function ProjectsPage() {
               SynexisAI Visionary Portfolio
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-xl sm:text-3xl md:text-6xl font-bold mb-6">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-400">
                 Beyond Code. Beyond Limits.
               </span>
@@ -198,7 +198,7 @@ export default function ProjectsPage() {
               Building a future where AI, sustainable infrastructure, and renewable energy converge to transform industries and empower humanity.
             </p>
 
-            <div className="flex justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -282,7 +282,7 @@ export default function ProjectsPage() {
                 <img
                   src={profile?.avatar_url || "https://avatars.githubusercontent.com/u/583231?v=4"}
                   alt="GitHub Avatar"
-                  className="w-20 h-20 rounded-full border-2 border-cyan-400"
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-cyan-400"
                 />
                 <div>
                   <h2 className="text-2xl font-bold">
@@ -452,7 +452,7 @@ export default function ProjectsPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             <PartnerLogo name="AWS Green Energy" logo="☁️" />
             <PartnerLogo name="UN Sustainable Tech" logo="🇺🇳" />
             <PartnerLogo name="Tesla Energy" logo="🔋" />
@@ -467,7 +467,7 @@ export default function ProjectsPage() {
           transition={{ duration: 0.8, delay: 1 }}
           className="bg-gradient-to-r from-cyan-900/30 to-teal-900/30 border border-cyan-500/20 rounded-2xl p-12 text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Join the Revolution</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">Join the Revolution</h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
             We're building more than a company - we're creating a movement that will redefine how technology serves humanity while protecting our planet.
           </p>
@@ -510,6 +510,8 @@ function getLanguageColor(language) {
     HTML: '#e34c26',
     CSS: '#563d7c',
     TypeScript: '#2b7489',
+    Shell: '#89e051',
+    "Jupyter Notebook": '#DA5B0B',
   };
   return colors[language] || '#ccc';
 }

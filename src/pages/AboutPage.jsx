@@ -66,8 +66,8 @@ export default function AboutPage() {
       <Container animate className="text-white relative overflow-hidden">
         {/* Background elements */}
         <div className="absolute inset-0 overflow-hidden -z-10">
-          <div className="absolute top-0 left-1/4 w-[300px] h-[300px] bg-cyan-500/10 rounded-full blur-[100px] animate-float-slow" />
-          <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px] animate-float-medium" />
+          <div className="hidden sm:block absolute top-0 left-1/4 w-[300px] h-[300px] bg-cyan-500/10 rounded-full blur-[60px] md:blur-[100px] animate-float-slow" />
+          <div className="hidden sm:block absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px] animate-float-medium" />
         </div>
 
         {/* Hero Section */}
@@ -80,7 +80,7 @@ export default function AboutPage() {
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-transparent -z-10" />
           <motion.h1
-            className="text-5xl md:text-7xl font-bold mb-6"
+            className="text-3xl sm:text-5xl md:text-7xl font-bold mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
@@ -107,7 +107,7 @@ export default function AboutPage() {
           transition={{ duration: 0.8 }}
           className="mb-24 relative"
         >
-          <div className="bg-gradient-to-br from-gray-900/70 to-gray-900/90 rounded-3xl p-8 md:p-12 border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 backdrop-blur-sm">
+          <div className="bg-gradient-to-br from-gray-900/70 to-gray-900/90 rounded-3xl p-4 sm:p-8 md:p-12 border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 backdrop-blur-sm">
             <motion.h2
               className="text-3xl md:text-4xl font-bold text-center mb-12"
               initial={{ opacity: 0, y: 20 }}
@@ -121,7 +121,7 @@ export default function AboutPage() {
             </motion.h2>
 
             <motion.div
-              className="grid md:grid-cols-2 gap-12 mb-16"
+              className="grid md:grid-cols-2 gap-8 md:gap-12 mb-16"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -181,7 +181,7 @@ export default function AboutPage() {
                 Our Implementation Process
               </h3>
 
-              <div className="grid md:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
                 {implementationProcess.map((step, index) => (
                   <motion.div
                     key={index}
@@ -230,7 +230,7 @@ export default function AboutPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {coreValues.map((value, index) => (
               <ValueCard
                 key={index}
@@ -252,7 +252,7 @@ export default function AboutPage() {
           transition={{ duration: 0.8 }}
           className="mb-24"
         >
-          <div className="bg-gradient-to-br from-gray-900/70 to-gray-900/90 rounded-3xl p-8 md:p-12 border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 backdrop-blur-sm">
+          <div className="bg-gradient-to-br from-gray-900/70 to-gray-900/90 rounded-3xl p-4 sm:p-8 md:p-12 border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 backdrop-blur-sm">
             <motion.h3
               className="text-2xl font-semibold text-center text-cyan-400 mb-10"
               initial={{ opacity: 0 }}

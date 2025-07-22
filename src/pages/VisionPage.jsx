@@ -72,8 +72,8 @@ export default function VisionPage() {
         <Container animate className="text-white relative overflow-hidden">
           {/* Background elements */}
           <div className="absolute inset-0 overflow-hidden -z-10">
-            <div className="absolute top-0 left-1/4 w-[300px] h-[300px] bg-cyan-500/10 rounded-full blur-[100px] animate-float-slow" />
-            <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[120px] animate-float-medium" />
+            <div className="hidden sm:block absolute top-0 left-1/4 w-[300px] h-[300px] bg-cyan-500/10 rounded-full blur-[100px] animate-float-slow" />
+            <div className="hidden sm:block absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[120px] animate-float-medium" />
           </div>
 
           {/* Hero-section */}
@@ -84,7 +84,7 @@ export default function VisionPage() {
               transition={{ duration: 0.8 }}
               className="max-w-4xl mx-auto"
             >
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-cyan-400 to-teal-500 bg-clip-text text-transparent">
                   SynexiAI Vision
                 </span>
@@ -115,7 +115,7 @@ export default function VisionPage() {
           </section>
 
           {/* Roadmap section */}
-          <section className="relative z-10 py-12">
+          <section className="relative z-10 py-12 pl-4 sm:pl-0">
             <div className="max-w-6xl mx-auto">
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
@@ -147,7 +147,7 @@ export default function VisionPage() {
 
                     <motion.div
                       whileHover={{ y: -5 }}
-                      className={`bg-gradient-to-br from-gray-900/80 to-gray-800/80 p-8 rounded-2xl shadow-xl border border-gray-700/50 backdrop-blur-sm ${index % 2 === 0 ? "md:mr-8" : "md:ml-8"}`}
+                      className={`bg-gradient-to-br from-gray-900/80 to-gray-800/80 p-8 rounded-2xl shadow-xl border border-gray-700/50 backdrop-blur-0 sm:backdrop-blur-sm ${index % 2 === 0 ? "md:mr-8" : "md:ml-8"}`}
                     >
                       <div className="flex items-center mb-6">
                         <h3 className="text-2xl font-bold text-cyan-300">{milestone.year}</h3>

@@ -1,5 +1,6 @@
 // src/pages/TechStackPage.jsx
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import {
   FaReact, FaNodeJs, FaJava, FaDocker, FaAws, FaPython, FaGithub, FaGitAlt, FaMicrosoft,
   FaSolarPanel, FaWind, FaBolt, FaShieldAlt, FaChartLine, FaLink
@@ -10,6 +11,7 @@ import {
   SiApachespark, SiWeb3Dotjs, SiGraphql, SiFlask, SiGnubash, SiPytorch
 } from "react-icons/si";
 import { motion } from "framer-motion";
+
 
 const techStack = {
   ai: {
@@ -71,12 +73,12 @@ const techStack = {
 };
 
 const ArchitectureDiagram = () => (
-  <div className="bg-gradient-to-br from-gray-800/30 to-gray-900 border border-cyan-500/20 rounded-2xl p-6 mb-16">
+  <div className="bg-gradient-to-br from-gray-800/30 to-gray-900 border border-cyan-500/20 rounded-2xl p-4 sm:p-6 mb-16">
     <h3 className="text-2xl font-bold text-cyan-400 mb-6 text-center">SynexisAI Architecture Blueprint</h3>
 
     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8">
       {/* User Layer */}
-      <div className="md:col-span-12 bg-gray-800/50 rounded-xl p-4 border border-cyan-500/20">
+      <div className="md:col-span-12 bg-gray-800/50 rounded-xl p-4 sm:p-6 border border-cyan-500/20">
         <div className="flex items-center justify-center mb-2">
           <div className="text-cyan-400 text-xl mr-2">👤</div>
           <h4 className="font-semibold">User Interface</h4>
@@ -85,7 +87,7 @@ const ArchitectureDiagram = () => (
       </div>
 
       {/* AI Layer */}
-      <div className="md:col-span-4 bg-gray-800/50 rounded-xl p-4 border border-green-500/20">
+      <div className="md:col-span-4 bg-gray-800/50 rounded-xl p-4 sm:p-6 border border-green-500/20">
         <div className="flex items-center justify-center mb-2">
           <div className="text-green-400 text-xl mr-2">🧠</div>
           <h4 className="font-semibold">AI Optimization</h4>
@@ -94,7 +96,7 @@ const ArchitectureDiagram = () => (
       </div>
 
       {/* Security Layer */}
-      <div className="md:col-span-4 bg-gray-800/50 rounded-xl p-4 border border-purple-500/20">
+      <div className="md:col-span-4 bg-gray-800/50 rounded-xl p-4 sm:p-6 border border-purple-500/20">
         <div className="flex items-center justify-center mb-2">
           <div className="text-purple-400 text-xl mr-2">🔒</div>
           <h4 className="font-semibold">Blockchain Security</h4>
@@ -103,7 +105,7 @@ const ArchitectureDiagram = () => (
       </div>
 
       {/* Energy Layer */}
-      <div className="md:col-span-4 bg-gray-800/50 rounded-xl p-4 border border-yellow-500/20">
+      <div className="md:col-span-4 bg-gray-800/50 rounded-xl p-4 sm:p-6 border border-yellow-500/20">
         <div className="flex items-center justify-center mb-2">
           <div className="text-yellow-400 text-xl mr-2">⚡</div>
           <h4 className="font-semibold">Renewable Energy</h4>
@@ -112,7 +114,7 @@ const ArchitectureDiagram = () => (
       </div>
 
       {/* Database Layer */}
-      <div className="md:col-span-12 bg-gray-800/50 rounded-xl p-4 border border-blue-500/20">
+      <div className="md:col-span-12 bg-gray-800/50 rounded-xl p-4 sm:p-6 border border-blue-500/20">
         <div className="flex items-center justify-center mb-2">
           <div className="text-blue-400 text-xl mr-2">💾</div>
           <h4 className="font-semibold">Hybrid Database System</h4>
@@ -122,10 +124,15 @@ const ArchitectureDiagram = () => (
     </div>
 
     <div className="flex justify-center">
-      <button className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium flex items-center">
+      <a
+        href="https://github.com/Prasanth7029/Synexiai"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium flex items-center"
+      >
         <FaGithub className="mr-2" />
         View Architecture Repository
-      </button>
+      </a>
     </div>
   </div>
 );
@@ -158,6 +165,36 @@ export default function TechStackPage() {
   const [activeTab, setActiveTab] = useState('ai');
 
   return (
+  <>
+      <Helmet>
+        <title>SynexiAI Technology Stack | AI, Cloud & Green Infrastructure</title>
+        <meta
+          name="description"
+          content="Discover the innovative technology stack behind SynexiAI: AI, Machine Learning, Cloud, Blockchain Security, and Renewable Infrastructure. See the tools powering tomorrow's sustainable digital world."
+        />
+        <meta property="og:title" content="SynexiAI Technology Stack | AI, Cloud & Green Infrastructure" />
+        <meta property="og:description" content="Explore the tech powering SynexiAI: AI, cloud, blockchain security, green infra, and more." />
+        <meta property="og:image" content="/assets/techstack-preview.png" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="SynexiAI Technology Stack | AI, Cloud & Green Infrastructure" />
+        <meta name="twitter:description" content="Explore the tech powering SynexiAI: AI, cloud, blockchain security, green infra, and more." />
+        <meta name="twitter:image" content="/assets/techstack-preview.jpg" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "SynexiAI Technology Stack",
+            "description": "Discover the technology powering SynexiAI: AI, ML, Cloud, Blockchain, and Renewable Infrastructure.",
+            "url": "https://www.synexiai.online/tech",
+            "publisher": {
+              "@type": "Organization",
+              "name": "SynexiAI",
+              "url": "https://www.synexiai.online"
+            }
+          })}
+        </script>
+      </Helmet>
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 py-16 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <motion.div
@@ -170,7 +207,7 @@ export default function TechStackPage() {
             Technology Powering Innovation
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-6">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-400">
               SynexisAI Technology Ecosystem
             </span>
@@ -184,8 +221,8 @@ export default function TechStackPage() {
         <ArchitectureDiagram />
 
         {/* Tech Stack Tabs */}
-        <div className="bg-gradient-to-br from-gray-800/30 to-gray-900 border border-cyan-500/20 rounded-2xl p-6 mb-16">
-          <div className="flex flex-wrap border-b border-cyan-500/20 mb-8">
+        <div className="bg-gradient-to-br from-gray-800/30 to-gray-900 border border-cyan-500/20 rounded-2xl p-4 sm:p-6 mb-16">
+          <div className="flex flex-wrap overflow-x-auto border-b border-cyan-500/20 mb-8">
             {Object.keys(techStack).map((key) => (
               <TabHeader
                 key={key}
@@ -296,5 +333,6 @@ export default function TechStackPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
