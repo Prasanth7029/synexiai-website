@@ -6,7 +6,6 @@ const openai = new OpenAI({
   timeout: 10000 // 10 second timeout
 });
 
-// Build a strict system prompt using predefined company data
 const strictSystemPrompt = `YOU MUST FOLLOW THESE RULES STRICTLY:
 
 COMPANY INFORMATION (USE ONLY THESE DETAILS):
@@ -93,7 +92,7 @@ export async function handler(event) {
         "Content-Type": "application/json",
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ reply, fullResponse: response })
+      body: JSON.stringify({ reply })
     };
 
   } catch (error) {
@@ -112,7 +111,6 @@ export async function handler(event) {
   }
 }
 
-// Validate that the response contains required company info; otherwise fallback
 function validateResponse(response) {
   const requiredInfo = [
     companyInfo.name,
@@ -129,7 +127,7 @@ function validateResponse(response) {
 
 function generateFallbackResponse() {
   return `I can tell you about ${companyInfo.name}:
-  
+
 Our founder: ${companyInfo.team.founder}
 Our team: ${companyInfo.team.members.join(', ')}
 Our projects: ${companyInfo.projects.join(', ')}

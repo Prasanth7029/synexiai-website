@@ -15,6 +15,8 @@ import ScrollToTop    from "./components/ScrollToTop";
 import Layout         from "./components/Layout";
 import NewsPage       from './pages/NewsPage';
 
+
+
 export default function App() {
   useEffect(() => {
     AOS.init({
@@ -29,6 +31,7 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
+
       <Layout>
         <Routes>
           <Route path="/"               element={<HomePage />} />
