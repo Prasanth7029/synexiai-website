@@ -62,7 +62,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 py-16 px-4 sm:px-6 relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--bg-gradient)] py-16 px-4 sm:px-6 relative overflow-hidden transition-all duration-500">
       {/* Floating Particles Background */}
       <div className="absolute inset-0 z-0 hidden sm:block">
         {[...Array(15)].map((_, i) => (
@@ -97,7 +97,9 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               className={`fixed top-6 left-1/2 -translate-x-1/2 right-auto w-full max-w-xs px-6 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-3
-                ${status === "success" ? "bg-gradient-to-r from-green-600 to-emerald-700" : "bg-gradient-to-r from-red-600 to-rose-700"}`}
+                ${status === "success"
+                  ? "bg-green-600 dark:bg-emerald-700"
+                  : "bg-red-600 dark:bg-rose-700"}`}
             >
               {status === "success" ? (
                 <>

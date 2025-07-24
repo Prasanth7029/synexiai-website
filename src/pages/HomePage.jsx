@@ -42,7 +42,7 @@ export default function HomePage() {
     <>
       <HeroBanner />
 
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-white">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-[var(--text-color)]">
         {/* Features Section */}
         <section className="mb-24">
           <motion.div
@@ -54,7 +54,7 @@ export default function HomePage() {
             <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-green-400">
               The SynexiAI Tri-Force
             </h2>
-            <p className="text-lg md:text-xl text-gray-400 mb-10">
+            <p className="text-lg md:text-xl text-[var(--text-color)] mb-10">
               Everything we build stems from these 3 power pillars
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
