@@ -69,7 +69,7 @@ export default function VisionPage() {
       </Helmet>
 
       <ErrorBoundary>
-        <Container animate className="text-white relative overflow-hidden">
+        <Container animate className="text-white relative ">
           {/* Background elements */}
           <div className="absolute inset-0 overflow-hidden -z-10">
             <div className="hidden sm:block absolute top-0 left-1/4 w-[300px] h-[300px] bg-cyan-500/10 rounded-full blur-[100px] animate-float-slow" />

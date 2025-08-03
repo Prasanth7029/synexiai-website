@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import { fnUrl } from '../lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,7 +17,8 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaArrowUp,
-  FaTimes
+  FaTimes,
+  FaSpinner
 } from 'react-icons/fa';
 import { useMediaQuery } from 'react-responsive';
 
@@ -35,6 +36,23 @@ const CONTENT_TYPES = [
   { id: 'video', name: 'Videos' },
   { id: 'blog', name: 'Articles' }
 ];
+
+// Custom hook for debounce
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 // Helpers
 const formatDate = (dateString) => {
@@ -71,18 +89,27 @@ const getCategoryIcon = (categoryId) => {
 // Components
 const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) => {
   const [imageError, setImageError] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   return (
     <motion.div
       whileHover={{ y: layout === 'carousel' ? 0 : -5 }}
-      className={`relative bg-white/5 dark:bg-gray-900/60 backdrop-blur-sm border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-[480px]  ${
-        layout === 'carousel' ? (isMobile ? 'w-[92vw] max-w-[380px]' : 'w-[360px]') : 'w-full'
-      }`}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: 'spring', stiffness: 300 }}
+      className={`relative bg-white/5 dark:bg-gray-900/60 backdrop-blur-sm border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${
+        layout === 'carousel' ? (isMobile ? 'w-[85vw]' : 'w-[360px]') : 'w-full'
+      } h-[480px]`}
     >
       {/* Video */}
       {article.type === 'video' && (
-        <div className="relative pt-[56.25%] bg-black flex-shrink-0">
+        <div className="relative pt-[56.25%] bg-black flex-shrink-0 overflow-hidden rounded-t-xl">
+          {!videoLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
+              <FaSpinner className="animate-spin text-cyan-400 text-2xl" />
+            </div>
+          )}
           <iframe
             loading="lazy"
             src={article.url}
@@ -91,19 +118,27 @@ const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) =
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             className="absolute top-0 left-0 w-full h-full"
+            onLoad={() => setVideoLoaded(true)}
           />
         </div>
       )}
 
       {/* Image for article/blog */}
       {(article.type === 'article' || article.type === 'blog') && article.imageUrl && !imageError && (
-        <div className="h-48 overflow-hidden bg-gray-800">
+        <div className="h-48 overflow-hidden bg-gray-800 relative">
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <FaSpinner className="animate-spin text-cyan-400 text-xl" />
+            </div>
+          )}
           <img
             loading="lazy"
+            decoding="async"
             src={article.imageUrl}
             alt={article.title}
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            className={`w-full h-full object-cover transition-transform duration-300 hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             onError={() => setImageError(true)}
+            onLoad={() => setImageLoaded(true)}
           />
         </div>
       )}
@@ -133,12 +168,12 @@ const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) =
           </span>
         </div>
 
-        <h3 className="text-lg md:text-xl font-bold mb-2 text-white line-clamp-2">{article.title}</h3>
+        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-white line-clamp-2">{article.title}</h3>
         {article.description && (
           <p className="text-gray-300 mb-3 line-clamp-2 text-sm">{article.description}</p>
         )}
 
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex justify-between items-center mt-auto">
           <span className="text-xs font-medium text-gray-400 bg-gray-800/50 px-2 py-1 rounded">
             {article.source || 'Unknown source'}
           </span>
@@ -161,26 +196,28 @@ const ContentCarousel = React.memo(({ items, title, onViewAll, type, categories 
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const carouselRef = React.useRef(null);
 
-  const scrollLeft = () => {
+  const scrollLeft = useCallback(() => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;
+      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
     }
-  };
+  }, [isMobile]);
 
-  const scrollRight = () => {
+  const scrollRight = useCallback(() => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
-  };
+  }, [isMobile]);
 
   return (
     <div className="mb-12 relative group">
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-xl md:text-2xl font-bold text-white">{title}</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">{title}</h2>
         {onViewAll && (
           <button
             onClick={onViewAll}
-            className="text-cyan-400 hover:text-cyan-300 flex items-center text-sm font-medium"
+            className="text-cyan-400 hover:text-cyan-300 flex items-center text-sm font-medium active:scale-95 transition-transform"
           >
             View all <FaArrowRight className="ml-1 h-3 w-3" />
           </button>
@@ -191,11 +228,16 @@ const ContentCarousel = React.memo(({ items, title, onViewAll, type, categories 
         <div
           ref={carouselRef}
           className="flex space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            '&::-webkit-scrollbar': { display: 'none' }
+          }}
         >
           {items.map((item, index) => (
             <div
               key={`${type}-${item.id}-${index}`}
-              className="flex-shrink-0 snap-start w-[360px] h-[480px]"
+              className="flex-shrink-0 snap-start w-[85vw] sm:w-[360px] h-[480px]"
             >
               <ContentCard
                 article={item}
@@ -210,13 +252,19 @@ const ContentCarousel = React.memo(({ items, title, onViewAll, type, categories 
           <>
             <button
               onClick={scrollLeft}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-gray-800 hover:bg-gray-700 rounded-full p-2 shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-gray-800 hover:bg-gray-700 rounded-full p-2 shadow-lg z-10 ${
+                isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+              } transition-opacity active:scale-90`}
+              aria-label="Scroll left"
             >
               <FaChevronLeft className="text-white text-lg" />
             </button>
             <button
               onClick={scrollRight}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-gray-800 hover:bg-gray-700 rounded-full p-2 shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-gray-800 hover:bg-gray-700 rounded-full p-2 shadow-lg z-10 ${
+                isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+              } transition-opacity active:scale-90`}
+              aria-label="Scroll right"
             >
               <FaChevronRight className="text-white text-lg" />
             </button>
@@ -247,7 +295,7 @@ const CategorySection = React.memo(({
   return (
     <section id={category.id} className="mb-16 scroll-mt-16">
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white flex items-center">
           {getCategoryIcon(category.id) && (
             <span className="mr-3">{getCategoryIcon(category.id)}</span>
           )}
@@ -258,7 +306,7 @@ const CategorySection = React.memo(({
         {onViewAll && (
           <button
             onClick={() => onViewAll(category.id)}
-            className="text-cyan-400 hover:text-cyan-300 flex items-center text-sm font-medium"
+            className="text-cyan-400 hover:text-cyan-300 flex items-center text-sm font-medium active:scale-95 transition-transform"
           >
             View all <FaArrowRight className="ml-1 h-3 w-3" />
           </button>
@@ -270,7 +318,7 @@ const CategorySection = React.memo(({
           <button
             key={type.id}
             onClick={() => setActiveContentType(type.id)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center ${
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center active:scale-95 ${
               activeContentType === type.id
                 ? 'bg-gray-700 text-white shadow'
                 : 'text-gray-400 hover:text-gray-300 hover:bg-gray-700/30'
@@ -392,6 +440,7 @@ export default function NewsPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeContentType, setActiveContentType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [errorCount, setErrorCount] = useState(0);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -412,7 +461,7 @@ export default function NewsPage() {
       });
 
       try {
-        const [newsResults, videoResults, rssResults] = await Promise.all([
+        const requests = [
           Promise.all(categoriesToFetch.map(cat =>
             wrap(axios.get(`${fnUrl('news-proxy')}?category=${cat}`))
           )),
@@ -422,7 +471,9 @@ export default function NewsPage() {
           Promise.all(categoriesToFetch.map(cat =>
             wrap(axios.get(`${fnUrl('rss-proxy')}?category=${cat}`))
           ))
-        ]);
+        ];
+
+        const [newsResults, videoResults, rssResults] = await Promise.all(requests);
 
         const allArticles = [
           ...newsResults.flatMap(r => r.data.map(item => ({ ...item, type: 'article' }))),
@@ -447,8 +498,8 @@ export default function NewsPage() {
       if (activeCategory !== 'all' && article.category !== activeCategory) {
         return false;
       }
-      if (searchTerm) {
-        const term = searchTerm.toLowerCase();
+      if (debouncedSearchTerm) {
+        const term = debouncedSearchTerm.toLowerCase();
         return (
           article.title?.toLowerCase().includes(term) ||
           (article.description && article.description.toLowerCase().includes(term)) ||
@@ -457,7 +508,7 @@ export default function NewsPage() {
       }
       return true;
     });
-  }, [articles, activeCategory, searchTerm]);
+  }, [articles, activeCategory, debouncedSearchTerm]);
 
   const trendingArticles = useMemo(() => {
     return [...articles]
@@ -465,19 +516,19 @@ export default function NewsPage() {
       .slice(0, 3);
   }, [articles]);
 
-  const handleViewAll = (categoryId) => {
+  const handleViewAll = useCallback((categoryId) => {
     setActiveCategory(categoryId);
     if (activeCategory === categoryId) {
       document.getElementById(categoryId)?.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, [activeCategory]);
 
-  const clearSearch = () => {
+  const clearSearch = useCallback(() => {
     setSearchTerm('');
-  };
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-gray-100 pb-20">
       {/* Sticky Header */}
       <header className="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -496,7 +547,7 @@ export default function NewsPage() {
               {isMobile ? (
                 <button
                   onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+                  className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors active:scale-95"
                   aria-label="Toggle menu"
                 >
                   {showMobileMenu ? (
@@ -513,7 +564,7 @@ export default function NewsPage() {
                     <button
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors active:scale-95 ${
                         activeCategory === cat.id
                           ? 'bg-gray-700 text-white shadow'
                           : 'text-gray-300 hover:bg-gray-700/50'
@@ -542,7 +593,7 @@ export default function NewsPage() {
                 {searchTerm && (
                   <button
                     onClick={clearSearch}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 active:scale-95"
                   >
                     <FaTimes className="w-4 h-4" />
                   </button>
@@ -559,6 +610,7 @@ export default function NewsPage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               className="overflow-hidden bg-gray-800/50"
             >
               <div className="px-4 pb-4 grid grid-cols-2 gap-2">
@@ -569,7 +621,7 @@ export default function NewsPage() {
                       setActiveCategory(cat.id);
                       setShowMobileMenu(false);
                     }}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors active:scale-95 ${
                       activeCategory === cat.id
                         ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white'
                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
@@ -605,12 +657,13 @@ export default function NewsPage() {
             <motion.div
               animate={{
                 rotate: 360,
-                scale: [1, 1.1, 1]
+                scale: [1, 1.2, 1],
+                opacity: [0.8, 1, 0.8]
               }}
               transition={{
-                duration: 1.2,
+                duration: 1.5,
                 repeat: Infinity,
-                ease: "linear"
+                ease: "easeInOut"
               }}
               className="rounded-full h-14 w-14 border-t-2 border-b-2 border-cyan-500"
             />
@@ -627,16 +680,17 @@ export default function NewsPage() {
                 <motion.div
                   initial={{ scale: 0.9 }}
                   animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
                   className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-5 py-1.5 rounded-full mb-5 text-xs font-medium tracking-wide"
                 >
                   Industry Insights
                 </motion.div>
-                <h1 className="text-4xl md:text-5xl font-bold mb-5">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5">
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400">
                     Tech & Innovation Pulse
                   </span>
                 </h1>
-                <p className="text-gray-300 max-w-3xl mx-auto text-lg">
+                <p className="text-gray-300 max-w-3xl mx-auto text-base sm:text-lg">
                   Stay updated with the latest news, videos, and blogs in AI, database technologies, and renewable energy.
                 </p>
               </motion.section>
@@ -647,9 +701,10 @@ export default function NewsPage() {
               <motion.section
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
                 className="mb-16"
               >
-                <h2 className="text-2xl font-bold text-white mb-5">Trending Now</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-5">Trending Now</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {trendingArticles.map(article => (
                     <ContentCard
@@ -700,7 +755,7 @@ export default function NewsPage() {
                 <div className="text-5xl mb-3 text-gray-500">🔍</div>
                 <h3 className="text-xl font-bold text-gray-300 mb-2">No content found</h3>
                 <p className="text-gray-500 max-w-md mx-auto">
-                  {searchTerm ? 'Try a different search term' : 'No articles available for this category'}
+                  {debouncedSearchTerm ? 'Try a different search term' : 'No articles available for this category'}
                 </p>
               </motion.div>
             )}
@@ -710,9 +765,10 @@ export default function NewsPage() {
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
                 className="mt-16 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 border border-gray-700 rounded-xl p-6"
               >
-                <h3 className="text-2xl font-bold text-cyan-400 mb-5 text-center">Market Insights</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-cyan-400 mb-5 text-center">Market Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   {[
                     {
@@ -737,6 +793,7 @@ export default function NewsPage() {
                     <motion.div
                       key={index}
                       whileHover={{ y: -5 }}
+                      whileTap={{ scale: 0.98 }}
                       className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}
                     >
                       <h4 className="text-lg font-bold text-white mb-2">{item.title}</h4>
@@ -753,11 +810,12 @@ export default function NewsPage() {
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
                 className="mt-16 text-center"
               >
                 <div className="bg-gradient-to-r from-cyan-900/30 to-teal-900/30 border border-gray-700 rounded-xl p-6 max-w-2xl mx-auto">
-                  <h3 className="text-2xl md:text-3xl font-bold text-cyan-300 mb-3">Stay Informed</h3>
-                  <p className="text-gray-300 mb-5">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-300 mb-3">Stay Informed</h3>
+                  <p className="text-gray-300 mb-5 text-base sm:text-lg">
                     Get weekly insights on AI breakthroughs, database innovations, and renewable energy advancements.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -766,7 +824,7 @@ export default function NewsPage() {
                       placeholder="Your email address"
                       className="px-4 py-2.5 rounded-lg bg-gray-800/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"
                     />
-                    <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors">
+                    <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors active:scale-95">
                       Subscribe
                     </button>
                   </div>
@@ -780,11 +838,12 @@ export default function NewsPage() {
         {!loading && (
           <motion.button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-6 right-6 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-full p-3 shadow-lg z-50 backdrop-blur-sm transition-all"
+            className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-full p-3 shadow-lg z-50 backdrop-blur-sm transition-all`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            aria-label="Back to top"
           >
             <FaArrowUp className="text-cyan-400" />
           </motion.button>

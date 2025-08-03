@@ -8,6 +8,13 @@ export const teamMembers = [
     expertise: ["Microservices", "AI Architecture", "Strategic Vision"],
     image: "/assets/team/prasanth.jpg",
   },
+  {
+   name: "Teja Peddiboyina",
+   role: "Chief Executive Officer",
+   bio: "Passionate about AI research and its transformative potential.",
+   expertise: ["System Architecture", "AI Research", "Product Development"],
+   image: "/assets/team/teja.jpg",
+    }
 ];
 
 export const coreValues = [
