@@ -1,12 +1,17 @@
-/** @type {import('tailwindcss').Config} */
+// tailwind.config.js
 export default {
-  darkMode: 'class', // Enable dark mode support
+  darkMode: 'class',
   content: [
-    "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
+    './index.html',
+    './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'Segoe UI', 'Helvetica', 'Arial', 'Apple Color Emoji', 'Segoe UI Emoji'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+      },
+    },
   },
-  plugins: [require('@tailwindcss/typography')],
-}
+  plugins: [], // ← remove @tailwindcss/forms if you don't have it installed
+};

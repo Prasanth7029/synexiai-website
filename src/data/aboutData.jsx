@@ -14,6 +14,13 @@ export const teamMembers = [
    bio: "Passionate about AI research and its transformative potential.",
    expertise: ["System Architecture", "AI Research", "Product Development"],
    image: "/assets/team/teja.jpg",
+    },
+    {
+    name: "Prakash Chowdary",
+    role: "Chief Technology Officer",
+    bio: "Expert in AI systems, passionate about building scalable solutions.",
+    expertise: ["AI Systems", "Cloud Architecture", "Scalability"],
+    image: "/assets/team/prakash.jpg",
     }
 ];
 

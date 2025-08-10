@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { fnUrl } from '../lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -22,47 +22,38 @@ import {
 } from 'react-icons/fa';
 import { useMediaQuery } from 'react-responsive';
 
-// Constants
+
+// --------------------------- Constants ---------------------------
 const CATEGORIES = [
-  { id: 'all', name: 'All News', icon: <FaRegNewspaper /> },
-  { id: 'ai', name: 'AI', icon: <FaRobot /> },
-  { id: 'database', name: 'Database', icon: <FaDatabase /> },
-  { id: 'renewable', name: 'Renewable', icon: <FaLeaf /> },
-  { id: 'innovation', name: 'Innovation', icon: <FaChartLine /> }
+  { id: 'all',       name: 'All News',   icon: <FaRegNewspaper /> },
+  { id: 'ai',        name: 'AI',         icon: <FaRobot /> },
+  { id: 'database',  name: 'Database',   icon: <FaDatabase /> },
+  { id: 'renewable', name: 'Renewable',  icon: <FaLeaf /> },
+  { id: 'innovation',name: 'Innovation', icon: <FaChartLine /> }
 ];
 
 const CONTENT_TYPES = [
-  { id: 'all', name: 'All' },
+  { id: 'all',   name: 'All' },
   { id: 'video', name: 'Videos' },
-  { id: 'blog', name: 'Articles' }
+  { id: 'blog',  name: 'Articles' }
 ];
 
-// Custom hook for debounce
+// --------------------------- Hooks & Helpers ---------------------------
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
-
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
+    const t = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(t);
   }, [value, delay]);
-
   return debouncedValue;
 };
 
-// Helpers
 const formatDate = (dateString) => {
   if (!dateString) return 'N/A';
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
+  const t = Date.parse(dateString);
+  if (!Number.isFinite(t)) return 'N/A';
+  const d = new Date(t);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
 const getCategoryColor = (category) => {
@@ -86,12 +77,64 @@ const getCategoryIcon = (categoryId) => {
   return icons[categoryId] || null;
 };
 
-// Components
-const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) => {
+// --------------------------- Inline Video Embed (lazy) ---------------------------
+function VideoEmbed({ src, title }) {
+  const [active, setActive] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const boxRef = useRef(null);
+
+  useEffect(() => {
+    if (!boxRef.current || active) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setVisible(true);
+        io.disconnect();
+      }
+    }, { rootMargin: '200px' });
+    io.observe(boxRef.current);
+    return () => io.disconnect();
+  }, [active]);
+
+  const start = () => setActive(true);
+
+  return (
+    <div ref={boxRef} className="relative pt-[56.25%] bg-black overflow-hidden rounded-t-xl">
+      {(active || visible) && (
+        <iframe
+          title={title}
+          src={active ? src : undefined}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="absolute inset-0 w-full h-full"
+        />
+      )}
+      {!active && (
+        <button
+          onClick={start}
+          className="absolute inset-0 w-full h-full flex items-center justify-center text-white/90
+                     bg-gradient-to-b from-black/40 to-black/50"
+          aria-label={`Play video: ${title}`}
+        >
+          <div className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 backdrop-blur">
+            ▶ Play
+          </div>
+        </button>
+      )}
+    </div>
+  );
+}
+
+// --------------------------- Content Card ---------------------------
+const ContentCard = React.memo(function ContentCard({ article, categories = [], layout = 'grid' }) {
   const [imageError, setImageError] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
+
+  const categoryMap = useMemo(
+    () => Object.fromEntries(categories.map(c => [c.id, c.name])),
+    [categories]
+  );
 
   return (
     <motion.div
@@ -104,23 +147,7 @@ const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) =
     >
       {/* Video */}
       {article.type === 'video' && (
-        <div className="relative pt-[56.25%] bg-black flex-shrink-0 overflow-hidden rounded-t-xl">
-          {!videoLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-              <FaSpinner className="animate-spin text-cyan-400 text-2xl" />
-            </div>
-          )}
-          <iframe
-            loading="lazy"
-            src={article.url}
-            title={`Video: ${article.title}`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="absolute top-0 left-0 w-full h-full"
-            onLoad={() => setVideoLoaded(true)}
-          />
-        </div>
+        <VideoEmbed src={article.url} title={`Video: ${article.title}`} />
       )}
 
       {/* Image for article/blog */}
@@ -134,8 +161,12 @@ const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) =
           <img
             loading="lazy"
             decoding="async"
+            width={640}
+            height={192} /* approximate aspect for 48px height in tailwind h-48; adjust if you know real dims */
             src={article.imageUrl}
-            alt={article.title}
+            srcSet={`${article.imageUrl} 640w`}
+            sizes="(max-width: 640px) 90vw, 360px"
+            alt={article.title || 'Article image'}
             className={`w-full h-full object-cover transition-transform duration-300 hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             onError={() => setImageError(true)}
             onLoad={() => setImageLoaded(true)}
@@ -155,8 +186,8 @@ const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) =
       <div className="p-5 flex-grow flex flex-col">
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center space-x-2">
-            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${getCategoryColor(article.category)}`}>
-              {categories.find(c => c.id === article.category)?.name || article.category}
+            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ring-1 ring-white/10 ${getCategoryColor(article.category)}`}>
+              {categoryMap[article.category] || article.category}
             </span>
             <span className="text-xs text-gray-400 flex items-center">
               {article.type === 'video' ? <FaVideo className="mr-1" /> : <FaNewspaper className="mr-1" />}
@@ -168,7 +199,10 @@ const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) =
           </span>
         </div>
 
-        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-white line-clamp-2">{article.title}</h3>
+        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-white line-clamp-2">
+          {article.title}
+        </h3>
+
         {article.description && (
           <p className="text-gray-300 mb-3 line-clamp-2 text-sm">{article.description}</p>
         )}
@@ -192,9 +226,10 @@ const ContentCard = React.memo(({ article, categories = [], layout = 'grid' }) =
   );
 });
 
-const ContentCarousel = React.memo(({ items, title, onViewAll, type, categories }) => {
+// --------------------------- Carousel ---------------------------
+const ContentCarousel = React.memo(function ContentCarousel({ items, title, onViewAll, type, categories }) {
   const isMobile = useMediaQuery({ maxWidth: 767 });
-  const carouselRef = React.useRef(null);
+  const carouselRef = useRef(null);
 
   const scrollLeft = useCallback(() => {
     if (carouselRef.current) {
@@ -227,22 +262,18 @@ const ContentCarousel = React.memo(({ items, title, onViewAll, type, categories 
       <div className="relative">
         <div
           ref={carouselRef}
-          className="flex space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory"
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            '&::-webkit-scrollbar': { display: 'none' }
-          }}
+          className="flex space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory
+                     [scroll-snap-type:x_proximity] [scroll-behavior:smooth] [-webkit-overflow-scrolling:touch]"
         >
           {items.map((item, index) => (
             <div
-              key={`${type}-${item.id}-${index}`}
+              key={`${type}-${item.url || item.id || index}-${index}`}
               className="flex-shrink-0 snap-start w-[85vw] sm:w-[360px] h-[480px]"
             >
               <ContentCard
                 article={item}
                 layout="carousel"
-                categories={categories}
+                categories={CATEGORIES}
               />
             </div>
           ))}
@@ -275,14 +306,15 @@ const ContentCarousel = React.memo(({ items, title, onViewAll, type, categories 
   );
 });
 
-const CategorySection = React.memo(({
+// --------------------------- Category Section ---------------------------
+const CategorySection = React.memo(function CategorySection({
   category,
   articles,
   categories,
   onViewAll,
   activeContentType,
   setActiveContentType
-}) => {
+}) {
   const [filteredArticles, videos, blogs] = useMemo(() => {
     const filtered = articles.filter(a => a.category === category.id);
     return [
@@ -291,6 +323,8 @@ const CategorySection = React.memo(({
       filtered.filter(a => a.type === 'blog' || a.type === 'article')
     ];
   }, [articles, category.id]);
+
+  const VISIBLE_MAX = 21; // defensive cap for slower devices
 
   return (
     <section id={category.id} className="mb-16 scroll-mt-16">
@@ -318,6 +352,7 @@ const CategorySection = React.memo(({
           <button
             key={type.id}
             onClick={() => setActiveContentType(type.id)}
+            aria-pressed={activeContentType === type.id}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center active:scale-95 ${
               activeContentType === type.id
                 ? 'bg-gray-700 text-white shadow'
@@ -359,30 +394,15 @@ const CategorySection = React.memo(({
         <>
           {videos.length > 0 ? (
             <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1
-                  }
-                }
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ staggerChildren: 0.06 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
             >
-              {videos.map(article => (
-                <motion.div
-                  key={`video-${article.id}`}
-                  className="h-full flex"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                >
+              {videos.slice(0, VISIBLE_MAX).map(article => (
+                <div key={`video-${article.url || article.id}`} className="h-full flex">
                   <ContentCard article={article} categories={categories} />
-                </motion.div>
+                </div>
               ))}
             </motion.div>
           ) : (
@@ -397,30 +417,15 @@ const CategorySection = React.memo(({
         <>
           {blogs.length > 0 ? (
             <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1
-                  }
-                }
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ staggerChildren: 0.06 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
             >
-              {blogs.map(article => (
-                <motion.div
-                  key={`blog-${article.id}`}
-                  className="h-full flex"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                >
+              {blogs.slice(0, VISIBLE_MAX).map(article => (
+                <div key={`blog-${article.url || article.id}`} className="h-full flex">
                   <ContentCard article={article} categories={categories} />
-                </motion.div>
+                </div>
               ))}
             </motion.div>
           ) : (
@@ -434,6 +439,7 @@ const CategorySection = React.memo(({
   );
 });
 
+// --------------------------- Page ---------------------------
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -446,44 +452,50 @@ export default function NewsPage() {
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   useEffect(() => {
+    const ac = new AbortController();
+    const key = 'synexiai:news:v1';
+
+    const cached = sessionStorage.getItem(key);
+    if (cached) {
+      try {
+        setArticles(JSON.parse(cached));
+        setLoading(false);
+        return () => ac.abort();
+      } catch (_) {}
+    }
+
     const fetchNews = async () => {
       setLoading(true);
       setErrorCount(0);
-
-      const categoriesToFetch = CATEGORIES
-        .filter(c => c.id !== 'all')
-        .map(c => c.id);
-
-      const wrap = (p) => p.catch((e) => {
-        console.error('Fetch error:', e);
-        setErrorCount(n => n + 1);
-        return { data: [] };
-      });
+      const categoriesToFetch = CATEGORIES.filter(c => c.id !== 'all').map(c => c.id);
+      const wrap = (p) => p.catch(() => ({ data: [] }));
 
       try {
-        const requests = [
-          Promise.all(categoriesToFetch.map(cat =>
-            wrap(axios.get(`${fnUrl('news-proxy')}?category=${cat}`))
-          )),
-          Promise.all(categoriesToFetch.map(cat =>
-            wrap(axios.get(`${fnUrl('video-proxy')}?category=${cat}`))
-          )),
-          Promise.all(categoriesToFetch.map(cat =>
-            wrap(axios.get(`${fnUrl('rss-proxy')}?category=${cat}`))
-          ))
-        ];
+        const [newsResults, videoResults, rssResults] = await Promise.all([
+          Promise.all(categoriesToFetch.map(cat => wrap(axios.get(`${fnUrl('news-proxy')}?category=${cat}`,  { signal: ac.signal })))),
+          Promise.all(categoriesToFetch.map(cat => wrap(axios.get(`${fnUrl('video-proxy')}?category=${cat}`, { signal: ac.signal })))),
+          Promise.all(categoriesToFetch.map(cat => wrap(axios.get(`${fnUrl('rss-proxy')}?category=${cat}`,   { signal: ac.signal })))),
+        ]);
 
-        const [newsResults, videoResults, rssResults] = await Promise.all(requests);
-
-        const allArticles = [
-          ...newsResults.flatMap(r => r.data.map(item => ({ ...item, type: 'article' }))),
-          ...videoResults.flatMap(r => r.data),
-          ...rssResults.flatMap(r => r.data)
+        const merged = [
+          ...newsResults.flatMap(r => (r.data || []).map(item => ({ ...item, type: 'article' }))),
+          ...videoResults.flatMap(r => r.data || []),
+          ...rssResults.flatMap(r => r.data || [])
         ].filter(Boolean);
 
-        setArticles(allArticles);
+        // Dedupe by URL/id
+        const seen = new Set();
+        const deduped = [];
+        for (const it of merged) {
+          const k = it.url || it.id;
+          if (!k || seen.has(k)) continue;
+          seen.add(k);
+          deduped.push(it);
+        }
+
+        setArticles(deduped);
+        sessionStorage.setItem(key, JSON.stringify(deduped));
       } catch (error) {
-        console.error('Failed to fetch articles:', error);
         setErrorCount(prev => prev + 1);
       } finally {
         setLoading(false);
@@ -491,19 +503,18 @@ export default function NewsPage() {
     };
 
     fetchNews();
+    return () => ac.abort();
   }, []);
 
   const filteredArticles = useMemo(() => {
     return articles.filter(article => {
-      if (activeCategory !== 'all' && article.category !== activeCategory) {
-        return false;
-      }
+      if (activeCategory !== 'all' && article.category !== activeCategory) return false;
       if (debouncedSearchTerm) {
         const term = debouncedSearchTerm.toLowerCase();
         return (
-          article.title?.toLowerCase().includes(term) ||
-          (article.description && article.description.toLowerCase().includes(term)) ||
-          (article.source && article.source.toLowerCase().includes(term))
+          (article.title || '').toLowerCase().includes(term) ||
+          (article.description || '').toLowerCase().includes(term) ||
+          (article.source || '').toLowerCase().includes(term)
         );
       }
       return true;
@@ -512,7 +523,7 @@ export default function NewsPage() {
 
   const trendingArticles = useMemo(() => {
     return [...articles]
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .sort((a, b) => Date.parse(b.date || '') - Date.parse(a.date || ''))
       .slice(0, 3);
   }, [articles]);
 
@@ -523,14 +534,12 @@ export default function NewsPage() {
     }
   }, [activeCategory]);
 
-  const clearSearch = useCallback(() => {
-    setSearchTerm('');
-  }, []);
+  const clearSearch = useCallback(() => setSearchTerm(''), []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-gray-100 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 text-gray-900 dark:text-gray-100 pb-20">
       {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 shadow-sm">
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col">
             <div className="flex justify-between items-center py-4">
@@ -539,42 +548,47 @@ export default function NewsPage() {
                 animate={{ opacity: 1 }}
                 className="text-2xl font-bold"
               >
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-teal-500">
                   Tech Pulse
                 </span>
               </motion.h1>
 
-              {isMobile ? (
-                <button
-                  onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors active:scale-95"
-                  aria-label="Toggle menu"
-                >
-                  {showMobileMenu ? (
-                    <FaTimes className="w-5 h-5 text-gray-300" />
-                  ) : (
-                    <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                  )}
-                </button>
-              ) : (
-                <div className="hidden md:flex space-x-1 bg-gray-800 rounded-lg p-1">
-                  {CATEGORIES.map(cat => (
-                    <button
-                      key={cat.id}
-                      onClick={() => setActiveCategory(cat.id)}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors active:scale-95 ${
-                        activeCategory === cat.id
-                          ? 'bg-gray-700 text-white shadow'
-                          : 'text-gray-300 hover:bg-gray-700/50'
-                      }`}
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {/* Right side: theme + categories (desktop) */}
+              <div className="flex items-center gap-3">
+                {!isMobile && (
+                  <div className="hidden md:flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+                    {CATEGORIES.map(cat => (
+                      <button
+                        key={cat.id}
+                        onClick={() => setActiveCategory(cat.id)}
+                        aria-current={activeCategory === cat.id ? 'page' : undefined}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors active:scale-95 ${
+                          activeCategory === cat.id
+                            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200/70 dark:hover:bg-gray-700/50'
+                        }`}
+                      >
+                        {cat.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {isMobile && (
+                  <button
+                    onClick={() => setShowMobileMenu(!showMobileMenu)}
+                    className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors active:scale-95"
+                    aria-label="Toggle menu"
+                  >
+                    {showMobileMenu ? (
+                      <FaTimes className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                    ) : (
+                      <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                      </svg>
+                    )}
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Search bar */}
@@ -586,14 +600,15 @@ export default function NewsPage() {
                 <input
                   type="text"
                   placeholder="Search AI, database, or renewable energy content..."
-                  className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-gray-800/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-gray-100/70 dark:bg-gray-800/50 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 {searchTerm && (
                   <button
                     onClick={clearSearch}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 active:scale-95"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 active:scale-95"
+                    aria-label="Clear search"
                   >
                     <FaTimes className="w-4 h-4" />
                   </button>
@@ -611,7 +626,7 @@ export default function NewsPage() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="overflow-hidden bg-gray-800/50"
+              className="overflow-hidden bg-gray-100 dark:bg-gray-800/50"
             >
               <div className="px-4 pb-4 grid grid-cols-2 gap-2">
                 {CATEGORIES.map(cat => (
@@ -624,7 +639,7 @@ export default function NewsPage() {
                     className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors active:scale-95 ${
                       activeCategory === cat.id
                         ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
                     <span className="mr-2">{cat.icon}</span>
@@ -643,10 +658,10 @@ export default function NewsPage() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-yellow-900/30 border border-yellow-500/20 rounded-lg p-3 mb-6 flex items-center"
+            className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-400/30 rounded-lg p-3 mb-6 flex items-center"
           >
-            <FaExclamationTriangle className="text-yellow-400 mr-3 flex-shrink-0" />
-            <p className="text-yellow-300 text-sm">
+            <FaExclamationTriangle className="text-yellow-500 mr-3 flex-shrink-0" />
+            <p className="text-yellow-700 dark:text-yellow-300 text-sm">
               {errorCount} data source{errorCount > 1 ? 's' : ''} failed to load. Some content may be missing.
             </p>
           </motion.div>
@@ -655,16 +670,8 @@ export default function NewsPage() {
         {loading ? (
           <div className="flex justify-center py-20">
             <motion.div
-              animate={{
-                rotate: 360,
-                scale: [1, 1.2, 1],
-                opacity: [0.8, 1, 0.8]
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+              animate={{ rotate: 360, scale: [1, 1.2, 1], opacity: [0.8, 1, 0.8] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
               className="rounded-full h-14 w-14 border-t-2 border-b-2 border-cyan-500"
             />
           </div>
@@ -690,7 +697,7 @@ export default function NewsPage() {
                     Tech & Innovation Pulse
                   </span>
                 </h1>
-                <p className="text-gray-300 max-w-3xl mx-auto text-base sm:text-lg">
+                <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg">
                   Stay updated with the latest news, videos, and blogs in AI, database technologies, and renewable energy.
                 </p>
               </motion.section>
@@ -698,17 +705,12 @@ export default function NewsPage() {
 
             {/* Trending Section */}
             {activeCategory === 'all' && trendingArticles.length > 0 && (
-              <motion.section
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="mb-16"
-              >
-                <h2 className="text-xl sm:text-2xl font-bold text-white mb-5">Trending Now</h2>
+              <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mb-16">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5">Trending Now</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {trendingArticles.map(article => (
+                  {trendingArticles.map((article, i) => (
                     <ContentCard
-                      key={`trending-${article.id}`}
+                      key={`trending-${article.url || article.id || i}`}
                       article={article}
                       categories={CATEGORIES}
                     />
@@ -722,7 +724,6 @@ export default function NewsPage() {
               CATEGORIES.filter(cat => cat.id !== 'all').map(category => {
                 const catArticles = articles.filter(a => a.category === category.id);
                 if (catArticles.length === 0) return null;
-
                 return (
                   <CategorySection
                     key={category.id}
@@ -747,13 +748,9 @@ export default function NewsPage() {
 
             {/* No results */}
             {filteredArticles.length === 0 && !loading && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-16"
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
                 <div className="text-5xl mb-3 text-gray-500">🔍</div>
-                <h3 className="text-xl font-bold text-gray-300 mb-2">No content found</h3>
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-300 mb-2">No content found</h3>
                 <p className="text-gray-500 max-w-md mx-auto">
                   {debouncedSearchTerm ? 'Try a different search term' : 'No articles available for this category'}
                 </p>
@@ -766,39 +763,19 @@ export default function NewsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="mt-16 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 border border-gray-700 rounded-xl p-6"
+                className="mt-16 bg-gradient-to-r from-cyan-900/10 to-teal-900/10 dark:from-cyan-900/20 dark:to-teal-900/20 border border-gray-200 dark:border-gray-700 rounded-xl p-6"
               >
-                <h3 className="text-xl sm:text-2xl font-bold text-cyan-400 mb-5 text-center">Market Insights</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-5 text-center">Market Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   {[
-                    {
-                      title: "AI Market Growth",
-                      value: "$1.8T",
-                      description: "Projected market value by 2030 at 38% CAGR",
-                      color: "from-purple-500 to-indigo-500"
-                    },
-                    {
-                      title: "Database Industry",
-                      value: "+24%",
-                      description: "Annual growth for AI-optimized database solutions",
-                      color: "from-cyan-500 to-blue-500"
-                    },
-                    {
-                      title: "Renewable Energy",
-                      value: "$2T",
-                      description: "Global investment by 2030, mostly in solar and wind",
-                      color: "from-green-500 to-emerald-500"
-                    }
+                    { title: "AI Market Growth",   value: "$1.8T", description: "Projected market value by 2030 at 38% CAGR", color: "from-purple-500 to-indigo-500" },
+                    { title: "Database Industry",  value: "+24%",  description: "Annual growth for AI-optimized database solutions", color: "from-cyan-500 to-blue-500" },
+                    { title: "Renewable Energy",   value: "$2T",   description: "Global investment by 2030, mostly in solar and wind", color: "from-green-500 to-emerald-500" }
                   ].map((item, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ y: -5 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}
-                    >
+                    <motion.div key={index} whileHover={{ y: -5 }} whileTap={{ scale: 0.98 }} className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}>
                       <h4 className="text-lg font-bold text-white mb-2">{item.title}</h4>
                       <div className="text-2xl font-bold text-white mb-2">{item.value}</div>
-                      <p className="text-gray-200 text-sm">{item.description}</p>
+                      <p className="text-white/90 text-sm">{item.description}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -807,22 +784,17 @@ export default function NewsPage() {
 
             {/* Newsletter */}
             {activeCategory === 'all' && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="mt-16 text-center"
-              >
-                <div className="bg-gradient-to-r from-cyan-900/30 to-teal-900/30 border border-gray-700 rounded-xl p-6 max-w-2xl mx-auto">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-300 mb-3">Stay Informed</h3>
-                  <p className="text-gray-300 mb-5 text-base sm:text-lg">
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-16 text-center">
+                <div className="bg-gradient-to-r from-cyan-900/10 to-teal-900/10 dark:from-cyan-900/30 dark:to-teal-900/30 border border-gray-200 dark:border-gray-700 rounded-xl p-6 max-w-2xl mx-auto">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-300 mb-3">Stay Informed</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mb-5 text-base sm:text-lg">
                     Get weekly insights on AI breakthroughs, database innovations, and renewable energy advancements.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <input
                       type="email"
                       placeholder="Your email address"
-                      className="px-4 py-2.5 rounded-lg bg-gray-800/50 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"
+                      className="px-4 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"
                     />
                     <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors active:scale-95">
                       Subscribe

@@ -3,6 +3,7 @@ import HeroBanner from "../components/HeroBanner";
 import { FaReact, FaServer, FaBell, FaChartLine, FaBrain } from "react-icons/fa";
 import FeatureCard from "../components/FeatureCard";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const features = [
   {
@@ -42,19 +43,20 @@ export default function HomePage() {
     <>
       <HeroBanner />
 
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-[var(--text-color)]">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20">
         {/* Features Section */}
         <section className="mb-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
+            viewport={{ once: true, amount: 0.2 }}
             className="text-center max-w-5xl mx-auto"
           >
             <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-green-400">
               The SynexiAI Tri-Force
             </h2>
-            <p className="text-lg md:text-xl text-[var(--text-color)] mb-10">
+            <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10">
               Everything we build stems from these 3 power pillars
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
@@ -77,7 +79,7 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
               What Powers SynexiAI
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
               Solutions born from the fusion of AI, cloud systems, and renewable intelligence
             </p>
           </motion.div>
@@ -85,7 +87,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
             {features.map((feature, index) => (
               <FeatureCard
-                key={index}
+                key={`${feature.title}-${index}`}
                 icon={feature.icon}
                 title={feature.title}
                 description={feature.description}
@@ -101,13 +103,13 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
             className="text-center max-w-4xl mx-auto"
           >
             <h3 className="text-3xl md:text-4xl font-bold text-white mb-8">
               "From <span className="text-cyan-400">Zero to Forever</span> — Building Systems That Last"
             </h3>
-            <p className="text-xl text-gray-300 leading-relaxed">
+            <p className="text-xl text-gray-200/90 leading-relaxed">
               Our philosophy centers on creating technology that evolves with time,
               solving tomorrow's problems with today's innovation. We architect systems
               that grow more valuable with each iteration.
@@ -121,22 +123,24 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
           >
             <h3 className="text-3xl md:text-4xl font-bold text-cyan-400 mb-8">
               Ready to Build the Future With Us?
             </h3>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-700 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
               Whether you're looking to collaborate, invest, or join our team, we're excited to connect.
             </p>
-            <motion.a
-              href="/contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xl font-semibold shadow-lg shadow-cyan-500/30 transition-all duration-300"
-            >
-              Get Started Today
-            </motion.a>
+
+            {/* Use Link to avoid full page refresh */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
+              <Link
+                to="/contact"
+                className="inline-block px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xl font-semibold shadow-lg shadow-cyan-500/30 transition-all duration-300"
+              >
+                Get Started Today
+              </Link>
+            </motion.div>
           </motion.div>
         </section>
       </div>
