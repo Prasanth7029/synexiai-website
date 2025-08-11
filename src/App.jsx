@@ -47,7 +47,7 @@ export default function App() {
     <Router>
       <ScrollToTop />
       <Layout>
-        <Suspense fallback={<div className="p-8 text-gray-300">Loading…</div>}>
+
           <Routes>
             <Route path="/"            element={<HomePage />} />
             <Route path="/about"       element={<AboutPage />} />
@@ -58,7 +58,7 @@ export default function App() {
             <Route path="/ai-news"     element={<NewsPage />} />
             <Route path="*"            element={<NotFound />} />
           </Routes>
-        </Suspense>
+
       </Layout>
     </Router>
   );

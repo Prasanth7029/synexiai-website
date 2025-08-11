@@ -1,7 +1,7 @@
 // src/components/ChatWidget.jsx
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
+import { chatAxios } from '../lib/chatAxios'
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaRobot, FaTimes, FaInfoCircle, FaUsers, FaProjectDiagram, FaHandshake } from 'react-icons/fa';
 import { IoMdSend } from 'react-icons/io';
@@ -153,7 +153,7 @@ export default function ChatWidget() {
       setError(null);
 
       try {
-        const { data } = await axios.post(
+        const { data } = await chatAxios.post(
           fnUrl('chat-assistant'),
           { messages: payload },
           { timeout: 10000, signal }
