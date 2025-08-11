@@ -1,20 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
-import ChatWidget from './ChatWidget';
+import ChatWidget from "./ChatWidget";
 
 export default function Layout({ children }) {
-  const location = useLocation();
 
   return (
-    <div className="flex flex-col min-h-screen  text-white">
+    <div className="flex flex-col min-h-screen text-white">
       {/* Header */}
       <Header />
 
       {/* Page Content */}
-      <main className="flex-grow">
+      <main id="main" className="min-h-screen">
         {children}
       </main>
 
@@ -26,6 +24,8 @@ export default function Layout({ children }) {
       >
         <Footer />
       </motion.div>
+
+      {/* Chat */}
       <ChatWidget />
     </div>
   );

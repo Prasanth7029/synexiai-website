@@ -25,6 +25,8 @@ export default function Footer() {
     { label: "Contact", path: "/contact" },
   ];
 
+  const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+
   return (
     <footer className="relative bg-gradient-to-b from-black to-[#0a0a0a] dark:bg-gradient-to-b dark:from-black dark:to-gray-900 text-white pt-20 pb-12 px-6 overflow-hidden border-t border-cyan-500/20">
       {/* Animated Background Elements */}
@@ -52,6 +54,8 @@ export default function Footer() {
             >
               <Link
                 to="/"
+                onClick={toTop}
+                data-scroll-top
                 className="bg-gradient-to-r from-cyan-400 to-teal-500 bg-clip-text text-transparent inline-block focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-black rounded"
               >
                 SynexiAI
@@ -76,6 +80,8 @@ export default function Footer() {
                 >
                   <Link
                     to={link.path}
+                    onClick={toTop}
+                    data-scroll-top
                     className="text-gray-300 hover:text-cyan-400 transition-colors duration-300 text-sm flex items-center group"
                   >
                     <span className="w-1 h-1 bg-cyan-400 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -127,14 +133,13 @@ export default function Footer() {
           </div>
 
           <div className="flex gap-6 text-gray-500">
-            <Link to="/privacy" className="hover:text-cyan-400 transition-colors">
+            <Link to="/privacy" onClick={toTop} data-scroll-top className="hover:text-cyan-400 transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="hover:text-cyan-400 transition-colors">
+            <Link to="/terms" onClick={toTop} data-scroll-top className="hover:text-cyan-400 transition-colors">
               Terms of Service
             </Link>
-            {/* ✅ match your route exactly */}
-            <Link to="/cookie-policy" className="hover:text-cyan-400 transition-colors">
+            <Link to="/cookie-policy" onClick={toTop} data-scroll-top className="hover:text-cyan-400 transition-colors">
               Cookie Policy
             </Link>
           </div>

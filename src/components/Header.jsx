@@ -158,7 +158,7 @@ export default function Header() {
   const socialLinks = useMemo(
     () => [
       { icon: <FiGithub />, url: "https://github.com/synexiai" },
-      { icon: <FiTwitter />, url: "https://twitter.com" }, // update when ready
+      { icon: <FiTwitter />, url: "https://twitter.com" },
       { icon: <FiLinkedin />, url: "https://www.linkedin.com/company/synexiai" },
     ],
     []

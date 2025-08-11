@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import Layout from './components/Layout';
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy.jsx";
 import TermsOfService from "./pages/legal/TermsOfService.jsx";
 import CookiePolicy from "./pages/legal/CookiePolicy.jsx";
+import LoaderScreen from './components/LoaderScreen';
 
-import { Suspense, lazy } from 'react';
-
+// Lazy pages
 const HomePage      = lazy(() => import('./pages/HomePage.jsx'));
 const AboutPage     = lazy(() => import('./pages/AboutPage.jsx'));
 const ProjectsPage  = lazy(() => import('./pages/ProjectsPage.jsx'));
@@ -43,37 +43,30 @@ function useDeferredAOS() {
   }, []);
 }
 
-function Fallback() {
-  return (
-    <div className="min-h-[40vh] grid place-items-center">
-      <div className="animate-pulse text-sm opacity-70">Loading…</div>
-    </div>
-  );
-}
-
 export default function App() {
   useDeferredAOS();
 
   return (
     <Router>
-      <ScrollToTop />
-      <Layout>
-        <Suspense fallback={<Fallback />}>
+      {/* Smooth behavior; also handles hash anchors */}
+      <ScrollToTop behavior="smooth" />
+      <Suspense fallback={<LoaderScreen />}>
+        <Layout>
           <Routes>
-            <Route path="/"             element={<HomePage />} />
-            <Route path="/about"        element={<AboutPage />} />
-            <Route path="/projects"     element={<ProjectsPage />} />
-            <Route path="/vision"       element={<VisionPage />} />
-            <Route path="/contact"      element={<ContactPage />} />
-            <Route path="/tech"         element={<TechStackPage />} />
-            <Route path="/ai-news"      element={<NewsPage />} />
-            <Route path="/privacy"      element={<PrivacyPolicy />} />
-            <Route path="/terms"        element={<TermsOfService />} />
+            <Route path="/"              element={<HomePage />} />
+            <Route path="/about"         element={<AboutPage />} />
+            <Route path="/projects"      element={<ProjectsPage />} />
+            <Route path="/vision"        element={<VisionPage />} />
+            <Route path="/contact"       element={<ContactPage />} />
+            <Route path="/tech"          element={<TechStackPage />} />
+            <Route path="/ai-news"       element={<NewsPage />} />
+            <Route path="/privacy"       element={<PrivacyPolicy />} />
+            <Route path="/terms"         element={<TermsOfService />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
-            <Route path="*"             element={<NotFound />} />
+            <Route path="*"              element={<NotFound />} />
           </Routes>
-        </Suspense>
-      </Layout>
+        </Layout>
+      </Suspense>
     </Router>
   );
 }
