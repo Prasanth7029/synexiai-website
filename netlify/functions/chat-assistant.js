@@ -1,138 +1,168 @@
+// netlify/functions/chat-assistant.js
 import OpenAI from "openai";
-import { companyInfo } from '../../src/lib/companyInfo.js';
+import { companyInfo } from "../../src/lib/companyInfo.js";
 
+// ---------- OpenAI client ----------
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  timeout: 10000 // 10 second timeout
+  timeout: 10000, // 10s
 });
 
-const strictSystemPrompt = `YOU MUST FOLLOW THESE RULES STRICTLY:
+// ---------- Helpers ----------
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 
-COMPANY INFORMATION (USE ONLY THESE DETAILS):
-- Name: ${companyInfo.name}
-- Mission: "${companyInfo.mission}"
-- Vision: "${companyInfo.vision}"
+const strictSystemPrompt =
+  "You are SynexiAI's assistant. Use ONLY the facts provided by the system/user. " +
+  "Never invent names, roles, or projects. Keep answers concise and factual.";
 
-TEAM:
-- Founder: ${companyInfo.team.founder}
-- Team Members: ${companyInfo.team.members.join(', ')}
+function classifyIntent(text = "") {
+  const t = (text || "").toLowerCase();
+  if (/(^|\b)(team|member|who.*(ceo|founder)|lead|cto)(\b|$)/i.test(t)) return "team";
+  if (/(project|working on|build|repo|github)/i.test(t)) return "projects";
+  if (/(collab|partner|invest|work with|contact)/i.test(t)) return "collab";
+  if (/(company|mission|vision|about)/i.test(t)) return "company";
+  return "other";
+}
 
-PROJECTS: ${companyInfo.projects.join(', ')}
-
-CONTACT:
-- Email: ${companyInfo.contact.email}
-- Phone: ${companyInfo.contact.phone}
-
-RESPONSE TEMPLATES:
-
-1. About company:
-"${companyInfo.name} is focused on ${companyInfo.mission}. Our vision is ${companyInfo.vision}."
-
-2. About team:
-"Our founder is ${companyInfo.team.founder}. Our team includes ${companyInfo.team.members.join(', ')}."
-
-3. About projects:
-"We're currently working on: ${companyInfo.projects.join(', ')}."
-
-4. For other questions:
-"I can answer questions about ${companyInfo.name}. Please ask about our team, projects, or mission."
-
-5. ALWAYS END WITH:
-"\n\nContact us:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}"
-
-DO NOT:
-- Make up names or positions
-- Add information not listed above
-- Deviate from these templates
-`;
-
-export async function handler(event) {
-  // Handle preflight OPTIONS request
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
-      },
-      body: ''
-    };
+function ensureContactTail(text = "") {
+  const email = companyInfo.contact.email;
+  const phone = companyInfo.contact.phone;
+  if (!text.includes(email) || !text.includes(phone)) {
+    const tail = `\n\nContact us:\nEmail: ${email}\nPhone: ${phone}`;
+    return (text || "") + tail;
   }
+  return text;
+}
 
-  try {
-    const { messages } = JSON.parse(event.body);
+function factsReply(kind) {
+  const { name, mission, vision, contact, team, projects } = companyInfo;
+  const members = team.members.join(", ");
+  const projectList = projects.join(", ");
 
-    // Prepare messages: enforce strict system prompt + user conversation
-    const systemMessage = {
-      role: "system",
-      content: strictSystemPrompt
-    };
-
-    const userMessages = messages.filter(m => m.role !== "system");
-
-    // Call OpenAI
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [systemMessage, ...userMessages],
-      temperature: 0.7
-    });
-
-    if (!response.choices?.[0]?.message) {
-      throw new Error("Invalid response format from OpenAI");
-    }
-
-    // Extract and validate the AI's reply
-    let reply = response.choices[0].message.content;
-    reply = validateResponse(reply);
-
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify({ reply })
-    };
-
-  } catch (error) {
-    console.error("Chat-assistant error:", error);
-    return {
-      statusCode: error.status || 500,
-      headers: {
-        "Content-Type": "application/json",
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify({
-        error: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-      })
-    };
+  switch (kind) {
+    case "team":
+      return ensureContactTail(
+        `Our founder is ${team.founder}. Key team members include: ${members}.`
+      );
+    case "projects":
+      return ensureContactTail(`Current projects: ${projectList}.`);
+    case "collab":
+      return ensureContactTail(
+        `We welcome collaborations! Contact ${contact.email} or call ${contact.phone}.`
+      );
+    case "company":
+      return ensureContactTail(`${name} is focused on ${mission}. Our vision is ${vision}.`);
+    default:
+      return ensureContactTail(
+        `I can answer questions about ${name}. Ask about our team, projects, or mission.`
+      );
   }
 }
 
-function validateResponse(response) {
-  const requiredInfo = [
+function safeParse(body) {
+  try {
+    return JSON.parse(body || "{}");
+  } catch {
+    return {};
+  }
+}
+
+// Basic validation: the reply must include at least one canonical fact
+function looksLikeFacts(text = "") {
+  const required = [
     companyInfo.name,
     companyInfo.team.founder,
     ...companyInfo.team.members,
     ...companyInfo.projects,
     companyInfo.contact.email,
-    companyInfo.contact.phone
+    companyInfo.contact.phone,
   ];
-
-  const isValid = requiredInfo.some(info => response.includes(info));
-  return isValid ? response : generateFallbackResponse();
+  return required.some((needle) => (text || "").includes(needle));
 }
 
-function generateFallbackResponse() {
-  return `I can tell you about ${companyInfo.name}:
+// ---------- Lambda handler ----------
+export async function handler(event) {
+  // CORS preflight
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 200, headers: CORS_HEADERS, body: "" };
+  }
 
-Our founder: ${companyInfo.team.founder}
-Our team: ${companyInfo.team.members.join(', ')}
-Our projects: ${companyInfo.projects.join(', ')}
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      body: JSON.stringify({ error: "Method not allowed" }),
+    };
+  }
 
-Contact us:
-Email: ${companyInfo.contact.email}
-Phone: ${companyInfo.contact.phone}`;
+  if (!process.env.OPENAI_API_KEY) {
+    return {
+      statusCode: 500,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      body: JSON.stringify({ error: "OPENAI_API_KEY is not set" }),
+    };
+  }
+
+  try {
+    const { messages = [] } = safeParse(event.body);
+    const userMessages = messages.filter((m) => m?.role !== "system");
+    const lastUser = userMessages[userMessages.length - 1]?.content || "";
+    const intent = classifyIntent(lastUser);
+
+    // For sensitive intents, return canonical facts immediately (0% chance to hallucinate)
+    if (intent !== "other") {
+      const reply = factsReply(intent);
+      return {
+        statusCode: 200,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        body: JSON.stringify({ reply }),
+      };
+    }
+
+    // Otherwise, allow the model to paraphrase — but be deterministic & constrained
+    const system = { role: "system", content: strictSystemPrompt };
+    const companyCard = {
+      role: "system",
+      content:
+        `FACTS:\n` +
+        `Name: ${companyInfo.name}\n` +
+        `Mission: ${companyInfo.mission}\n` +
+        `Vision: ${companyInfo.vision}\n` +
+        `Founder: ${companyInfo.team.founder}\n` +
+        `Team: ${companyInfo.team.members.join(", ")}\n` +
+        `Projects: ${companyInfo.projects.join(", ")}\n` +
+        `Contact: ${companyInfo.contact.email} | ${companyInfo.contact.phone}`,
+    };
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      temperature: 0,
+      max_tokens: 300,
+      messages: [system, companyCard, ...userMessages],
+    });
+
+    let reply = completion?.choices?.[0]?.message?.content || "";
+    if (!looksLikeFacts(reply)) {
+      // If the LLM tried to wander, snap back to generic facts
+      reply = factsReply("company");
+    }
+    reply = ensureContactTail(reply);
+
+    return {
+      statusCode: 200,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      body: JSON.stringify({ reply }),
+    };
+  } catch (error) {
+    console.error("chat-assistant error:", error);
+    return {
+      statusCode: 500,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      body: JSON.stringify({ error: error.message || "Unexpected error" }),
+    };
+  }
 }

@@ -22,7 +22,6 @@ import {
 } from 'react-icons/fa';
 import { useMediaQuery } from 'react-responsive';
 
-
 // --------------------------- Constants ---------------------------
 const CATEGORIES = [
   { id: 'all',       name: 'All News',   icon: <FaRegNewspaper /> },
@@ -141,7 +140,7 @@ const ContentCard = React.memo(function ContentCard({ article, categories = [], 
       whileHover={{ y: layout === 'carousel' ? 0 : -5 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 300 }}
-      className={`relative bg-white/5 dark:bg-gray-900/60 backdrop-blur-sm border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${
+      className={`relative bg-white/5 dark:bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${
         layout === 'carousel' ? (isMobile ? 'w-[85vw]' : 'w-[360px]') : 'w-full'
       } h-[480px]`}
     >
@@ -152,7 +151,7 @@ const ContentCard = React.memo(function ContentCard({ article, categories = [], 
 
       {/* Image for article/blog */}
       {(article.type === 'article' || article.type === 'blog') && article.imageUrl && !imageError && (
-        <div className="h-48 overflow-hidden bg-gray-800 relative">
+        <div className="h-48 overflow-hidden bg-black/40 relative">
           {!imageLoaded && (
             <div className="absolute inset-0 flex items-center justify-center">
               <FaSpinner className="animate-spin text-cyan-400 text-xl" />
@@ -162,7 +161,7 @@ const ContentCard = React.memo(function ContentCard({ article, categories = [], 
             loading="lazy"
             decoding="async"
             width={640}
-            height={192} /* approximate aspect for 48px height in tailwind h-48; adjust if you know real dims */
+            height={192}
             src={article.imageUrl}
             srcSet={`${article.imageUrl} 640w`}
             sizes="(max-width: 640px) 90vw, 360px"
@@ -189,33 +188,33 @@ const ContentCard = React.memo(function ContentCard({ article, categories = [], 
             <span className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ring-1 ring-white/10 ${getCategoryColor(article.category)}`}>
               {categoryMap[article.category] || article.category}
             </span>
-            <span className="text-xs text-gray-400 flex items-center">
+            <span className="text-xs text-gray-600 dark:text-gray-400 flex items-center">
               {article.type === 'video' ? <FaVideo className="mr-1" /> : <FaNewspaper className="mr-1" />}
               {article.type}
             </span>
           </div>
-          <span className="text-xs text-gray-400 flex items-center">
+          <span className="text-xs text-gray-600 dark:text-gray-400 flex items-center">
             <FaRegClock className="mr-1" /> {formatDate(article.date)}
           </span>
         </div>
 
-        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-white line-clamp-2">
+        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-gray-900 dark:text-white line-clamp-2">
           {article.title}
         </h3>
 
         {article.description && (
-          <p className="text-gray-300 mb-3 line-clamp-2 text-sm">{article.description}</p>
+          <p className="text-gray-700 dark:text-gray-300 mb-3 line-clamp-2 text-sm">{article.description}</p>
         )}
 
         <div className="flex justify-between items-center mt-auto">
-          <span className="text-xs font-medium text-gray-400 bg-gray-800/50 px-2 py-1 rounded">
+          <span className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-white/5 border border-white/10 px-2 py-1 rounded">
             {article.source || 'Unknown source'}
           </span>
           <a
             href={article.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-cyan-400 hover:text-cyan-300 text-sm font-medium flex items-center group"
+            className="text-cyan-500 hover:text-cyan-400 text-sm font-medium flex items-center group"
           >
             {article.type === 'video' ? 'Watch' : 'Read'}
             <FaArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
@@ -248,11 +247,11 @@ const ContentCarousel = React.memo(function ContentCarousel({ items, title, onVi
   return (
     <div className="mb-12 relative group">
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">{title}</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
         {onViewAll && (
           <button
             onClick={onViewAll}
-            className="text-cyan-400 hover:text-cyan-300 flex items-center text-sm font-medium active:scale-95 transition-transform"
+            className="text-cyan-500 hover:text-cyan-400 flex items-center text-sm font-medium active:scale-95 transition-transform"
           >
             View all <FaArrowRight className="ml-1 h-3 w-3" />
           </button>
@@ -283,18 +282,18 @@ const ContentCarousel = React.memo(function ContentCarousel({ items, title, onVi
           <>
             <button
               onClick={scrollLeft}
-              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-gray-800 hover:bg-gray-700 rounded-full p-2 shadow-lg z-10 ${
+              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${
                 isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-              } transition-opacity active:scale-90`}
+              } transition-opacity active:scale-90 backdrop-blur-sm`}
               aria-label="Scroll left"
             >
               <FaChevronLeft className="text-white text-lg" />
             </button>
             <button
               onClick={scrollRight}
-              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-gray-800 hover:bg-gray-700 rounded-full p-2 shadow-lg z-10 ${
+              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${
                 isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-              } transition-opacity active:scale-90`}
+              } transition-opacity active:scale-90 backdrop-blur-sm`}
               aria-label="Scroll right"
             >
               <FaChevronRight className="text-white text-lg" />
@@ -329,7 +328,7 @@ const CategorySection = React.memo(function CategorySection({
   return (
     <section id={category.id} className="mb-16 scroll-mt-16">
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white flex items-center">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center">
           {getCategoryIcon(category.id) && (
             <span className="mr-3">{getCategoryIcon(category.id)}</span>
           )}
@@ -340,14 +339,14 @@ const CategorySection = React.memo(function CategorySection({
         {onViewAll && (
           <button
             onClick={() => onViewAll(category.id)}
-            className="text-cyan-400 hover:text-cyan-300 flex items-center text-sm font-medium active:scale-95 transition-transform"
+            className="text-cyan-500 hover:text-cyan-400 flex items-center text-sm font-medium active:scale-95 transition-transform"
           >
             View all <FaArrowRight className="ml-1 h-3 w-3" />
           </button>
         )}
       </div>
 
-      <div className="mb-6 flex space-x-1 bg-gray-800/50 rounded-lg p-1">
+      <div className="mb-6 flex space-x-1 bg-white/5 rounded-lg p-1 border border-white/10">
         {CONTENT_TYPES.map(type => (
           <button
             key={type.id}
@@ -355,8 +354,8 @@ const CategorySection = React.memo(function CategorySection({
             aria-pressed={activeContentType === type.id}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center active:scale-95 ${
               activeContentType === type.id
-                ? 'bg-gray-700 text-white shadow'
-                : 'text-gray-400 hover:text-gray-300 hover:bg-gray-700/30'
+                ? 'bg-white/10 text-gray-900 dark:text-white shadow'
+                : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5'
             }`}
           >
             {type.name}
@@ -383,7 +382,7 @@ const CategorySection = React.memo(function CategorySection({
             />
           )}
           {filteredArticles.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-gray-600 dark:text-gray-400">
               No content found in this category
             </div>
           )}
@@ -406,7 +405,7 @@ const CategorySection = React.memo(function CategorySection({
               ))}
             </motion.div>
           ) : (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-gray-600 dark:text-gray-400">
               No videos found in this category
             </div>
           )}
@@ -429,7 +428,7 @@ const CategorySection = React.memo(function CategorySection({
               ))}
             </motion.div>
           ) : (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-gray-600 dark:text-gray-400">
               No articles found in this category
             </div>
           )}
@@ -442,7 +441,7 @@ const CategorySection = React.memo(function CategorySection({
 // --------------------------- Page ---------------------------
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // kept for logic (e.g., back-to-top visibility)
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeContentType, setActiveContentType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -528,18 +527,20 @@ export default function NewsPage() {
   }, [articles]);
 
   const handleViewAll = useCallback((categoryId) => {
-    setActiveCategory(categoryId);
-    if (activeCategory === categoryId) {
-      document.getElementById(categoryId)?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [activeCategory]);
+    setActiveCategory(prev => {
+      if (prev === categoryId) {
+        document.getElementById(categoryId)?.scrollIntoView({ behavior: 'smooth' });
+      }
+      return categoryId;
+    });
+  }, []);
 
   const clearSearch = useCallback(() => setSearchTerm(''), []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 text-gray-900 dark:text-gray-100 pb-20">
+    <div className="min-h-screen text-gray-900 dark:text-gray-100">
       {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm">
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-black/10 dark:bg-black/20 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col">
             <div className="flex justify-between items-center py-4">
@@ -556,7 +557,7 @@ export default function NewsPage() {
               {/* Right side: theme + categories (desktop) */}
               <div className="flex items-center gap-3">
                 {!isMobile && (
-                  <div className="hidden md:flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+                  <div className="hidden md:flex space-x-1 bg-white/5 dark:bg-white/5 rounded-lg p-1 border border-white/10">
                     {CATEGORIES.map(cat => (
                       <button
                         key={cat.id}
@@ -564,8 +565,8 @@ export default function NewsPage() {
                         aria-current={activeCategory === cat.id ? 'page' : undefined}
                         className={`px-4 py-2 rounded-md text-sm font-medium transition-colors active:scale-95 ${
                           activeCategory === cat.id
-                            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200/70 dark:hover:bg-gray-700/50'
+                            ? 'bg-white/10 text-gray-900 dark:text-white shadow'
+                            : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5'
                         }`}
                       >
                         {cat.name}
@@ -576,13 +577,13 @@ export default function NewsPage() {
                 {isMobile && (
                   <button
                     onClick={() => setShowMobileMenu(!showMobileMenu)}
-                    className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors active:scale-95"
+                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors active:scale-95 backdrop-blur"
                     aria-label="Toggle menu"
                   >
                     {showMobileMenu ? (
-                      <FaTimes className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                      <FaTimes className="w-5 h-5 text-white/90" />
                     ) : (
-                      <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                       </svg>
                     )}
@@ -600,14 +601,14 @@ export default function NewsPage() {
                 <input
                   type="text"
                   placeholder="Search AI, database, or renewable energy content..."
-                  className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-gray-100/70 dark:bg-gray-800/50 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-white/5 dark:bg-white/5 text-gray-900 dark:text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 {searchTerm && (
                   <button
                     onClick={clearSearch}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 active:scale-95"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200 active:scale-95"
                     aria-label="Clear search"
                   >
                     <FaTimes className="w-4 h-4" />
@@ -626,7 +627,7 @@ export default function NewsPage() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="overflow-hidden bg-gray-100 dark:bg-gray-800/50"
+              className="overflow-hidden bg-black/20 dark:bg-black/30 backdrop-blur-md border-t border-white/10"
             >
               <div className="px-4 pb-4 grid grid-cols-2 gap-2">
                 {CATEGORIES.map(cat => (
@@ -639,7 +640,7 @@ export default function NewsPage() {
                     className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors active:scale-95 ${
                       activeCategory === cat.id
                         ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white'
-                        : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                        : 'bg-white/10 text-white/90 hover:bg-white/20 border border-white/10'
                     }`}
                   >
                     <span className="mr-2">{cat.icon}</span>
@@ -658,159 +659,147 @@ export default function NewsPage() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-400/30 rounded-lg p-3 mb-6 flex items-center"
+            className="bg-yellow-50/70 dark:bg-yellow-900/30 border border-yellow-400/30 rounded-lg p-3 mb-6 flex items-center backdrop-blur"
           >
-            <FaExclamationTriangle className="text-yellow-500 mr-3 flex-shrink-0" />
-            <p className="text-yellow-700 dark:text-yellow-300 text-sm">
+            <FaExclamationTriangle className="text-yellow-600 dark:text-yellow-400 mr-3 flex-shrink-0" />
+            <p className="text-yellow-800 dark:text-yellow-300 text-sm">
               {errorCount} data source{errorCount > 1 ? 's' : ''} failed to load. Some content may be missing.
             </p>
           </motion.div>
         )}
 
-        {loading ? (
-          <div className="flex justify-center py-20">
+        {/* Hero Section */}
+        {activeCategory === 'all' && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-16 text-center"
+          >
             <motion.div
-              animate={{ rotate: 360, scale: [1, 1.2, 1], opacity: [0.8, 1, 0.8] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-              className="rounded-full h-14 w-14 border-t-2 border-b-2 border-cyan-500"
-            />
-          </div>
-        ) : (
-          <>
-            {/* Hero Section */}
-            {activeCategory === 'all' && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-16 text-center"
-              >
-                <motion.div
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                  className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-5 py-1.5 rounded-full mb-5 text-xs font-medium tracking-wide"
-                >
-                  Industry Insights
-                </motion.div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5">
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400">
-                    Tech & Innovation Pulse
-                  </span>
-                </h1>
-                <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg">
-                  Stay updated with the latest news, videos, and blogs in AI, database technologies, and renewable energy.
-                </p>
-              </motion.section>
-            )}
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+              className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-5 py-1.5 rounded-full mb-5 text-xs font-medium tracking-wide"
+            >
+              Industry Insights
+            </motion.div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400">
+                Tech & Innovation Pulse
+              </span>
+            </h1>
+            <p className="text-gray-800 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg">
+              Stay updated with the latest news, videos, and blogs in AI, database technologies, and renewable energy.
+            </p>
+          </motion.section>
+        )}
 
-            {/* Trending Section */}
-            {activeCategory === 'all' && trendingArticles.length > 0 && (
-              <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mb-16">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5">Trending Now</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {trendingArticles.map((article, i) => (
-                    <ContentCard
-                      key={`trending-${article.url || article.id || i}`}
-                      article={article}
-                      categories={CATEGORIES}
-                    />
-                  ))}
-                </div>
-              </motion.section>
-            )}
+        {/* Trending Section */}
+        {activeCategory === 'all' && trendingArticles.length > 0 && (
+          <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mb-16">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5">Trending Now</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {trendingArticles.map((article, i) => (
+                <ContentCard
+                  key={`trending-${article.url || article.id || i}`}
+                  article={article}
+                  categories={CATEGORIES}
+                />
+              ))}
+            </div>
+          </motion.section>
+        )}
 
-            {/* Category Content */}
-            {activeCategory === 'all' ? (
-              CATEGORIES.filter(cat => cat.id !== 'all').map(category => {
-                const catArticles = articles.filter(a => a.category === category.id);
-                if (catArticles.length === 0) return null;
-                return (
-                  <CategorySection
-                    key={category.id}
-                    category={category}
-                    articles={articles}
-                    categories={CATEGORIES}
-                    onViewAll={handleViewAll}
-                    activeContentType={activeContentType}
-                    setActiveContentType={setActiveContentType}
-                  />
-                );
-              })
-            ) : (
+        {/* Category Content */}
+        {activeCategory === 'all' ? (
+          CATEGORIES.filter(cat => cat.id !== 'all').map(category => {
+            const catArticles = articles.filter(a => a.category === category.id);
+            if (catArticles.length === 0) return null;
+            return (
               <CategorySection
-                category={CATEGORIES.find(c => c.id === activeCategory)}
-                articles={filteredArticles}
+                key={category.id}
+                category={category}
+                articles={articles}
                 categories={CATEGORIES}
+                onViewAll={handleViewAll}
                 activeContentType={activeContentType}
                 setActiveContentType={setActiveContentType}
               />
-            )}
+            );
+          })
+        ) : (
+          <CategorySection
+            category={CATEGORIES.find(c => c.id === activeCategory)}
+            articles={filteredArticles}
+            categories={CATEGORIES}
+            activeContentType={activeContentType}
+            setActiveContentType={setActiveContentType}
+          />
+        )}
 
-            {/* No results */}
-            {filteredArticles.length === 0 && !loading && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-                <div className="text-5xl mb-3 text-gray-500">🔍</div>
-                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-300 mb-2">No content found</h3>
-                <p className="text-gray-500 max-w-md mx-auto">
-                  {debouncedSearchTerm ? 'Try a different search term' : 'No articles available for this category'}
-                </p>
-              </motion.div>
-            )}
+        {/* No results */}
+        {filteredArticles.length === 0 && !loading && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
+            <div className="text-5xl mb-3 text-gray-500">🔍</div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-300 mb-2">No content found</h3>
+            <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+              {debouncedSearchTerm ? 'Try a different search term' : 'No articles available for this category'}
+            </p>
+          </motion.div>
+        )}
 
-            {/* Market Insights */}
-            {activeCategory === 'all' && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="mt-16 bg-gradient-to-r from-cyan-900/10 to-teal-900/10 dark:from-cyan-900/20 dark:to-teal-900/20 border border-gray-200 dark:border-gray-700 rounded-xl p-6"
-              >
-                <h3 className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-5 text-center">Market Insights</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {[
-                    { title: "AI Market Growth",   value: "$1.8T", description: "Projected market value by 2030 at 38% CAGR", color: "from-purple-500 to-indigo-500" },
-                    { title: "Database Industry",  value: "+24%",  description: "Annual growth for AI-optimized database solutions", color: "from-cyan-500 to-blue-500" },
-                    { title: "Renewable Energy",   value: "$2T",   description: "Global investment by 2030, mostly in solar and wind", color: "from-green-500 to-emerald-500" }
-                  ].map((item, index) => (
-                    <motion.div key={index} whileHover={{ y: -5 }} whileTap={{ scale: 0.98 }} className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}>
-                      <h4 className="text-lg font-bold text-white mb-2">{item.title}</h4>
-                      <div className="text-2xl font-bold text-white mb-2">{item.value}</div>
-                      <p className="text-white/90 text-sm">{item.description}</p>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.section>
-            )}
+        {/* Market Insights */}
+        {activeCategory === 'all' && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mt-16 bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-md"
+          >
+            <h3 className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-5 text-center">Market Insights</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {[
+                { title: "AI Market Growth",   value: "$1.8T", description: "Projected market value by 2030 at 38% CAGR", color: "from-purple-500 to-indigo-500" },
+                { title: "Database Industry",  value: "+24%",  description: "Annual growth for AI-optimized database solutions", color: "from-cyan-500 to-blue-500" },
+                { title: "Renewable Energy",   value: "$2T",   description: "Global investment by 2030, mostly in solar and wind", color: "from-green-500 to-emerald-500" }
+              ].map((item, index) => (
+                <motion.div key={index} whileHover={{ y: -5 }} whileTap={{ scale: 0.98 }} className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}>
+                  <h4 className="text-lg font-bold text-white mb-2">{item.title}</h4>
+                  <div className="text-2xl font-bold text-white mb-2">{item.value}</div>
+                  <p className="text-white/90 text-sm">{item.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+        )}
 
-            {/* Newsletter */}
-            {activeCategory === 'all' && (
-              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-16 text-center">
-                <div className="bg-gradient-to-r from-cyan-900/10 to-teal-900/10 dark:from-cyan-900/30 dark:to-teal-900/30 border border-gray-200 dark:border-gray-700 rounded-xl p-6 max-w-2xl mx-auto">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-300 mb-3">Stay Informed</h3>
-                  <p className="text-gray-700 dark:text-gray-300 mb-5 text-base sm:text-lg">
-                    Get weekly insights on AI breakthroughs, database innovations, and renewable energy advancements.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <input
-                      type="email"
-                      placeholder="Your email address"
-                      className="px-4 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"
-                    />
-                    <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors active:scale-95">
-                      Subscribe
-                    </button>
-                  </div>
-                </div>
-              </motion.section>
-            )}
-          </>
+        {/* Newsletter */}
+        {activeCategory === 'all' && (
+          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-16 text-center">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl mx-auto backdrop-blur-md">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-300 mb-3">Stay Informed</h3>
+              <p className="text-gray-800 dark:text-gray-300 mb-5 text-base sm:text-lg">
+                Get weekly insights on AI breakthroughs, database innovations, and renewable energy advancements.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-900 dark:text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"
+                />
+                <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors active:scale-95">
+                  Subscribe
+                </button>
+              </div>
+            </div>
+          </motion.section>
         )}
 
         {/* Back to top button */}
         {!loading && (
           <motion.button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-full p-3 shadow-lg z-50 backdrop-blur-sm transition-all`}
+            className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-3 shadow-lg z-50 backdrop-blur-sm transition-all`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.1 }}

@@ -8,31 +8,40 @@ import { IoMdSend } from 'react-icons/io';
 import { fnUrl } from '../lib/api.js';
 import { companyInfo } from '../lib/companyInfo.js';
 
-// Helper functions
-const AVATAR_URL = "/assets/logoSynexiai.png";
+/* -----------------------------------------------------------------------------
+   Helpers
+----------------------------------------------------------------------------- */
+const AVATAR_URL = '/assets/logoSynexiai.png';
 const now = () => new Date().toISOString();
 
-// Predefined quick questions
+// Quick actions
 const quickQuestions = [
-  {
-    icon: <FaInfoCircle className="mr-2" />,
-    text: "Tell me about your company"
-  },
-  {
-    icon: <FaUsers className="mr-2" />,
-    text: "Who is on your team?"
-  },
-  {
-    icon: <FaProjectDiagram className="mr-2" />,
-    text: "What projects are you working on?"
-  },
-  {
-    icon: <FaHandshake className="mr-2" />,
-    text: "How can we collaborate?"
-  }
+  { icon: <FaInfoCircle className="mr-2" />, text: 'Tell me about your company' },
+  { icon: <FaUsers className="mr-2" />, text: 'Who is on your team?' },
+  { icon: <FaProjectDiagram className="mr-2" />, text: 'What projects are you working on?' },
+  { icon: <FaHandshake className="mr-2" />, text: 'How can we collaborate?' },
+  { icon: <FaInfoCircle className="mr-2" />, text: 'Show me your site map' }, // optional RAG overview
 ];
 
-// Enhanced system prompt for the AI (not sent to server, just for initial message context)
+// Sanitize + linkify (avoid XSS; keep clickable links)
+function escapeHtml(s = '') {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+function linkify(text = '') {
+  const escaped = escapeHtml(text);
+  const urlRE = /(\b(https?|ftp):\/\/[^\s<]+)/ig;
+  return escaped.replace(
+    urlRE,
+    (url) =>
+      `<a href="${url}" target="_blank" rel="noopener noreferrer" class="underline decoration-cyan-400/60 hover:decoration-cyan-300">${url}</a>`
+  );
+}
+
+// System prompt stays client-side (for your initial greeting context only)
 const enhancedSystemPrompt = `You are the official AI assistant for ${companyInfo.name}. Follow these rules STRICTLY:
 
 COMPANY INFORMATION (USE ONLY THESE DETAILS):
@@ -47,30 +56,20 @@ COMPANY INFORMATION (USE ONLY THESE DETAILS):
 RESPONSE GUIDELINES:
 1. For company questions:
    "We are ${companyInfo.name}. ${companyInfo.mission} Our vision is ${companyInfo.vision}."
-
 2. For founder/team questions:
    "Our founder is ${companyInfo.team.founder}. Key team members include: ${companyInfo.team.members.join(', ')}."
-
 3. For project questions:
    "Current projects: ${companyInfo.projects.join(', ')}."
-
 4. For collaboration:
    "We welcome collaborations! Contact ${companyInfo.contact.email} or call ${companyInfo.contact.phone}."
-
 5. Unknown questions:
    "I specialize in ${companyInfo.name} information. Could you clarify your question?"
-
 6. ALWAYS end with:
    "\\n\\nFor direct inquiries:\\nEmail: ${companyInfo.contact.email}\\nPhone: ${companyInfo.contact.phone}"
 `;
 
-// Initial messages
 const initialMessages = [
-  {
-    role: 'system',
-    content: enhancedSystemPrompt,
-    timestamp: now(),
-  },
+  { role: 'system', content: enhancedSystemPrompt, timestamp: now() },
   {
     role: 'assistant',
     content: `👋 Hello! I'm your ${companyInfo.name} assistant.
@@ -86,6 +85,9 @@ Ask me anything!`,
   },
 ];
 
+/* -----------------------------------------------------------------------------
+   Component
+----------------------------------------------------------------------------- */
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState(initialMessages);
@@ -93,31 +95,28 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+
   const endRef = useRef(null);
   const inputRef = useRef(null);
   const controllerRef = useRef(null);
 
-  // Check for mobile devices
+  // Mobile detection
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Auto-open on desktop after 8 seconds
+  // Auto-open on desktop after 8s
   useEffect(() => {
     if (!isMobile) {
-      const timer = setTimeout(() => {
-        setOpen(true);
-      }, 8000);
-      return () => clearTimeout(timer);
+      const t = setTimeout(() => setOpen(true), 8000);
+      return () => clearTimeout(t);
     }
   }, [isMobile]);
 
-  // Scroll handling
+  // Scroll + focus
   useEffect(() => {
     if (open) {
       endRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -125,103 +124,101 @@ export default function ChatWidget() {
     }
   }, [messages, open]);
 
-  // Always show quick questions if only greeting is present or after user closes chat and reopens
-  const shouldShowQuickQuestions = () =>
-    messages.filter(m => m.role !== 'system').length <= 2;
-
-  const sendMessage = useCallback(async (messageContent = null) => {
-    const content = messageContent || input.trim();
-    if (!content || loading) return;
-
-    controllerRef.current = new AbortController();
-    const signal = controllerRef.current.signal;
-
-    const userMsg = {
-      role: 'user',
-      content: content,
-      timestamp: now(),
-    };
-
-    // Only keep last 4 messages for context (excluding system)
-    const payload = [
-      ...messages.filter(m => m.role !== 'system').slice(-4),
-      userMsg
-    ];
-
-    setMessages(prev => [...prev, userMsg]);
-    if (!messageContent) setInput('');
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Backend does validation, don't send company_info
-      const { data } = await axios.post(fnUrl('chat-assistant'), { messages: payload }, {
-        timeout: 10000,
-        signal
-      });
-
-      let responseContent;
-      if (data?.error) {
-        throw new Error(data.error);
-      } else if (data?.reply) {
-        responseContent = data.reply;
-      } else if (data?.choices?.[0]?.message?.content) {
-        responseContent = data.choices[0].message.content;
-      } else {
-        responseContent = `Thank you for your interest in ${companyInfo.name}! ` +
-          `We're focused on ${companyInfo.mission.toLowerCase()}.`;
-      }
-
-      // Ensure response ends with contact info
-      if (!responseContent.includes(companyInfo.contact.email)) {
-        responseContent += `\n\nFor direct inquiries:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`;
-      }
-
-      const aiMsg = {
-        role: 'assistant',
-        content: responseContent,
-        timestamp: now(),
-      };
-
-      setMessages(prev => [...prev, aiMsg]);
-
-    } catch (err) {
-      if (err.name === 'CanceledError' || err.message === 'canceled') return;
-
-      console.error('Chat API error:', err);
-      setError(err);
-
-      const errorContent = err.response?.data?.error?.message ||
-                         err.message ||
-                         'Sorry, I encountered an error. Please try again.';
-
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: `❗️ ${errorContent}\n\nContact us directly:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`,
-          timestamp: now()
-        },
-      ]);
-    } finally {
-      setLoading(false);
-      controllerRef.current = null;
-    }
-  }, [input, messages, loading]);
-
-  // Clean up pending requests
+  // Close on Escape
   useEffect(() => {
-    return () => {
-      if (controllerRef.current) {
-        controllerRef.current.abort();
-      }
-    };
+    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // Filter out system messages for display
-  const visibleMessages = messages.filter(m => m.role !== 'system');
+  // Quick suggestions only when greeting + first reply
+  const shouldShowQuickQuestions = () =>
+    messages.filter((m) => m.role !== 'system').length <= 2;
 
-  // Handle key events
+  // Send message
+  const sendMessage = useCallback(
+    async (messageContent = null) => {
+      const content = messageContent || input.trim();
+      if (!content || loading) return;
+
+      controllerRef.current = new AbortController();
+      const signal = controllerRef.current.signal;
+
+      const userMsg = { role: 'user', content, timestamp: now() };
+      const payload = [...messages.filter((m) => m.role !== 'system').slice(-4), userMsg];
+
+      setMessages((prev) => [...prev, userMsg]);
+      if (!messageContent) setInput('');
+      setLoading(true);
+      setError(null);
+
+      try {
+        const { data } = await axios.post(
+          fnUrl('chat-assistant'),
+          { messages: payload },
+          { timeout: 10000, signal }
+        );
+
+        let responseContent;
+        if (data?.error) throw new Error(data.error);
+        else if (data?.reply) responseContent = data.reply;
+        else if (data?.choices?.[0]?.message?.content) responseContent = data.choices[0].message.content;
+        else {
+          responseContent = `Thank you for your interest in ${companyInfo.name}! We're focused on ${companyInfo.mission.toLowerCase()}.`;
+        }
+
+        if (!responseContent.includes(companyInfo.contact.email)) {
+          responseContent += `\n\nFor direct inquiries:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`;
+        }
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: 'assistant',
+            content: responseContent,
+            timestamp: now(),
+            links: Array.isArray(data?.links) ? data.links : [],
+          },
+        ]);
+      } catch (err) {
+        if (err.name === 'CanceledError' || err.message === 'canceled') return;
+
+        console.error('Chat API error:', err);
+        setError(err);
+
+        const errorContent =
+          err.response?.data?.error?.message ||
+          err.message ||
+          'Sorry, I encountered an error. Please try again.';
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: 'assistant',
+            content: `❗️ ${errorContent}\n\nContact us directly:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`,
+            timestamp: now(),
+          },
+        ]);
+      } finally {
+        setLoading(false);
+        controllerRef.current = null;
+      }
+    },
+    [input, messages, loading]
+  );
+
+  // Abort in-flight request
+  const stopGeneration = () => {
+    try {
+      controllerRef.current?.abort();
+    } catch {}
+  };
+
+  // Cleanup on unmount
+  useEffect(() => () => controllerRef.current?.abort(), []);
+
+  const visibleMessages = messages.filter((m) => m.role !== 'system');
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -229,17 +226,23 @@ export default function ChatWidget() {
     }
   };
 
-  // Chat widget component
+  /* -----------------------------------------------------------------------------
+     UI (glassy look + a11y + link cards for RAG)
+  ----------------------------------------------------------------------------- */
   const widget = (
     <>
       {/* Floating toggle button */}
       <motion.button
+        type="button"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
+        whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => setOpen(o => !o)}
-        className={`fixed ${isMobile ? 'bottom-4 right-4 p-3' : 'bottom-6 right-6 p-4'} z-[9999] bg-gradient-to-r from-cyan-600 to-blue-600 rounded-full shadow-xl text-white hover:from-cyan-700 hover:to-blue-700 transition-colors`}
+        onClick={() => setOpen((o) => !o)}
+        className={`fixed ${isMobile ? 'bottom-4 right-4 p-3' : 'bottom-6 right-6 p-4'} z-[9999]
+          rounded-full shadow-2xl text-white
+          bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700
+          ring-1 ring-white/20 backdrop-blur-md`}
         aria-label={open ? 'Close chat' : 'Open chat'}
       >
         {open ? <FaTimes size={isMobile ? 18 : 20} /> : <FaRobot size={isMobile ? 18 : 20} />}
@@ -253,60 +256,93 @@ export default function ChatWidget() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className={`fixed ${isMobile ? 'bottom-16 right-2 left-2 w-auto' : 'bottom-20 right-6 w-96'} z-[9999] max-h-[80vh] flex flex-col bg-gray-50 dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700`}
+            className={`fixed ${isMobile ? 'bottom-16 right-2 left-2 w-auto' : 'bottom-20 right-6 w-[380px]'} z-[9999]
+              max-h-[80vh] flex flex-col overflow-hidden
+              rounded-2xl shadow-2xl ring-1 ring-white/10
+              bg-white/5 dark:bg-white/5 backdrop-blur-xl`}
+            aria-live="polite"
           >
-            {/* Header with gradient */}
-            <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 text-white">
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-cyan-600/90 to-blue-600/90 text-white shadow-md">
               <div className="flex items-center">
-                <img src={AVATAR_URL} alt="Company Logo" className="w-7 h-7 rounded-full mr-2" />
+                <img src={AVATAR_URL} alt="Company Logo" className="w-7 h-7 rounded-md mr-2 ring-1 ring-white/20" />
                 <span className="font-semibold">{companyInfo.name} Assistant</span>
               </div>
-              <button
-                onClick={() => setOpen(false)}
-                className="text-white hover:text-gray-200 p-1 focus:outline-none"
-                aria-label="Close chat"
-              >
-                <FaTimes size={16} />
-              </button>
+              <div className="flex items-center gap-2">
+                {loading && (
+                  <button
+                    type="button"
+                    onClick={stopGeneration}
+                    className="px-2 py-1 text-xs rounded-md bg-white/10 hover:bg-white/20 border border-white/20"
+                    aria-label="Stop generating"
+                  >
+                    Stop
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="text-white/90 hover:text-white p-1 focus:outline-none"
+                  aria-label="Close chat"
+                >
+                  <FaTimes size={16} />
+                </button>
+              </div>
             </div>
 
-            {/* Messages container */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-4">
+            {/* Messages */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-transparent to-black/5">
               {visibleMessages.map((message, index) => (
                 <motion.div
                   key={`${message.timestamp}-${index}`}
                   initial={{ opacity: 0, y: message.role === 'user' ? 10 : -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`flex max-w-[90%] ${message.role === 'user' ? 'ml-auto justify-end' : 'mr-auto justify-start'}`}
+                  className={`flex max-w-[92%] ${message.role === 'user' ? 'ml-auto justify-end' : 'mr-auto justify-start'}`}
                 >
-                  <div
-                    className={`p-3 rounded-lg ${message.role === 'user'
-                      ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-none'
-                      : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 shadow-sm rounded-bl-none border border-gray-200 dark:border-gray-700'}`}
-                    dangerouslySetInnerHTML={{
-                      __html: message.content.replace(
-                        /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig,
-                        url => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">${url}</a>`
-                      ).replace(/\n/g, '<br>')
-                    }}
-                  />
+                  <div className="flex flex-col">
+                    <div
+                      className={`px-3 py-2 sm:px-4 sm:py-3 rounded-2xl text-sm leading-relaxed
+                        ${message.role === 'user'
+                          ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-sm shadow-lg'
+                          : 'text-gray-900 dark:text-gray-100 bg-white/10 border border-white/15 backdrop-blur-md shadow-lg rounded-bl-sm'}`}
+                      // Safe render (escape + linkify + line breaks)
+                      dangerouslySetInnerHTML={{
+                        __html: linkify(message.content || '').replace(/\n/g, '<br>'),
+                      }}
+                    />
+
+                    {/* Optional: render RAG site links if function returns them */}
+                    {message.links?.length > 0 && (
+                      <div className="mt-2 grid grid-cols-1 gap-2">
+                        {message.links.map((l, i) => (
+                          <a
+                            key={`${l.path}-${i}`}
+                            href={l.path}
+                            className="block px-3 py-2 rounded-xl bg-white/10 border border-white/15 backdrop-blur-md
+                                       hover:bg-white/15 transition text-sm text-gray-900 dark:text-gray-100"
+                          >
+                            <div className="font-medium">{l.title}</div>
+                            <div className="text-xs opacity-75">{l.path}</div>
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               ))}
 
-              {/* Quick questions (only show after initial message or when chat is cleared) */}
+              {/* Quick questions */}
               {shouldShowQuickQuestions() && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="grid grid-cols-2 gap-2 mt-4"
-                >
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="grid grid-cols-2 gap-2 mt-2">
                   {quickQuestions.map((q, i) => (
                     <button
+                      type="button"
                       key={i}
                       onClick={() => sendMessage(q.text)}
-                      className="flex items-center p-2 text-xs bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      className="flex items-center p-2 text-xs rounded-xl transition-all
+                                 bg-white/10 hover:bg-white/15 border border-white/15
+                                 text-gray-900 dark:text-gray-100 backdrop-blur-md"
                     >
                       {q.icon}
                       <span className="text-left">{q.text}</span>
@@ -315,18 +351,14 @@ export default function ChatWidget() {
                 </motion.div>
               )}
 
-              {/* Loading indicator */}
+              {/* Loading bubble */}
               {loading && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex mr-auto justify-start"
-                >
-                  <div className="p-3 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-none shadow-sm border border-gray-200 dark:border-gray-700">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex mr-auto justify-start">
+                  <div className="px-3 py-2 rounded-2xl rounded-bl-sm bg-white/10 border border-white/15 backdrop-blur-md shadow-lg text-gray-900 dark:text-gray-100">
                     <div className="flex space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
-                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" />
+                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.2s' }} />
+                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.4s' }} />
                     </div>
                   </div>
                 </motion.div>
@@ -335,36 +367,49 @@ export default function ChatWidget() {
               <div ref={endRef} />
             </div>
 
-            {/* Input area */}
-            <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            {/* Input */}
+            <div className="p-3 border-t border-white/10 bg-white/5 backdrop-blur-md">
               {error && (
-                <div className="mb-2 px-3 py-2 text-xs text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/50 rounded">
+                <div className="mb-2 px-3 py-2 text-xs text-rose-600 dark:text-rose-300 bg-rose-100/70 dark:bg-rose-900/40 rounded-lg">
                   Error: {error.message}
                 </div>
               )}
-              <div className="flex items-center space-x-2">
+
+              <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}
                   type="text"
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={(e) => {
+                    setInput(e.target.value);
+                    if (error) setError(null);
+                  }}
                   onKeyDown={handleKeyDown}
                   placeholder="Type your message..."
                   disabled={loading}
-                  className="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50"
+                  className="flex-1 px-4 py-2 rounded-xl
+                             bg-white/10 text-gray-900 dark:text-gray-100
+                             placeholder:text-gray-500
+                             border border-white/15 focus:outline-none focus:ring-2 focus:ring-cyan-400/50
+                             disabled:opacity-50 backdrop-blur-md"
                   aria-label="Type your message"
                 />
                 <button
+                  type="button"
                   onClick={() => sendMessage()}
                   disabled={loading || !input.trim()}
-                  className="p-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-lg hover:from-cyan-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="p-2 rounded-xl shadow-md
+                             bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700
+                             text-white transition-colors
+                             disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Send message"
                 >
                   <IoMdSend size={18} />
                 </button>
               </div>
-              <div className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
-                Powered by {companyInfo.name} • <a href="/privacy" className="hover:underline">Privacy Policy</a>
+
+              <div className="mt-2 text-[11px] text-center text-gray-600 dark:text-gray-400">
+                Powered by {companyInfo.name} • <a href="/privacy" className="underline hover:opacity-80">Privacy Policy</a>
               </div>
             </div>
           </motion.div>
