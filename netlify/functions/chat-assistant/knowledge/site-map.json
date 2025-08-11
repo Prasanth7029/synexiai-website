@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2025-08-11T09:08:12.096Z",
+  "routes": [
+    "/aboutpage",
+    "/contactpage",
+    "/homepage",
+    "/newspage",
+    "/notfound",
+    "/projectspage",
+    "/public/404",
+    "/techstackpage",
+    "/visionpage"
+  ]
+}

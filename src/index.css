@@ -34,6 +34,17 @@
     font-family: 'Inter', ui-sans-serif, system-ui, "Segoe UI", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    /* ===== Compatibility aliases (used across pages/components) ===== */
+    --text-color: var(--color-text);
+    --card-text: var(--color-text);
+    --card-bg: var(--surface);
+    --border-color: var(--color-border);
+    --primary: var(--brand-cyan);
+    --secondary: var(--brand-cyan-600);
+
+    /* Background overlay token used by some pages */
+    --bg-gradient: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
   }
 
   .dark {
@@ -60,6 +71,17 @@
                linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
 
     color-scheme: dark;
+
+    /* ===== Compatibility aliases (dark) ===== */
+    --text-color: var(--color-text);
+    --card-text: var(--color-text);
+    --card-bg: var(--surface);
+    --border-color: var(--color-border);
+    --primary: var(--brand-cyan);
+    --secondary: var(--brand-cyan-600);
+
+    /* Non-blocking page overlay gradient */
+    --bg-gradient: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
   }
 
   html {
@@ -83,10 +105,7 @@
     background-attachment: fixed, fixed, fixed;
   }
 
-  body {
-    margin: 0;
-    padding: 0;
-  }
+  body { margin: 0; padding: 0; }
 
   /* Typography */
   h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
@@ -169,8 +188,13 @@
   /* Float animations */
   @keyframes float { 0%{transform:translateY(0)}50%{transform:translateY(-14px)}100%{transform:translateY(0)} }
   @keyframes float-slow { 0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)} }
+  @keyframes float-medium { 0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)} }
+  @keyframes float-fast { 0%{transform:translateY(0)}50%{transform:translateY(-18px)}100%{transform:translateY(0)} }
+
   .animate-float { animation: float 6s ease-in-out infinite; }
   .animate-float-slow { animation: float-slow 12s ease-in-out infinite; }
+  .animate-float-medium { animation: float-medium 9s ease-in-out infinite; }
+  .animate-float-fast { animation: float-fast 4.5s ease-in-out infinite; }
 
   /* Simple entrance */
   @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
@@ -182,6 +206,39 @@
   }
   .line-clamp-3 {
     display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  /* ===== Utilities referenced by legal pages ===== */
+  .section-title {
+    @apply text-2xl font-semibold mt-10 mb-4 pb-2 border-b;
+    border-color: var(--border-color);
+  }
+  .link-accent { color: var(--primary); }
+  .link-accent:hover { text-decoration: underline; }
+
+  .card-secondary {
+    background: rgba(255,255,255,0.6);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+  }
+  .dark .card-secondary { background: rgba(17,17,17,0.6); }
+
+  .badge-check {
+    @apply inline-block rounded-full p-1 mr-3 mt-1;
+    background: var(--primary);
+    color: #fff;
+    width: 1.5rem; height: 1.5rem;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M5 13l4 4L19 7'/%3E%3C/svg%3E") center/70% no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M5 13l4 4L19 7'/%3E%3C/svg%3E") center/70% no-repeat;
+  }
+
+  .dot-accent {
+    @apply mr-2;
+    display: inline-block;
+    width: 0.6rem; height: 0.6rem;
+    background: var(--primary);
+    border-radius: 9999px;
+    margin-top: 0.4rem;
   }
 }
 

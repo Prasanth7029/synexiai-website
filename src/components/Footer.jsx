@@ -133,7 +133,8 @@ export default function Footer() {
             <Link to="/terms" className="hover:text-cyan-400 transition-colors">
               Terms of Service
             </Link>
-            <Link to="/cookies" className="hover:text-cyan-400 transition-colors">
+            {/* ✅ match your route exactly */}
+            <Link to="/cookie-policy" className="hover:text-cyan-400 transition-colors">
               Cookie Policy
             </Link>
           </div>
