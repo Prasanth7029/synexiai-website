@@ -9,6 +9,9 @@ import { LoadingProvider } from "./lib/LoadingProvider.jsx";
 import LoadingOverlay from "./components/LoadingOverlay.jsx";
 import { attachAxiosLoading } from "./lib/setupAxiosLoading.js";
 
+// ✅ New import for persona context
+import { PersonaProvider } from "./context/PersonaContext.jsx";
+
 // Debug polyfill and error handling
 if (typeof window !== 'undefined') {
   if (typeof window.debug === 'undefined') {
@@ -34,10 +37,12 @@ if (!import.meta.env.PROD) {
   root.render(
     <React.StrictMode>
       <HelmetProvider>
-        <LoadingProvider>
-          <App />
-          <LoadingOverlay />
-        </LoadingProvider>
+        <PersonaProvider>
+          <LoadingProvider>
+            <App />
+            <LoadingOverlay />
+          </LoadingProvider>
+        </PersonaProvider>
       </HelmetProvider>
     </React.StrictMode>
   );
@@ -45,10 +50,12 @@ if (!import.meta.env.PROD) {
   // PROD: StrictMode OFF (optional, but recommended)
   root.render(
     <HelmetProvider>
-      <LoadingProvider>
-        <App />
-        <LoadingOverlay />
-      </LoadingProvider>
+      <PersonaProvider>
+        <LoadingProvider>
+          <App />
+          <LoadingOverlay />
+        </LoadingProvider>
+      </PersonaProvider>
     </HelmetProvider>
   );
 }

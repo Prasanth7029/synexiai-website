@@ -1,15 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import HeroBanner from "../components/HeroBanner";
-import { FaReact, FaServer, FaBell, FaChartLine, FaBrain } from "react-icons/fa";
 import FeatureCard from "../components/FeatureCard";
+import { FaReact, FaServer, FaBell, FaChartLine, FaBrain } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { partnerOrgs, testimonials, milestones } from "../content/socialProof.js";
+import SocialProofSection from "../components/social/SocialProofSection.jsx";
+import { projects } from "../content/projects.js";
+import ProjectsSection from "../components/projects/ProjectsSection.jsx";
+
+
+
+// ✅ NEW: persona-aware content
+import { usePersona } from "../context/PersonaContext.jsx";
+import { personaCopy } from "../content/personaCopy.js";
+import usePersonaDetector from "../hooks/usePersonaDetector.js";
+// (Optional) If you want a visible toggle on the page:
+import PersonaSwitch from "../components/PersonaSwitch.jsx";
+import GlobeSection from "../components/visuals/GlobeSection.jsx";
+import AIPipeline from "../components/visuals/AIPipeline.jsx";
+import MetricCard from "../components/visuals/MetricCard.jsx";
+
 
 const features = [
   {
     icon: <FaReact className="text-4xl text-cyan-400" />,
     title: "Modular Architecture",
-    description: "Solutions born from the fusion of AI, cloud systems, and renewable intelligence",
+    description:
+      "Solutions born from the fusion of AI, cloud systems, and renewable intelligence",
     delay: 0.1,
   },
   {
@@ -39,12 +57,82 @@ const features = [
 ];
 
 export default function HomePage() {
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  // ✅ Persona-aware copy
+  usePersonaDetector(); // enables click-based hints anywhere using data-persona="..."
+  const { persona } = usePersona();
+  const p = personaCopy[persona] || personaCopy.general;
+
   return (
     <>
       {/* Keep HeroBanner clean—let the global background from index.css show */}
-      <HeroBanner />
+      <HeroBanner
+        // ✅ Light persona-aware text handoff to HeroBanner (optional, if HeroBanner uses props)
+        title={p.heroTitle}
+        subtitle={p.heroSubtitle}
+        // You can also ignore the above props if HeroBanner is standalone
+      />
 
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">
+        {/* Persona intro row */}
+        <section className="mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col md:flex-row md:items-end md:justify-between gap-4"
+          >
+            <div>
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
+                {p.heroTitle}
+              </h1>
+              <p className="mt-3 text-lg sm:text-xl opacity-90">{p.heroSubtitle}</p>
+            </div>
+
+            {/* If you want a visible persona switcher on the page, uncomment: */}
+             <PersonaSwitch />
+          </motion.div>
+
+          {/* Quick persona‑specific CTAs */}
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            {p.ctas?.map((cta) => (
+              <Link
+                key={cta.label}
+                to={cta.to}
+                className="relative group inline-flex items-center rounded-full border border-[var(--border-color)] px-5 py-2 text-sm backdrop-blur-sm hover:shadow-lg transition"
+                data-persona={persona} // reinforces current persona on click
+              >
+                <span className="relative z-10">{cta.label}</span>
+                <span
+                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  style={{ background: "var(--border-glow)" }}
+                />
+              </Link>
+            ))}
+          </div>
+          {/* ---- NEW: Interactive Visuals ---- */}
+            <GlobeSection size="sm" align="right" />
+
+            <div className="mb-20 grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <AIPipeline />
+              </div>
+              <div className="lg:col-span-1">
+                <MetricCard />
+              </div>
+            </div>
+        </section>
+
+        {/* Social Proof Section */}
+        <SocialProofSection logos={partnerOrgs} stats={milestones} quotes={testimonials} />
+
+        {/* Projects Section */}
+        <ProjectsSection items={projects} title="Featured Projects" preview limit={6} />
+
+
+
         {/* Features Section */}
         <section id="tri-force" aria-labelledby="tri-force-title" className="mb-24">
           <motion.div
@@ -125,7 +213,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Mission Statement (convert heavy gradient to glass to respect global bg) */}
+        {/* Mission Statement */}
         <section
           id="mission"
           aria-labelledby="mission-title"
@@ -164,12 +252,12 @@ export default function HomePage() {
               Whether you're looking to collaborate, invest, or join our team, we're excited to connect.
             </p>
 
-            {/* Use Link to avoid full page refresh */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
               <Link
                 to="/contact"
                 className="inline-block px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xl font-semibold shadow-lg shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                 aria-label="Go to contact page to get started"
+                data-persona={persona}
               >
                 Get Started Today
               </Link>

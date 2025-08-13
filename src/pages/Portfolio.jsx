@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 /* --------------------------------- Utils --------------------------------- */
 const GITHUB_USER = import.meta.env.VITE_GITHUB_USERNAME?.trim() || "Prasanth7029";
@@ -112,7 +113,7 @@ const PartnerLogo = ({ name, logo }) => (
 
 /* --------------------------------- Page ---------------------------------- */
 
-export default function ProjectsPage() {
+export default function Portfolio() {
   const [repos, setRepos] = useState([]);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -369,7 +370,7 @@ export default function ProjectsPage() {
           <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto mb-8">We’re building more than a company—we’re creating a movement that will redefine how technology serves humanity while protecting our planet.</p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a href="/contact" className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-4 rounded-lg font-medium text-lg transition-all text-center">Partner With Us</a>
+            <Link to="/contact" className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-4 rounded-lg font-medium text-lg transition-all text-center">Partner With Us</Link>
             <a href="/assets/synexisai-vision.pdf" className="bg-transparent border-2 border-cyan-500 text-cyan-400 hover:bg-cyan-500/10 px-8 py-4 rounded-lg font-medium text-lg transition-all text-center">Download Full Vision Deck</a>
           </div>
 
