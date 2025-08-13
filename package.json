@@ -14,7 +14,9 @@
     "preview": "vite preview",
     "kb:generate": "node scripts/generate-site-map.mjs",
     "kb:embed": "node scripts/kb-embed-if-ready.mjs",
-    "prebuild": "npm run kb:generate && npm run kb:embed"
+    "prebuild": "node scripts/generate-site-map.mjs && node scripts/kb-embed-if-ready.mjs",
+    "postbuild": "cp public/sitemap.xml dist/sitemap.xml && cp public/robots.txt dist/robots.txt",
+    "deploy:netlify": "vite build && netlify deploy --dir=dist --functions=netlify/functions --prod"
   },
   "dependencies": {
     "aos": "^2.3.4",

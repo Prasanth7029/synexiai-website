@@ -88,13 +88,22 @@ Ask me anything!`,
 /* -----------------------------------------------------------------------------
    Component
 ----------------------------------------------------------------------------- */
-export default function ChatWidget() {
+export default function ChatWidget({ side = 'right', z = 9999 }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState(initialMessages);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+
+  const sideBtn = side === 'left'
+    ? `${isMobile ? 'left-4' : 'left-6'}`
+    : `${isMobile ? 'right-4' : 'right-6'}`;
+
+  const sidePanel = side === 'left'
+    ? `${isMobile ? 'left-2' : 'left-6'}`
+    : `${isMobile ? 'right-2' : 'right-6'}`;
+
 
   const endRef = useRef(null);
   const inputRef = useRef(null);
@@ -239,7 +248,7 @@ export default function ChatWidget() {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen((o) => !o)}
-        className={`fixed ${isMobile ? 'bottom-4 right-4 p-3' : 'bottom-6 right-6 p-4'} z-[9999]
+        className={`fixed ${isMobile ? 'bottom-4' : 'bottom-6'} ${sideBtn} ${isMobile ? 'p-3' : 'p-4'} z-[${z}]
           rounded-full shadow-2xl text-white
           bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700
           ring-1 ring-white/20 backdrop-blur-md`}
@@ -256,10 +265,10 @@ export default function ChatWidget() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className={`fixed ${isMobile ? 'bottom-16 right-2 left-2 w-auto' : 'bottom-20 right-6 w-[380px]'} z-[9999]
-              max-h-[80vh] flex flex-col overflow-hidden
-              rounded-2xl shadow-2xl ring-1 ring-white/10
-              bg-white/5 dark:bg-white/5 backdrop-blur-xl`}
+             className={`fixed ${isMobile ? 'bottom-16' : 'bottom-20'} ${sidePanel} ${isMobile ? 'w-[92vw] max-w-[420px]' : 'w-[380px]'} z-[${z}]
+             max-h-[80dvh] flex flex-col overflow-hidden
+             rounded-2xl shadow-2xl ring-1 ring-white/10
+             bg-white/5 dark:bg-white/5 backdrop-blur-xl`}
             aria-live="polite"
           >
             {/* Header */}

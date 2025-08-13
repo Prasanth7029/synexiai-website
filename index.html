@@ -1,31 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="h-full">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <base href="/" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="SynexiAI - Your AI-powered assistant for seamless task management, innovation, and future tech." />
+    <!-- Viewport & color scheme -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="color-scheme" content="light dark" />
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- SEO -->
+    <title>SynexiAI — AI, Cloud & Renewable Intelligence</title>
+    <meta name="description" content="Global-by-design systems: AI microservices, cloud-native apps, and energy-aware infrastructure." />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://www.synexiai.online/#/" />
 
-    <meta name="robots" content="index, follow" />
+    <!-- OpenGraph / Twitter -->
+    <meta property="og:title" content="SynexiAI — AI, Cloud & Renewable Intelligence" />
+    <meta property="og:description" content="AI + Clean Infrastructure, anywhere on Earth." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.synexiai.online/" />
+    <meta property="og:image" content="/social/og-cover.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SynexiAI — AI, Cloud & Renewable Intelligence" />
+    <meta name="twitter:description" content="AI + Clean Infrastructure, anywhere on Earth." />
+    <meta name="twitter:image" content="/social/og-cover.jpg" />
+
+    <!-- Icons / PWA (add the files when ready) -->
     <link rel="icon" href="/assets/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Fonts (performance: preconnect) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
 
-    <title>SynexiAI</title>
+    <!-- Organization JSON-LD -->
+    <script type="application/ld+json">
+        {
+            "@context":"https://schema.org",
+            "@type":"Organization",
+            "name":"SynexiAI",
+            "url":"https://www.synexiai.online/",
+            "logo":"https://www.synexiai.online/icons/icon-512.png",
+            "sameAs":["https://github.com/Prasanth7029"]
+        }
+    </script>
 </head>
-<body class="text-[var(--text-color)] font-sans">
-<noscript>You need to enable JavaScript to run this app.</noscript>
+
+<body class="h-full text-[var(--text-color)] font-sans">
+<!-- No-JS fallback with useful links (HashRouter-friendly) -->
+<noscript>
+    <style>
+        .ns-card{max-width:720px;margin:2rem auto;padding:1rem;border:1px solid #e5e7eb;border-radius:12px;font:14px/1.5 system-ui;color:#111}
+        .ns-links a{display:inline-block;margin:.25rem .5rem;color:#0369a1;text-decoration:none}
+    </style>
+    <div class="ns-card">
+        <strong>SynexiAI</strong> — This site needs JavaScript. Quick links:
+        <div class="ns-links" style="margin-top:.5rem">
+            <a href="#/">Home</a>
+            <a href="#/projects">Projects</a>
+            <a href="#/portfolio">Portfolio</a>
+            <a href="#/about">About</a>
+            <a href="#/contact">Contact</a>
+        </div>
+    </div>
+</noscript>
+
 <div id="root"></div>
-<script type="module" src="/src/main.jsx"></script>
+
+<!-- Boot theme before paint -->
 <script>
-    (function() {
+    (function () {
       try {
         var saved = localStorage.getItem('theme');
         var dark = saved ? saved === 'dark'
-          : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
         var root = document.documentElement;
         if (dark) root.classList.add('dark');
         root.setAttribute('data-theme', dark ? 'dark' : 'light');
@@ -33,5 +84,7 @@
     })();
 </script>
 
+<!-- Vite entry -->
+<script type="module" src="/src/main.jsx"></script>
 </body>
 </html>

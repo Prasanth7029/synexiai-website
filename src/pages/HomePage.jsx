@@ -9,132 +9,98 @@ import SocialProofSection from "../components/social/SocialProofSection.jsx";
 import { projects } from "../content/projects.js";
 import ProjectsSection from "../components/projects/ProjectsSection.jsx";
 
-
-
-// ✅ NEW: persona-aware content
+// ✅ Persona-aware content
 import { usePersona } from "../context/PersonaContext.jsx";
 import { personaCopy } from "../content/personaCopy.js";
 import usePersonaDetector from "../hooks/usePersonaDetector.js";
-// (Optional) If you want a visible toggle on the page:
+// Optional on-page toggle
 import PersonaSwitch from "../components/PersonaSwitch.jsx";
-import GlobeSection from "../components/visuals/GlobeSection.jsx";
 import AIPipeline from "../components/visuals/AIPipeline.jsx";
 import MetricCard from "../components/visuals/MetricCard.jsx";
 
-
 const features = [
-  {
-    icon: <FaReact className="text-4xl text-cyan-400" />,
-    title: "Modular Architecture",
-    description:
-      "Solutions born from the fusion of AI, cloud systems, and renewable intelligence",
-    delay: 0.1,
-  },
-  {
-    icon: <FaServer className="text-4xl text-cyan-400" />,
-    title: "AI Microservices",
-    description: "Scalable AI-powered dashboards and microservice ecosystems",
-    delay: 0.2,
-  },
-  {
-    icon: <FaBell className="text-4xl text-cyan-400" />,
-    title: "Real-Time Systems",
-    description: "Notification layers and seamless third-party integrations",
-    delay: 0.3,
-  },
-  {
-    icon: <FaChartLine className="text-4xl text-cyan-400" />,
-    title: "Data Applications",
-    description: "Cloud-native, data-driven applications with actionable insights",
-    delay: 0.4,
-  },
-  {
-    icon: <FaBrain className="text-4xl text-cyan-400" />,
-    title: "Innovation Engine",
-    description: "The digital core of SynexiAI's future technologies",
-    delay: 0.5,
-  },
+  { icon: <FaReact className="text-4xl text-cyan-400" />, title: "Modular Architecture", description: "Solutions born from the fusion of AI, cloud systems, and renewable intelligence", delay: 0.1 },
+  { icon: <FaServer className="text-4xl text-cyan-400" />, title: "AI Microservices", description: "Scalable AI-powered dashboards and microservice ecosystems", delay: 0.2 },
+  { icon: <FaBell className="text-4xl text-cyan-400" />, title: "Real-Time Systems", description: "Notification layers and seamless third-party integrations", delay: 0.3 },
+  { icon: <FaChartLine className="text-4xl text-cyan-400" />, title: "Data Applications", description: "Cloud-native, data-driven applications with actionable insights", delay: 0.4 },
+  { icon: <FaBrain className="text-4xl text-cyan-400" />, title: "Innovation Engine", description: "The digital core of SynexiAI's future technologies", delay: 0.5 },
 ];
 
 export default function HomePage() {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   // ✅ Persona-aware copy
-  usePersonaDetector(); // enables click-based hints anywhere using data-persona="..."
+  usePersonaDetector();
   const { persona } = usePersona();
   const p = personaCopy[persona] || personaCopy.general;
 
   return (
     <>
-      {/* Keep HeroBanner clean—let the global background from index.css show */}
-      <HeroBanner
-        // ✅ Light persona-aware text handoff to HeroBanner (optional, if HeroBanner uses props)
-        title={p.heroTitle}
-        subtitle={p.heroSubtitle}
-        // You can also ignore the above props if HeroBanner is standalone
-      />
+      {/* Keep HeroBanner clean */}
+      <HeroBanner title={p.heroTitle} subtitle={p.heroSubtitle} />
 
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">
+      {/* Everything below gets its own stacking context so it never hides under the hero */}
+      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">
         {/* Persona intro row */}
-        <section className="mb-12">
+        <section className="mb-12 scroll-mt-[calc(var(--header-h)+16px)]" id="intro">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col md:flex-row md:items-end md:justify-between gap-4"
+            className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 flex-wrap"
           >
-            <div>
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
+            <div className="min-w-0">
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight break-words">
                 {p.heroTitle}
               </h1>
               <p className="mt-3 text-lg sm:text-xl opacity-90">{p.heroSubtitle}</p>
             </div>
 
-            {/* If you want a visible persona switcher on the page, uncomment: */}
-             <PersonaSwitch />
+            {/* Optional visible persona switcher */}
+            <div className="min-w-0">
+              <PersonaSwitch />
+            </div>
           </motion.div>
 
-          {/* Quick persona‑specific CTAs */}
+          {/* Quick persona-specific CTAs */}
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {p.ctas?.map((cta) => (
               <Link
                 key={cta.label}
                 to={cta.to}
                 className="relative group inline-flex items-center rounded-full border border-[var(--border-color)] px-5 py-2 text-sm backdrop-blur-sm hover:shadow-lg transition"
-                data-persona={persona} // reinforces current persona on click
+                data-persona={persona}
               >
                 <span className="relative z-10">{cta.label}</span>
-                <span
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition"
-                  style={{ background: "var(--border-glow)" }}
-                />
+                <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition" style={{ background: "var(--border-glow)" }} />
               </Link>
             ))}
           </div>
-          {/* ---- NEW: Interactive Visuals ---- */}
-            <GlobeSection size="sm" align="right" />
 
-            <div className="mb-20 grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
-                <AIPipeline />
-              </div>
-              <div className="lg:col-span-1">
-                <MetricCard />
-              </div>
+          {/* Pipeline + metric cards */}
+          <div className="mb-20 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 min-w-0">
+              <AIPipeline />
             </div>
+            <div className="lg:col-span-1 min-w-0">
+              <MetricCard />
+            </div>
+          </div>
         </section>
 
         {/* Social Proof Section */}
-        <SocialProofSection logos={partnerOrgs} stats={milestones} quotes={testimonials} />
+        <section id="proof" className="scroll-mt-[calc(var(--header-h)+16px)]">
+          <SocialProofSection logos={partnerOrgs} stats={milestones} quotes={testimonials} />
+        </section>
 
         {/* Projects Section */}
-        <ProjectsSection items={projects} title="Featured Projects" preview limit={6} />
-
-
+        <section id="projects" className="scroll-mt-[calc(var(--header-h)+16px)]">
+          <ProjectsSection items={projects} title="Featured Projects" preview limit={6} />
+        </section>
 
         {/* Features Section */}
-        <section id="tri-force" aria-labelledby="tri-force-title" className="mb-24">
+        <section id="tri-force" aria-labelledby="tri-force-title" className="mb-24 scroll-mt-[calc(var(--header-h)+16px)]">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -152,35 +118,41 @@ export default function HomePage() {
               Everything we build stems from these 3 power pillars
             </p>
 
-            {/* Glass panel wrapper for cards */}
+            {/* Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-              <FeatureCard
-                icon={<FaBrain className="text-4xl text-cyan-400" />}
-                title="AI Innovation"
-                description="Next-gen ML, LLMs, and predictive systems"
-                delay={0.1}
-                className="bg-white/5 border border-white/10 backdrop-blur-sm"
-              />
-              <FeatureCard
-                icon={<FaServer className="text-4xl text-cyan-400" />}
-                title="Cloud & Databases"
-                description="Self-healing, scalable, hybrid cloud"
-                delay={0.2}
-                className="bg-white/5 border border-white/10 backdrop-blur-sm"
-              />
-              <FeatureCard
-                icon={<FaChartLine className="text-4xl text-green-400" />}
-                title="Renewable Tech"
-                description="Energy-aware AI & green data infrastructure"
-                delay={0.3}
-                className="bg-white/5 border border-white/10 backdrop-blur-sm"
-              />
+              <div className="min-w-0">
+                <FeatureCard
+                  icon={<FaBrain className="text-4xl text-cyan-400" />}
+                  title="AI Innovation"
+                  description="Next-gen ML, LLMs, and predictive systems"
+                  delay={0.1}
+                  className="bg-white/5 border border-white/10 backdrop-blur-sm"
+                />
+              </div>
+              <div className="min-w-0">
+                <FeatureCard
+                  icon={<FaServer className="text-4xl text-cyan-400" />}
+                  title="Cloud & Databases"
+                  description="Self-healing, scalable, hybrid cloud"
+                  delay={0.2}
+                  className="bg-white/5 border border-white/10 backdrop-blur-sm"
+                />
+              </div>
+              <div className="min-w-0">
+                <FeatureCard
+                  icon={<FaChartLine className="text-4xl text-green-400" />}
+                  title="Renewable Tech"
+                  description="Energy-aware AI & green data infrastructure"
+                  delay={0.3}
+                  className="bg-white/5 border border-white/10 backdrop-blur-sm"
+                />
+              </div>
             </div>
           </motion.div>
         </section>
 
         {/* Extended Features */}
-        <section id="what-powers-synexiai" aria-labelledby="powers-title" className="mb-24">
+        <section id="what-powers-synexiai" aria-labelledby="powers-title" className="mb-24 scroll-mt-[calc(var(--header-h)+16px)]">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -201,14 +173,15 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
             {features.map((feature, index) => (
-              <FeatureCard
-                key={`${feature.title}-${index}`}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-                delay={feature.delay}
-                className="bg-white/5 border border-white/10 backdrop-blur-sm"
-              />
+              <div className="min-w-0" key={`${feature.title}-${index}`}>
+                <FeatureCard
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                  delay={feature.delay}
+                  className="bg-white/5 border border-white/10 backdrop-blur-sm"
+                />
+              </div>
             ))}
           </div>
         </section>
@@ -217,7 +190,7 @@ export default function HomePage() {
         <section
           id="mission"
           aria-labelledby="mission-title"
-          className="px-4 sm:px-8 py-12 sm:py-16 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md shadow-xl shadow-cyan-500/10 mb-24"
+          className="px-4 sm:px-8 py-12 sm:py-16 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md shadow-xl shadow-cyan-500/10 mb-24 scroll-mt-[calc(var(--header-h)+16px)]"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -238,7 +211,7 @@ export default function HomePage() {
         </section>
 
         {/* Final CTA */}
-        <section id="cta" aria-labelledby="cta-title" className="text-center">
+        <section id="cta" aria-labelledby="cta-title" className="text-center scroll-mt-[calc(var(--header-h)+16px)]">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}

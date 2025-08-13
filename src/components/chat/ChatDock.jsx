@@ -1,6 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 
+// ✅ NEW: reuse the same API the ChatWidget uses
+import { chatAxios } from "../../lib/chatAxios";
+import { fnUrl } from "../../lib/api";
+
+// ---------- helpers ----------
 function roadmapFromStatus(status) {
   switch ((status || "").toLowerCase()) {
     case "poc":    return ["Validate core hypothesis with 2–3 datasets", "Collect feedback & refine metrics", "Decide go/no-go"];
@@ -20,10 +25,14 @@ function formatAnswer(ctx) {
   const roadmap = roadmapFromStatus(p.status).map(s => `- ${s}`).join("\n");
 
   return (
-    `**Project:** ${title}\n\n` +
-    `**Value** — ${value}\n\n` +
-    `**Stack** — ${stack}\n\n` +
-    `**Roadmap**\n${roadmap}`
+`**Project:** ${title}
+
+**Value** — ${value}
+
+**Stack** — ${stack}
+
+**Roadmap**
+${roadmap}`
   );
 }
 
@@ -38,38 +47,57 @@ function formatTime(ts) {
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
+// ---------- NEW: backend call for generic Q&A ----------
+async function fetchAssistantReply(userText, signal) {
+  // very short history keeps payload light; you can expand later
+  const payload = { messages: [{ role: "user", content: userText }] };
+
+  const { data } = await chatAxios.post(
+    fnUrl("chat-assistant"),
+    payload,
+    { timeout: 10000, signal }
+  );
+
+  if (data?.error) throw new Error(data.error);
+  if (data?.reply) return data.reply;
+  if (data?.choices?.[0]?.message?.content) return data.choices[0].message.content;
+
+  // Fallback if the server returned no text
+  return "Here’s a quick answer:\n\nArtificial Intelligence (AI) is software that learns patterns from data to make predictions, generate content, or automate decisions. Modern AI uses large neural networks (LLMs, vision models) and runs on GPUs/TPUs. Typical steps: collect data → train → evaluate → deploy → monitor.";
+}
+
+// ---------- component ----------
 export default function ChatDock() {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [msgs, setMsgs] = useState(() => {
-    try {
-      const saved = sessionStorage.getItem("sx_chat");
-      return saved ? JSON.parse(saved) : [];
-    } catch { return []; }
+    try { return JSON.parse(sessionStorage.getItem("sx_chat")) || []; }
+    catch { return []; }
   });
   const [typing, setTyping] = useState(false);
+
   const scrollRef = useRef(null);
   const contextRef = useRef(null);
   const lastEventRef = useRef({ key: "", ts: 0 });
+  const controllerRef = useRef(null);
 
   // persist
   useEffect(() => {
     try { sessionStorage.setItem("sx_chat", JSON.stringify(msgs)); } catch {}
   }, [msgs]);
 
-  // auto-scroll to bottom
+  // auto-scroll
   useEffect(() => {
     if (!scrollRef.current) return;
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [msgs, typing, open]);
 
+  // bridge + auto-fill
   useEffect(() => {
-    function onAsk(e) {
+    async function onAsk(e) {
       const payload = e.detail || {};
       const key = `${payload.type || "ask"}::${payload.project?.id || payload.title || ""}`;
       const now = Date.now();
-
-      // de-dupe rapid double events
       if (lastEventRef.current.key === key && now - lastEventRef.current.ts < 800) return;
       lastEventRef.current = { key, ts: now };
 
@@ -77,16 +105,28 @@ export default function ChatDock() {
       setOpen(true);
 
       const userText = buildUserPrompt(payload);
-      if (payload.autoSend && payload.project) {
-        // post user message then simulate typing, then assistant answer
+      if (payload.autoSend) {
         const userMsg = { role: "user", text: userText, ts: Date.now() };
         setMsgs(m => [...m, userMsg]);
         setTyping(true);
-        const answer = formatAnswer(payload);
-        setTimeout(() => {
+
+        // project summary or backend Q&A
+        try {
+          let answer;
+          if (payload.project) {
+            answer = formatAnswer(payload);
+          } else {
+            controllerRef.current = new AbortController();
+            answer = await fetchAssistantReply(userText, controllerRef.current.signal);
+          }
           setMsgs(m => [...m, { role: "assistant", text: answer, ts: Date.now() }]);
+        } catch (err) {
+          setMsgs(m => [...m, { role: "assistant", text:
+            `❗️I couldn’t fetch an answer right now.\n\nQuick tip: AI = software that learns from data to predict, generate, or automate. Typical flow: collect → train → evaluate → deploy → monitor.`, ts: Date.now() }]);
+        } finally {
           setTyping(false);
-        }, 450);
+          controllerRef.current = null;
+        }
         setDraft("");
       } else {
         setDraft(userText);
@@ -97,20 +137,41 @@ export default function ChatDock() {
     return () => window.removeEventListener("synexiai:ask", onAsk);
   }, []);
 
-  function send() {
-    if (!draft.trim()) return;
-    const user = { role: "user", text: draft.trim(), ts: Date.now() };
-    setMsgs(m => [...m, user]);
+  function clearChat() {
+    setMsgs([]);
     setDraft("");
+    contextRef.current = null;
+    try { sessionStorage.removeItem("sx_chat"); } catch {}
+  }
+
+  // send handler (uses backend when no project context)
+  const send = useCallback(async () => {
+    const text = draft.trim();
+    if (!text || typing) return;
+
+    const userMsg = { role: "user", text, ts: Date.now() };
+    setMsgs(m => [...m, userMsg]);
+    setDraft("");
+    setTyping(true);
 
     const ctx = contextRef.current;
-    const assistantText = ctx?.project ? formatAnswer(ctx) : "Got it — drafting a detailed answer next.";
-    setTyping(true);
-    setTimeout(() => {
+    try {
+      let assistantText;
+      if (ctx?.project) {
+        assistantText = formatAnswer(ctx);
+      } else {
+        controllerRef.current = new AbortController();
+        assistantText = await fetchAssistantReply(text, controllerRef.current.signal);
+      }
       setMsgs(m => [...m, { role: "assistant", text: assistantText, ts: Date.now() }]);
+    } catch (err) {
+      setMsgs(m => [...m, { role: "assistant", text:
+        `❗️Sorry, I hit an error.\n\nHere’s a quick summary:\nAI (Artificial Intelligence) uses learned patterns (models) to solve tasks like understanding text, classifying images, or generating content. Modern AI relies on neural networks, GPUs/TPUs, and MLOps for data/monitoring.`, ts: Date.now() }]);
+    } finally {
       setTyping(false);
-    }, 350);
-  }
+      controllerRef.current = null;
+    }
+  }, [draft, typing]);
 
   function onKeyDown(e) {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -119,29 +180,22 @@ export default function ChatDock() {
     }
   }
 
-  function clearChat() {
-    setMsgs([]);
-    setDraft("");
-    contextRef.current = null;
-    try { sessionStorage.removeItem("sx_chat"); } catch {}
-  }
-
   return (
     <>
-      {/* FAB */}
+      {/* FAB (left bottom per your layout) */}
       <button
         onClick={() => setOpen(v => !v)}
-        className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 shadow-lg hover:from-cyan-500 hover:to-blue-500"
-        aria-label="Open SynexiAI chat"
+        className="fixed bottom-6 left-6 z-40 h-14 w-14 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 shadow-lg hover:from-cyan-500 hover:to-blue-500"
+        aria-label="Open SynexiAI chat dock"
       >
         💬
       </button>
 
       {/* Panel */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-40 w-[360px] max-w-[92vw] rounded-2xl border border-white/10 bg-[#0b1220]/95 backdrop-blur-md shadow-2xl">
+        <div className="fixed bottom-24 left-6 z-40 w-[360px] max-w-[92vw] rounded-2xl border border-white/10 bg-[#0b1220]/95 backdrop-blur-md shadow-2xl">
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-            <div className="text-sm font-semibold">SynexiAI Assistant</div>
+            <div className="text-sm font-semibold">Dock • Quick Explain</div>
             <div className="flex items-center gap-2">
               <button onClick={clearChat} className="text-xs opacity-80 hover:opacity-100">Clear</button>
               <button onClick={() => setOpen(false)} className="opacity-80 hover:opacity-100">✕</button>
@@ -150,7 +204,7 @@ export default function ChatDock() {
 
           <div ref={scrollRef} className="max-h-[50vh] overflow-y-auto p-4 space-y-3 text-sm">
             {msgs.length === 0 && !typing && (
-              <div className="opacity-70">Ask anything about a project. Try “Explain with AI”.</div>
+              <div className="opacity-70">Ask anything. Try: “What is AI?” or “Explain SynexiAI’s vision.”</div>
             )}
 
             {msgs.map((m, i) => (

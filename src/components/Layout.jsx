@@ -26,7 +26,7 @@ export default function Layout({ children }) {
       </motion.div>
 
       {/* Chat */}
-      <ChatWidget />
+      <ChatWidget side="right" />
     </div>
   );
 }
