@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
 // src/components/visuals/GlobeSection.jsx
+import { motion } from "framer-motion";
 import React, {
   Suspense,
   useEffect,
@@ -8,9 +8,10 @@ import React, {
   useLayoutEffect,
   useRef,
 } from "react";
+
 const GlobeCanvas = React.lazy(() => import("./GlobeCanvas.jsx"));
 import GlobeFallback from "./GlobeFallback.jsx";
-import { canUseWebGL } from "../../lib/canUseWebGL.js";
+import canUseWebGL from "../../lib/canUseWebGL.js";
 import ErrorBoundary from "../ErrorBoundary.jsx";
 
 const MotionDiv = motion.div;
@@ -37,10 +38,10 @@ function useElementSize() {
 
 /* --------------------------------- component ------------------------------- */
 export default function GlobeSection({
-  showHeader = false, // hide title/subtitle by default (homepage wants clean hero)
-  controls = false, // only show status chip + force/try buttons if you opt in
-  size = "md", // "sm" | "md" | "lg" | number(px)
-  sizePx, // ✅ explicit pixel override for exact sizing (e.g., mobile)
+  showHeader = false,  // hide title/subtitle by default (homepage wants clean hero)
+  controls = false,    // show status chip + try/fallback buttons only if enabled
+  size = "md",         // "sm" | "md" | "lg" | number(px)
+  sizePx,              // explicit pixel override; wins over `size` (great for mobile)
   className = "",
 } = {}) {
   const [allow3D, setAllow3D] = useState(false);
@@ -81,19 +82,11 @@ export default function GlobeSection({
 
   const retry3D = () => setAllow3D(computeAllow3D());
   const forceFallback = () => {
-    try {
-      localStorage.setItem("sx_globe_fallback", "1");
-    } catch {
-      // no-op
-    }
+    try { localStorage.setItem("sx_globe_fallback", "1"); } catch {}
     setAllow3D(false);
   };
   const clearForce = () => {
-    try {
-      localStorage.removeItem("sx_globe_fallback");
-    } catch {
-      // no-op
-    }
+    try { localStorage.removeItem("sx_globe_fallback"); } catch {}
     retry3D();
   };
 
@@ -164,8 +157,10 @@ export default function GlobeSection({
           height: clampExpr,
           maxWidth: "90vw",
           maxHeight: "90vw",
+          overflow: "hidden", // keep canvas/SVG strictly inside
         }}
-        aria-label="Interactive globe"
+        aria-label={allow3D ? "Interactive globe" : "Globe visualization (static)"}
+        role={allow3D ? undefined : "img"}
       >
         {allow3D && vpSize.width > 0 ? (
           <ErrorBoundary fallback={<GlobeFallback />}>
@@ -174,7 +169,10 @@ export default function GlobeSection({
             </Suspense>
           </ErrorBoundary>
         ) : (
-          <GlobeFallback />
+          // Wrap fallback to force 100% fill of the viewport box
+          <div style={{ width: "100%", height: "100%" }}>
+            <GlobeFallback />
+          </div>
         )}
       </div>
     </section>

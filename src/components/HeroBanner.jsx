@@ -1,8 +1,10 @@
+// src/components/HeroBanner.jsx
 import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import GlobeSection from "../components/visuals/GlobeSection.jsx";
+import canUseWebGL from "../lib/canUseWebGL.js";
 
 const Particles = lazy(() => import("react-tsparticles"));
 const MotionLink = motion(Link);
@@ -23,7 +25,9 @@ export default function HeroBanner() {
   const [showScrollPrompt, setShowScrollPrompt] = useState(true);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [mountParticles, setMountParticles] = useState(false);
+  const [allowMobileGlobe, setAllowMobileGlobe] = useState(false);
 
+  /* ----------------------------- Headline rotation ---------------------------- */
   useEffect(() => {
     const id = setInterval(
       () => setCurrentTextIndex((p) => (p + 1) % ROTATING_TEXTS.length),
@@ -32,6 +36,7 @@ export default function HeroBanner() {
     return () => clearInterval(id);
   }, []);
 
+  /* ------------------------------ Video fade-in ------------------------------- */
   useEffect(() => {
     const video = document.querySelector(".hero-video");
     const onLoaded = () => setIsLoaded(true);
@@ -44,6 +49,7 @@ export default function HeroBanner() {
     };
   }, []);
 
+  /* --------------------------- Scroll prompt toggle --------------------------- */
   useEffect(() => {
     const onScroll = () =>
       setShowScrollPrompt(window.scrollY < SCROLL_PROMPT_THRESHOLD);
@@ -51,6 +57,7 @@ export default function HeroBanner() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /* ---------------------- Particles only for desktops ------------------------- */
   useEffect(() => {
     const reduced = window.matchMedia?.(
       "(prefers-reduced-motion: reduce)",
@@ -62,12 +69,19 @@ export default function HeroBanner() {
     }
   }, []);
 
+  /* --------------- Guard mobile globe (WebGL + motion + size) ---------------- */
+  useEffect(() => {
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const isPhone = !window.matchMedia?.("(min-width: 768px)")?.matches;
+    setAllowMobileGlobe(isPhone && !reduced && canUseWebGL());
+  }, []);
+
   const particlesInit = useCallback(async () => {}, []);
   const particlesLoaded = useCallback(async () => {}, []);
 
   return (
-    <div className="relative z-10 w-full min-h-[93dvh] flex items-stretch justify-center overflow-hidden">
-      {/* Backgrounds */}
+    <div className="relative z-10 w-full min-h-[93dvh] flex items-stretch justify-center overflow-hidden pb-safe-chat">
+      {/* Backgrounds (desktop only) */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-0 pointer-events-none opacity-70 hidden md:block
@@ -81,10 +95,9 @@ export default function HeroBanner() {
         <div className="absolute z-10 w-[450px] h-[450px] bg-cyan-500/20 blur-[90px] rounded-full left-[5%] top-[15%] animate-float-slow" />
         <div className="absolute z-10 w-[550px] h-[550px] bg-blue-500/10 blur-[110px] rounded-full right-[5%] bottom-[5%] animate-float" />
       </div>
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 z-[12] pointer-events-none"
-      >
+
+      {/* Video overlay */}
+      <div aria-hidden="true" className="absolute inset-0 z-[12] pointer-events-none">
         <video
           autoPlay
           loop
@@ -99,6 +112,8 @@ export default function HeroBanner() {
         </video>
         <div className="absolute inset-0 bg-black/35 dark:bg-black/45" />
       </div>
+
+      {/* Desktop particles */}
       {mountParticles && (
         <Suspense fallback={null}>
           <Particles
@@ -113,12 +128,7 @@ export default function HeroBanner() {
                 color: { value: "#22d3ee" },
                 opacity: { value: 0.2 },
                 size: { value: 3 },
-                move: {
-                  enable: true,
-                  speed: 0.4,
-                  direction: "none",
-                  outModes: "bounce",
-                },
+                move: { enable: true, speed: 0.4, direction: "none", outModes: "bounce" },
               },
               detectRetina: true,
             }}
@@ -137,18 +147,25 @@ export default function HeroBanner() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="order-2 md:order-1 w-full md:col-span-7 max-w-none mx-auto md:mx-0 text-center md:text-left px-1 sm:px-4"
           >
-            {/* Mobile globe inside the column */}
-            <div className="md:hidden flex justify-center pt-3 mb-2">
-              <GlobeSection
-                showHeader={false}
-                controls={false}
-                sizePx={200} // ✅ explicit pixels for mobile
-                className="mb-2 shrink-0" // prevents layout stretch
-              />
-            </div>
+            {/* Mobile globe */}
+            {allowMobileGlobe && (
+              <div className="md:hidden flex justify-center pt-2 mb-1">
+                <div
+                  className="pointer-events-none opacity-70 !w-[140px] !h-[140px] shrink-0"
+                  style={{ transform: "scale(0.98)" }}
+                >
+                  <GlobeSection
+                    showHeader={false}
+                    controls={false}
+                    sizePx={140}
+                    className="!w-[140px] !h-[140px]"
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Rotating headline */}
-            <div className="h-20 sm:h-32 md:h-40 flex items-center justify-center md:justify-start mb-3 sm:mb-5">
+            <div className="h-16 xs:h-20 sm:h-28 md:h-40 flex items-center justify-center md:justify-start mb-2 sm:mb-4">
               <AnimatePresence mode="wait">
                 <motion.h1
                   key={currentTextIndex}
@@ -156,11 +173,10 @@ export default function HeroBanner() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -18 }}
                   transition={{ duration: 0.45, ease: "easeOut" }}
-                  className="font-extrabold tracking-tight leading-[0.95] subpixel-antialiased
-                             text-3xl xs:text-[2rem] sm:text-[clamp(2.25rem,6vw,3.25rem)]
-                             md:text-[clamp(2.75rem,4vw,4.75rem)]
+                  className="font-extrabold leading-[0.98] tracking-tight subpixel-antialiased
+                             text-[clamp(1.6rem,6.2vw,3.2rem)] md:text-[clamp(2.75rem,4vw,4.75rem)]
                              bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500
-                             whitespace-normal md:whitespace-nowrap"
+                             whitespace-normal"
                 >
                   {ROTATING_TEXTS[currentTextIndex]}
                 </motion.h1>
@@ -175,10 +191,7 @@ export default function HeroBanner() {
               transition={{ delay: 0.25, duration: 0.6 }}
             >
               SynexiAI is the next-generation innovation hub where{" "}
-              <span className="text-cyan-700 dark:text-cyan-400 font-medium">
-                Artificial Intelligence
-              </span>
-              , futuristic IT, and bold ideas converge.
+              <span className="text-cyan-700 dark:text-cyan-400 font-medium">Artificial Intelligence</span>, futuristic IT, and bold ideas converge.
             </motion.p>
 
             {/* CTAs */}
@@ -211,7 +224,7 @@ export default function HeroBanner() {
             </motion.div>
           </motion.div>
 
-          {/* Desktop globe column */}
+          {/* Desktop globe */}
           <div className="order-1 md:order-2 hidden md:flex justify-center md:col-span-5">
             <GlobeSection showHeader={false} controls={false} size="lg" />
           </div>
@@ -228,15 +241,9 @@ export default function HeroBanner() {
             <motion.div
               className="flex flex-col items-center"
               animate={{ y: [0, 10, 0] }}
-              transition={{
-                repeat: Infinity,
-                duration: 1.6,
-                ease: "easeInOut",
-              }}
+              transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
             >
-              <p className="text-xs sm:text-sm text-gray-800 dark:text-gray-300 mb-1">
-                Scroll down
-              </p>
+              <p className="text-xs sm:text-sm text-gray-800 dark:text-gray-300 mb-1">Scroll down</p>
               <FaArrowDown className="text-gray-900 dark:text-white text-lg sm:text-xl opacity-80" />
             </motion.div>
           </motion.div>
