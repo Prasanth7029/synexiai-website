@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import GlobeSection from "../components/visuals/GlobeSection.jsx";
-import { canUseWebGL } from "../../lib/canUseWebGL.js";
+import { canUseWebGL } from "../lib/canUseWebGL.js";
 
 const Particles = lazy(() => import("react-tsparticles"));
 const MotionLink = motion(Link);

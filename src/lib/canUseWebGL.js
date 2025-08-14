@@ -10,6 +10,4 @@ export function canUseWebGL() {
     return false;
   }
 }
-
-// Optional: allow both `import { canUseWebGL }` and `import canUseWebGL`
 export default canUseWebGL;
