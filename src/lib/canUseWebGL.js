@@ -1,13 +1,15 @@
+// src/lib/canUseWebGL.js
 export function canUseWebGL() {
   if (typeof window === "undefined") return false;
   try {
     const canvas = document.createElement("canvas");
-    const gl2 = canvas.getContext("webgl2");
-    if (gl2) return true;
     const gl =
       canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-    return !!gl;
+    return !!(window.WebGLRenderingContext && gl);
   } catch {
     return false;
   }
 }
+
+// Optional: allow both `import { canUseWebGL }` and `import canUseWebGL`
+export default canUseWebGL;

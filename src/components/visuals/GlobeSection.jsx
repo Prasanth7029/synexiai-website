@@ -11,7 +11,7 @@ import React, {
 
 const GlobeCanvas = React.lazy(() => import("./GlobeCanvas.jsx"));
 import GlobeFallback from "./GlobeFallback.jsx";
-import canUseWebGL from "../../lib/canUseWebGL.js";
+import { canUseWebGL } from "../../lib/canUseWebGL.js";
 import ErrorBoundary from "../ErrorBoundary.jsx";
 
 const MotionDiv = motion.div;
