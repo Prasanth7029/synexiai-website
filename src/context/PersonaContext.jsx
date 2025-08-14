@@ -1,8 +1,15 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 const PersonaContext = createContext({
-  persona: "general",        // 'investor' | 'developer' | 'partner' | 'general'
-  source: "heuristic",       // 'query' | 'storage' | 'heuristic' | 'manual'
+  persona: "general", // 'investor' | 'developer' | 'partner' | 'general'
+  source: "heuristic", // 'query' | 'storage' | 'heuristic' | 'manual'
   setPersona: () => {},
 });
 
@@ -15,8 +22,14 @@ function detectHeuristic() {
     if (/github|stack(over)?flow|npm/i.test(ref)) return "developer";
     if (/linkedin|angel|crunchbase|pitchbook/i.test(ref)) return "investor";
     if (/partner|alliance|vendor/i.test(ref)) return "partner";
-  } catch {}
-  const loc = (window.location.hash || window.location.pathname || "").toLowerCase();
+  } catch {
+    // no-op
+  }
+  const loc = (
+    window.location.hash ||
+    window.location.pathname ||
+    ""
+  ).toLowerCase();
   if (/tech|stack|api|docs/.test(loc)) return "developer";
   if (/invest/.test(loc)) return "investor";
   if (/partner/.test(loc)) return "partner";
@@ -27,11 +40,15 @@ function readQueryPersona() {
   try {
     // support HashRouter (?persona=...) and normal search params
     const hash = window.location.hash || "";
-    const query = hash.includes("?") ? hash.split("?")[1] : window.location.search.slice(1);
+    const query = hash.includes("?")
+      ? hash.split("?")[1]
+      : window.location.search.slice(1);
     const params = new URLSearchParams(query);
     const p = params.get("persona");
     if (p && ALLOWED.includes(p)) return p;
-  } catch {}
+  } catch {
+    // no-op
+  }
   return null;
 }
 
@@ -42,13 +59,21 @@ export function PersonaProvider({ children }) {
   useEffect(() => {
     const qp = readQueryPersona();
     const stored = (() => {
-      try { return localStorage.getItem(STORAGE_KEY); } catch { return null; }
+      try {
+        return localStorage.getItem(STORAGE_KEY);
+      } catch {
+        return null;
+      }
     })();
 
     if (qp) {
       setPersonaState(qp);
       setSource("query");
-      try { localStorage.setItem(STORAGE_KEY, qp); } catch {}
+      try {
+        localStorage.setItem(STORAGE_KEY, qp);
+      } catch {
+        // no-op
+      }
       return;
     }
     if (stored && ALLOWED.includes(stored)) {
@@ -65,11 +90,20 @@ export function PersonaProvider({ children }) {
     if (!ALLOWED.includes(p)) return;
     setPersonaState(p);
     setSource("manual");
-    try { localStorage.setItem(STORAGE_KEY, p); } catch {}
+    try {
+      localStorage.setItem(STORAGE_KEY, p);
+    } catch {
+      // no-op
+    }
   };
 
-  const value = useMemo(() => ({ persona, source, setPersona }), [persona, source]);
-  return <PersonaContext.Provider value={value}>{children}</PersonaContext.Provider>;
+  const value = useMemo(
+    () => ({ persona, source, setPersona }),
+    [persona, source],
+  );
+  return (
+    <PersonaContext.Provider value={value}>{children}</PersonaContext.Provider>
+  );
 }
 
 export function usePersona() {

@@ -1,7 +1,14 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import axios from 'axios';
-import { fnUrl } from '../lib/api';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
+import axios from "axios";
+import { fnUrl } from "../lib/api";
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaRobot,
   FaDatabase,
@@ -18,23 +25,23 @@ import {
   FaChevronRight,
   FaArrowUp,
   FaTimes,
-  FaSpinner
-} from 'react-icons/fa';
-import { useMediaQuery } from 'react-responsive';
+  FaSpinner,
+} from "react-icons/fa";
+import { useMediaQuery } from "react-responsive";
 
 // --------------------------- Constants ---------------------------
 const CATEGORIES = [
-  { id: 'all',       name: 'All News',   icon: <FaRegNewspaper /> },
-  { id: 'ai',        name: 'AI',         icon: <FaRobot /> },
-  { id: 'database',  name: 'Database',   icon: <FaDatabase /> },
-  { id: 'renewable', name: 'Renewable',  icon: <FaLeaf /> },
-  { id: 'innovation',name: 'Innovation', icon: <FaChartLine /> }
+  { id: "all", name: "All News", icon: <FaRegNewspaper /> },
+  { id: "ai", name: "AI", icon: <FaRobot /> },
+  { id: "database", name: "Database", icon: <FaDatabase /> },
+  { id: "renewable", name: "Renewable", icon: <FaLeaf /> },
+  { id: "innovation", name: "Innovation", icon: <FaChartLine /> },
 ];
 
 const CONTENT_TYPES = [
-  { id: 'all',   name: 'All' },
-  { id: 'video', name: 'Videos' },
-  { id: 'blog',  name: 'Articles' }
+  { id: "all", name: "All" },
+  { id: "video", name: "Videos" },
+  { id: "blog", name: "Articles" },
 ];
 
 // --------------------------- Hooks & Helpers ---------------------------
@@ -48,20 +55,24 @@ const useDebounce = (value, delay) => {
 };
 
 const formatDate = (dateString) => {
-  if (!dateString) return 'N/A';
+  if (!dateString) return "N/A";
   const t = Date.parse(dateString);
-  if (!Number.isFinite(t)) return 'N/A';
+  if (!Number.isFinite(t)) return "N/A";
   const d = new Date(t);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 };
 
 const getCategoryColor = (category) => {
   const colors = {
-    ai: 'from-purple-500 to-indigo-500',
-    database: 'from-cyan-500 to-blue-500',
-    renewable: 'from-green-500 to-emerald-500',
-    innovation: 'from-orange-500 to-amber-500',
-    default: 'from-gray-500 to-slate-500'
+    ai: "from-purple-500 to-indigo-500",
+    database: "from-cyan-500 to-blue-500",
+    renewable: "from-green-500 to-emerald-500",
+    innovation: "from-orange-500 to-amber-500",
+    default: "from-gray-500 to-slate-500",
   };
   return colors[category] || colors.default;
 };
@@ -71,7 +82,7 @@ const getCategoryIcon = (categoryId) => {
     ai: <FaRobot className="text-purple-400" />,
     database: <FaDatabase className="text-cyan-400" />,
     renewable: <FaLeaf className="text-green-400" />,
-    innovation: <FaChartLine className="text-orange-400" />
+    innovation: <FaChartLine className="text-orange-400" />,
   };
   return icons[categoryId] || null;
 };
@@ -84,12 +95,15 @@ function VideoEmbed({ src, title }) {
 
   useEffect(() => {
     if (!boxRef.current || active) return;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setVisible(true);
-        io.disconnect();
-      }
-    }, { rootMargin: '200px' });
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
     io.observe(boxRef.current);
     return () => io.disconnect();
   }, [active]);
@@ -97,7 +111,10 @@ function VideoEmbed({ src, title }) {
   const start = () => setActive(true);
 
   return (
-    <div ref={boxRef} className="relative pt-[56.25%] bg-black overflow-hidden rounded-t-xl">
+    <div
+      ref={boxRef}
+      className="relative pt-[56.25%] bg-black overflow-hidden rounded-t-xl"
+    >
       {(active || visible) && (
         <iframe
           title={title}
@@ -125,71 +142,84 @@ function VideoEmbed({ src, title }) {
 }
 
 // --------------------------- Content Card ---------------------------
-const ContentCard = React.memo(function ContentCard({ article, categories = [], layout = 'grid' }) {
+const ContentCard = React.memo(function ContentCard({
+  article,
+  categories = [],
+  layout = "grid",
+}) {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const categoryMap = useMemo(
-    () => Object.fromEntries(categories.map(c => [c.id, c.name])),
-    [categories]
+    () => Object.fromEntries(categories.map((c) => [c.id, c.name])),
+    [categories],
   );
 
   return (
     <motion.div
-      whileHover={{ y: layout === 'carousel' ? 0 : -5 }}
+      whileHover={{ y: layout === "carousel" ? 0 : -5 }}
       whileTap={{ scale: 0.98 }}
-      transition={{ type: 'spring', stiffness: 300 }}
+      transition={{ type: "spring", stiffness: 300 }}
       className={`relative bg-white/5 dark:bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${
-        layout === 'carousel' ? (isMobile ? 'w-[85vw]' : 'w-[360px]') : 'w-full'
+        layout === "carousel" ? (isMobile ? "w-[85vw]" : "w-[360px]") : "w-full"
       } h-[480px]`}
     >
       {/* Video */}
-      {article.type === 'video' && (
+      {article.type === "video" && (
         <VideoEmbed src={article.url} title={`Video: ${article.title}`} />
       )}
 
       {/* Image for article/blog */}
-      {(article.type === 'article' || article.type === 'blog') && article.imageUrl && !imageError && (
-        <div className="h-48 overflow-hidden bg-black/40 relative">
-          {!imageLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <FaSpinner className="animate-spin text-cyan-400 text-xl" />
-            </div>
-          )}
-          <img
-            loading="lazy"
-            decoding="async"
-            width={640}
-            height={192}
-            src={article.imageUrl}
-            srcSet={`${article.imageUrl} 640w`}
-            sizes="(max-width: 640px) 90vw, 360px"
-            alt={article.title || 'Article image'}
-            className={`w-full h-full object-cover transition-transform duration-300 hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-            onError={() => setImageError(true)}
-            onLoad={() => setImageLoaded(true)}
-          />
-        </div>
-      )}
+      {(article.type === "article" || article.type === "blog") &&
+        article.imageUrl &&
+        !imageError && (
+          <div className="h-48 overflow-hidden bg-black/40 relative">
+            {!imageLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <FaSpinner className="animate-spin text-cyan-400 text-xl" />
+              </div>
+            )}
+            <img
+              loading="lazy"
+              decoding="async"
+              width={640}
+              height={192}
+              src={article.imageUrl}
+              srcSet={`${article.imageUrl} 640w`}
+              sizes="(max-width: 640px) 90vw, 360px"
+              alt={article.title || "Article image"}
+              className={`w-full h-full object-cover transition-transform duration-300 hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+              onError={() => setImageError(true)}
+              onLoad={() => setImageLoaded(true)}
+            />
+          </div>
+        )}
 
       {/* Fallback box */}
-      {((article.type === 'article' || article.type === 'blog') && (!article.imageUrl || imageError)) && (
-        <div className="h-48 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 flex items-center justify-center">
-          <div className="text-4xl text-cyan-500 opacity-30">
-            {article.type === 'blog' ? <FaNewspaper /> : <FaRegNewspaper />}
+      {(article.type === "article" || article.type === "blog") &&
+        (!article.imageUrl || imageError) && (
+          <div className="h-48 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 flex items-center justify-center">
+            <div className="text-4xl text-cyan-500 opacity-30">
+              {article.type === "blog" ? <FaNewspaper /> : <FaRegNewspaper />}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       <div className="p-5 flex-grow flex flex-col">
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center space-x-2">
-            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ring-1 ring-white/10 ${getCategoryColor(article.category)}`}>
+            <span
+              className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ring-1 ring-white/10 ${getCategoryColor(article.category)}`}
+            >
               {categoryMap[article.category] || article.category}
             </span>
             <span className="text-xs text-gray-600 dark:text-gray-400 flex items-center">
-              {article.type === 'video' ? <FaVideo className="mr-1" /> : <FaNewspaper className="mr-1" />}
+              {article.type === "video" ? (
+                <FaVideo className="mr-1" />
+              ) : (
+                <FaNewspaper className="mr-1" />
+              )}
               {article.type}
             </span>
           </div>
@@ -203,12 +233,14 @@ const ContentCard = React.memo(function ContentCard({ article, categories = [], 
         </h3>
 
         {article.description && (
-          <p className="text-gray-700 dark:text-gray-300 mb-3 line-clamp-2 text-sm">{article.description}</p>
+          <p className="text-gray-700 dark:text-gray-300 mb-3 line-clamp-2 text-sm">
+            {article.description}
+          </p>
         )}
 
         <div className="flex justify-between items-center mt-auto">
           <span className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-white/5 border border-white/10 px-2 py-1 rounded">
-            {article.source || 'Unknown source'}
+            {article.source || "Unknown source"}
           </span>
           <a
             href={article.url}
@@ -216,7 +248,7 @@ const ContentCard = React.memo(function ContentCard({ article, categories = [], 
             rel="noopener noreferrer"
             className="text-cyan-500 hover:text-cyan-400 text-sm font-medium flex items-center group"
           >
-            {article.type === 'video' ? 'Watch' : 'Read'}
+            {article.type === "video" ? "Watch" : "Read"}
             <FaArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
@@ -226,28 +258,36 @@ const ContentCard = React.memo(function ContentCard({ article, categories = [], 
 });
 
 // --------------------------- Carousel ---------------------------
-const ContentCarousel = React.memo(function ContentCarousel({ items, title, onViewAll, type, categories }) {
+const ContentCarousel = React.memo(function ContentCarousel({
+  items,
+  title,
+  onViewAll,
+  type,
+  categories,
+}) {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const carouselRef = useRef(null);
 
   const scrollLeft = useCallback(() => {
     if (carouselRef.current) {
       const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;
-      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
     }
   }, [isMobile]);
 
   const scrollRight = useCallback(() => {
     if (carouselRef.current) {
       const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;
-      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   }, [isMobile]);
 
   return (
     <div className="mb-12 relative group">
       <div className="flex justify-between items-center mb-5">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+          {title}
+        </h2>
         {onViewAll && (
           <button
             onClick={onViewAll}
@@ -272,7 +312,7 @@ const ContentCarousel = React.memo(function ContentCarousel({ items, title, onVi
               <ContentCard
                 article={item}
                 layout="carousel"
-                categories={CATEGORIES}
+                categories={categories}
               />
             </div>
           ))}
@@ -283,7 +323,7 @@ const ContentCarousel = React.memo(function ContentCarousel({ items, title, onVi
             <button
               onClick={scrollLeft}
               className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${
-                isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               } transition-opacity active:scale-90 backdrop-blur-sm`}
               aria-label="Scroll left"
             >
@@ -292,7 +332,7 @@ const ContentCarousel = React.memo(function ContentCarousel({ items, title, onVi
             <button
               onClick={scrollRight}
               className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${
-                isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               } transition-opacity active:scale-90 backdrop-blur-sm`}
               aria-label="Scroll right"
             >
@@ -312,14 +352,14 @@ const CategorySection = React.memo(function CategorySection({
   categories,
   onViewAll,
   activeContentType,
-  setActiveContentType
+  setActiveContentType,
 }) {
   const [filteredArticles, videos, blogs] = useMemo(() => {
-    const filtered = articles.filter(a => a.category === category.id);
+    const filtered = articles.filter((a) => a.category === category.id);
     return [
       filtered,
-      filtered.filter(a => a.type === 'video'),
-      filtered.filter(a => a.type === 'blog' || a.type === 'article')
+      filtered.filter((a) => a.type === "video"),
+      filtered.filter((a) => a.type === "blog" || a.type === "article"),
     ];
   }, [articles, category.id]);
 
@@ -332,7 +372,9 @@ const CategorySection = React.memo(function CategorySection({
           {getCategoryIcon(category.id) && (
             <span className="mr-3">{getCategoryIcon(category.id)}</span>
           )}
-          <span className={`bg-gradient-to-r bg-clip-text text-transparent ${getCategoryColor(category.id)}`}>
+          <span
+            className={`bg-gradient-to-r bg-clip-text text-transparent ${getCategoryColor(category.id)}`}
+          >
             {category.name}
           </span>
         </h2>
@@ -347,15 +389,15 @@ const CategorySection = React.memo(function CategorySection({
       </div>
 
       <div className="mb-6 flex space-x-1 bg-white/5 rounded-lg p-1 border border-white/10">
-        {CONTENT_TYPES.map(type => (
+        {CONTENT_TYPES.map((type) => (
           <button
             key={type.id}
             onClick={() => setActiveContentType(type.id)}
             aria-pressed={activeContentType === type.id}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center active:scale-95 ${
               activeContentType === type.id
-                ? 'bg-white/10 text-gray-900 dark:text-white shadow'
-                : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5'
+                ? "bg-white/10 text-gray-900 dark:text-white shadow"
+                : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5"
             }`}
           >
             {type.name}
@@ -363,7 +405,7 @@ const CategorySection = React.memo(function CategorySection({
         ))}
       </div>
 
-      {activeContentType === 'all' && (
+      {activeContentType === "all" && (
         <>
           {videos.length > 0 && (
             <ContentCarousel
@@ -389,7 +431,7 @@ const CategorySection = React.memo(function CategorySection({
         </>
       )}
 
-      {activeContentType === 'video' && (
+      {activeContentType === "video" && (
         <>
           {videos.length > 0 ? (
             <motion.div
@@ -398,8 +440,11 @@ const CategorySection = React.memo(function CategorySection({
               transition={{ staggerChildren: 0.06 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
             >
-              {videos.slice(0, VISIBLE_MAX).map(article => (
-                <div key={`video-${article.url || article.id}`} className="h-full flex">
+              {videos.slice(0, VISIBLE_MAX).map((article) => (
+                <div
+                  key={`video-${article.url || article.id}`}
+                  className="h-full flex"
+                >
                   <ContentCard article={article} categories={categories} />
                 </div>
               ))}
@@ -412,7 +457,7 @@ const CategorySection = React.memo(function CategorySection({
         </>
       )}
 
-      {activeContentType === 'blog' && (
+      {activeContentType === "blog" && (
         <>
           {blogs.length > 0 ? (
             <motion.div
@@ -421,8 +466,11 @@ const CategorySection = React.memo(function CategorySection({
               transition={{ staggerChildren: 0.06 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
             >
-              {blogs.slice(0, VISIBLE_MAX).map(article => (
-                <div key={`blog-${article.url || article.id}`} className="h-full flex">
+              {blogs.slice(0, VISIBLE_MAX).map((article) => (
+                <div
+                  key={`blog-${article.url || article.id}`}
+                  className="h-full flex"
+                >
                   <ContentCard article={article} categories={categories} />
                 </div>
               ))}
@@ -442,9 +490,9 @@ const CategorySection = React.memo(function CategorySection({
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true); // kept for logic (e.g., back-to-top visibility)
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [activeContentType, setActiveContentType] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [activeContentType, setActiveContentType] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [errorCount, setErrorCount] = useState(0);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -452,7 +500,7 @@ export default function NewsPage() {
 
   useEffect(() => {
     const ac = new AbortController();
-    const key = 'synexiai:news:v1';
+    const key = "synexiai:news:v1";
 
     const cached = sessionStorage.getItem(key);
     if (cached) {
@@ -460,26 +508,56 @@ export default function NewsPage() {
         setArticles(JSON.parse(cached));
         setLoading(false);
         return () => ac.abort();
-      } catch (_) {}
+      } catch {
+        /*  no-op */
+      }
     }
 
     const fetchNews = async () => {
       setLoading(true);
       setErrorCount(0);
-      const categoriesToFetch = CATEGORIES.filter(c => c.id !== 'all').map(c => c.id);
+      const categoriesToFetch = CATEGORIES.filter((c) => c.id !== "all").map(
+        (c) => c.id,
+      );
       const wrap = (p) => p.catch(() => ({ data: [] }));
 
       try {
         const [newsResults, videoResults, rssResults] = await Promise.all([
-          Promise.all(categoriesToFetch.map(cat => wrap(axios.get(`${fnUrl('news-proxy')}?category=${cat}`,  { signal: ac.signal })))),
-          Promise.all(categoriesToFetch.map(cat => wrap(axios.get(`${fnUrl('video-proxy')}?category=${cat}`, { signal: ac.signal })))),
-          Promise.all(categoriesToFetch.map(cat => wrap(axios.get(`${fnUrl('rss-proxy')}?category=${cat}`,   { signal: ac.signal })))),
+          Promise.all(
+            categoriesToFetch.map((cat) =>
+              wrap(
+                axios.get(`${fnUrl("news-proxy")}?category=${cat}`, {
+                  signal: ac.signal,
+                }),
+              ),
+            ),
+          ),
+          Promise.all(
+            categoriesToFetch.map((cat) =>
+              wrap(
+                axios.get(`${fnUrl("video-proxy")}?category=${cat}`, {
+                  signal: ac.signal,
+                }),
+              ),
+            ),
+          ),
+          Promise.all(
+            categoriesToFetch.map((cat) =>
+              wrap(
+                axios.get(`${fnUrl("rss-proxy")}?category=${cat}`, {
+                  signal: ac.signal,
+                }),
+              ),
+            ),
+          ),
         ]);
 
         const merged = [
-          ...newsResults.flatMap(r => (r.data || []).map(item => ({ ...item, type: 'article' }))),
-          ...videoResults.flatMap(r => r.data || []),
-          ...rssResults.flatMap(r => r.data || [])
+          ...newsResults.flatMap((r) =>
+            (r.data || []).map((item) => ({ ...item, type: "article" })),
+          ),
+          ...videoResults.flatMap((r) => r.data || []),
+          ...rssResults.flatMap((r) => r.data || []),
         ].filter(Boolean);
 
         // Dedupe by URL/id
@@ -494,8 +572,8 @@ export default function NewsPage() {
 
         setArticles(deduped);
         sessionStorage.setItem(key, JSON.stringify(deduped));
-      } catch (error) {
-        setErrorCount(prev => prev + 1);
+      } catch {
+        setErrorCount((prev) => prev + 1);
       } finally {
         setLoading(false);
       }
@@ -506,14 +584,15 @@ export default function NewsPage() {
   }, []);
 
   const filteredArticles = useMemo(() => {
-    return articles.filter(article => {
-      if (activeCategory !== 'all' && article.category !== activeCategory) return false;
+    return articles.filter((article) => {
+      if (activeCategory !== "all" && article.category !== activeCategory)
+        return false;
       if (debouncedSearchTerm) {
         const term = debouncedSearchTerm.toLowerCase();
         return (
-          (article.title || '').toLowerCase().includes(term) ||
-          (article.description || '').toLowerCase().includes(term) ||
-          (article.source || '').toLowerCase().includes(term)
+          (article.title || "").toLowerCase().includes(term) ||
+          (article.description || "").toLowerCase().includes(term) ||
+          (article.source || "").toLowerCase().includes(term)
         );
       }
       return true;
@@ -522,20 +601,22 @@ export default function NewsPage() {
 
   const trendingArticles = useMemo(() => {
     return [...articles]
-      .sort((a, b) => Date.parse(b.date || '') - Date.parse(a.date || ''))
+      .sort((a, b) => Date.parse(b.date || "") - Date.parse(a.date || ""))
       .slice(0, 3);
   }, [articles]);
 
   const handleViewAll = useCallback((categoryId) => {
-    setActiveCategory(prev => {
+    setActiveCategory((prev) => {
       if (prev === categoryId) {
-        document.getElementById(categoryId)?.scrollIntoView({ behavior: 'smooth' });
+        document
+          .getElementById(categoryId)
+          ?.scrollIntoView({ behavior: "smooth" });
       }
       return categoryId;
     });
   }, []);
 
-  const clearSearch = useCallback(() => setSearchTerm(''), []);
+  const clearSearch = useCallback(() => setSearchTerm(""), []);
 
   return (
     <div className="min-h-screen text-gray-900 dark:text-gray-100">
@@ -558,15 +639,17 @@ export default function NewsPage() {
               <div className="flex items-center gap-3">
                 {!isMobile && (
                   <div className="hidden md:flex space-x-1 bg-white/5 dark:bg-white/5 rounded-lg p-1 border border-white/10">
-                    {CATEGORIES.map(cat => (
+                    {CATEGORIES.map((cat) => (
                       <button
                         key={cat.id}
                         onClick={() => setActiveCategory(cat.id)}
-                        aria-current={activeCategory === cat.id ? 'page' : undefined}
+                        aria-current={
+                          activeCategory === cat.id ? "page" : undefined
+                        }
                         className={`px-4 py-2 rounded-md text-sm font-medium transition-colors active:scale-95 ${
                           activeCategory === cat.id
-                            ? 'bg-white/10 text-gray-900 dark:text-white shadow'
-                            : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5'
+                            ? "bg-white/10 text-gray-900 dark:text-white shadow"
+                            : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5"
                         }`}
                       >
                         {cat.name}
@@ -583,8 +666,18 @@ export default function NewsPage() {
                     {showMobileMenu ? (
                       <FaTimes className="w-5 h-5 text-white/90" />
                     ) : (
-                      <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                      <svg
+                        className="w-5 h-5 text-white/90"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 6h16M4 12h16M4 18h16"
+                        />
                       </svg>
                     )}
                   </button>
@@ -624,13 +717,13 @@ export default function NewsPage() {
           {showMobileMenu && isMobile && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className="overflow-hidden bg-black/20 dark:bg-black/30 backdrop-blur-md border-t border-white/10"
             >
               <div className="px-4 pb-4 grid grid-cols-2 gap-2">
-                {CATEGORIES.map(cat => (
+                {CATEGORIES.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => {
@@ -639,8 +732,8 @@ export default function NewsPage() {
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors active:scale-95 ${
                       activeCategory === cat.id
-                        ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white'
-                        : 'bg-white/10 text-white/90 hover:bg-white/20 border border-white/10'
+                        ? "bg-gradient-to-r from-cyan-600 to-teal-500 text-white"
+                        : "bg-white/10 text-white/90 hover:bg-white/20 border border-white/10"
                     }`}
                   >
                     <span className="mr-2">{cat.icon}</span>
@@ -663,13 +756,14 @@ export default function NewsPage() {
           >
             <FaExclamationTriangle className="text-yellow-600 dark:text-yellow-400 mr-3 flex-shrink-0" />
             <p className="text-yellow-800 dark:text-yellow-300 text-sm">
-              {errorCount} data source{errorCount > 1 ? 's' : ''} failed to load. Some content may be missing.
+              {errorCount} data source{errorCount > 1 ? "s" : ""} failed to
+              load. Some content may be missing.
             </p>
           </motion.div>
         )}
 
         {/* Hero Section */}
-        {activeCategory === 'all' && (
+        {activeCategory === "all" && (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -678,7 +772,7 @@ export default function NewsPage() {
             <motion.div
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 300 }}
+              transition={{ type: "spring", stiffness: 300 }}
               className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-5 py-1.5 rounded-full mb-5 text-xs font-medium tracking-wide"
             >
               Industry Insights
@@ -689,15 +783,23 @@ export default function NewsPage() {
               </span>
             </h1>
             <p className="text-gray-800 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg">
-              Stay updated with the latest news, videos, and blogs in AI, database technologies, and renewable energy.
+              Stay updated with the latest news, videos, and blogs in AI,
+              database technologies, and renewable energy.
             </p>
           </motion.section>
         )}
 
         {/* Trending Section */}
-        {activeCategory === 'all' && trendingArticles.length > 0 && (
-          <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mb-16">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5">Trending Now</h2>
+        {activeCategory === "all" && trendingArticles.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mb-16"
+          >
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5">
+              Trending Now
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {trendingArticles.map((article, i) => (
                 <ContentCard
@@ -711,9 +813,11 @@ export default function NewsPage() {
         )}
 
         {/* Category Content */}
-        {activeCategory === 'all' ? (
-          CATEGORIES.filter(cat => cat.id !== 'all').map(category => {
-            const catArticles = articles.filter(a => a.category === category.id);
+        {activeCategory === "all" ? (
+          CATEGORIES.filter((cat) => cat.id !== "all").map((category) => {
+            const catArticles = articles.filter(
+              (a) => a.category === category.id,
+            );
             if (catArticles.length === 0) return null;
             return (
               <CategorySection
@@ -729,7 +833,7 @@ export default function NewsPage() {
           })
         ) : (
           <CategorySection
-            category={CATEGORIES.find(c => c.id === activeCategory)}
+            category={CATEGORIES.find((c) => c.id === activeCategory)}
             articles={filteredArticles}
             categories={CATEGORIES}
             activeContentType={activeContentType}
@@ -739,33 +843,69 @@ export default function NewsPage() {
 
         {/* No results */}
         {filteredArticles.length === 0 && !loading && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16"
+          >
             <div className="text-5xl mb-3 text-gray-500">🔍</div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-300 mb-2">No content found</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-300 mb-2">
+              No content found
+            </h3>
             <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-              {debouncedSearchTerm ? 'Try a different search term' : 'No articles available for this category'}
+              {debouncedSearchTerm
+                ? "Try a different search term"
+                : "No articles available for this category"}
             </p>
           </motion.div>
         )}
 
         {/* Market Insights */}
-        {activeCategory === 'all' && (
+        {activeCategory === "all" && (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="mt-16 bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-md"
           >
-            <h3 className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-5 text-center">Market Insights</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-5 text-center">
+              Market Insights
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
-                { title: "AI Market Growth",   value: "$1.8T", description: "Projected market value by 2030 at 38% CAGR", color: "from-purple-500 to-indigo-500" },
-                { title: "Database Industry",  value: "+24%",  description: "Annual growth for AI-optimized database solutions", color: "from-cyan-500 to-blue-500" },
-                { title: "Renewable Energy",   value: "$2T",   description: "Global investment by 2030, mostly in solar and wind", color: "from-green-500 to-emerald-500" }
+                {
+                  title: "AI Market Growth",
+                  value: "$1.8T",
+                  description: "Projected market value by 2030 at 38% CAGR",
+                  color: "from-purple-500 to-indigo-500",
+                },
+                {
+                  title: "Database Industry",
+                  value: "+24%",
+                  description:
+                    "Annual growth for AI-optimized database solutions",
+                  color: "from-cyan-500 to-blue-500",
+                },
+                {
+                  title: "Renewable Energy",
+                  value: "$2T",
+                  description:
+                    "Global investment by 2030, mostly in solar and wind",
+                  color: "from-green-500 to-emerald-500",
+                },
               ].map((item, index) => (
-                <motion.div key={index} whileHover={{ y: -5 }} whileTap={{ scale: 0.98 }} className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}>
-                  <h4 className="text-lg font-bold text-white mb-2">{item.title}</h4>
-                  <div className="text-2xl font-bold text-white mb-2">{item.value}</div>
+                <motion.div
+                  key={index}
+                  whileHover={{ y: -5 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}
+                >
+                  <h4 className="text-lg font-bold text-white mb-2">
+                    {item.title}
+                  </h4>
+                  <div className="text-2xl font-bold text-white mb-2">
+                    {item.value}
+                  </div>
                   <p className="text-white/90 text-sm">{item.description}</p>
                 </motion.div>
               ))}
@@ -774,12 +914,20 @@ export default function NewsPage() {
         )}
 
         {/* Newsletter */}
-        {activeCategory === 'all' && (
-          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-16 text-center">
+        {activeCategory === "all" && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mt-16 text-center"
+          >
             <div className="bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl mx-auto backdrop-blur-md">
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-300 mb-3">Stay Informed</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-300 mb-3">
+                Stay Informed
+              </h3>
               <p className="text-gray-800 dark:text-gray-300 mb-5 text-base sm:text-lg">
-                Get weekly insights on AI breakthroughs, database innovations, and renewable energy advancements.
+                Get weekly insights on AI breakthroughs, database innovations,
+                and renewable energy advancements.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <input
@@ -798,8 +946,8 @@ export default function NewsPage() {
         {/* Back to top button */}
         {!loading && (
           <motion.button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-3 shadow-lg z-50 backdrop-blur-sm transition-all`}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className={`fixed ${isMobile ? "bottom-20" : "bottom-6"} right-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-3 shadow-lg z-50 backdrop-blur-sm transition-all`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.1 }}

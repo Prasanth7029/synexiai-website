@@ -1,7 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-export default function Container({ children, animate = false, className = "" }) {
+export default function Container({
+  children,
+  animate = false,
+  className = "",
+}) {
   const Wrapper = animate ? motion.div : "div";
 
   return (

@@ -1,4 +1,13 @@
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { GlobalLoading } from "./globalLoading";
 
 const Ctx = createContext(null);
@@ -29,7 +38,10 @@ export function LoadingProvider({ children }) {
       document.documentElement.style.overflow = "hidden";
     } else {
       // clear pending show
-      if (showTimer.current) { clearTimeout(showTimer.current); showTimer.current = null; }
+      if (showTimer.current) {
+        clearTimeout(showTimer.current);
+        showTimer.current = null;
+      }
       // release after a tiny delay so it feels smooth
       minShowTimer.current = setTimeout(() => {
         setVisible(false);
@@ -44,6 +56,7 @@ export function LoadingProvider({ children }) {
 
 export function useGlobalLoading() {
   const v = useContext(Ctx);
-  if (!v) throw new Error("useGlobalLoading must be used inside LoadingProvider");
+  if (!v)
+    throw new Error("useGlobalLoading must be used inside LoadingProvider");
   return v;
 }

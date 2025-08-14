@@ -1,7 +1,7 @@
+import { motion } from "framer-motion";
 // src/pages/TechStackPage.jsx
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { motion } from "framer-motion";
 
 // FA icons
 import {
@@ -41,9 +41,10 @@ import {
   SiMlflow,
 } from "react-icons/si";
 
-
-
 /* ------------------------------ Content Data ----------------------------- */
+
+const MotionDiv     = motion.div;
+
 
 const techStack = {
   ai: {
@@ -51,15 +52,54 @@ const techStack = {
     description:
       "Cutting-edge AI technologies powering our self-healing databases and predictive analytics",
     tools: [
-      { name: "TensorFlow", icon: <SiTensorflow />, color: "text-orange-400", description: "Machine learning framework" },
-      { name: "PyTorch", icon: <SiPytorch />, color: "text-red-400", description: "Deep learning framework" },
-      { name: "OpenAI API", icon: <SiOpenai />, color: "text-violet-300", description: "Advanced language models" },
-      { name: "Apache Spark", icon: <SiApachespark />, color: "text-red-500", description: "Large-scale data processing" },
-      { name: "Python", icon: <FaPython />, color: "text-yellow-400", description: "AI scripting language" },
-      { name: "scikit-learn", icon: <SiScikitlearn />, color: "text-blue-400", description: "Machine learning library" },
-      { name: "MLflow", icon: <SiMlflow />, color: "text-purple-400", description: "ML lifecycle management" },
-      { name: "Kubeflow", icon: <SiKubernetes />, color: "text-blue-300", description: "ML on Kubernetes" },
-
+      {
+        name: "TensorFlow",
+        icon: <SiTensorflow />,
+        color: "text-orange-400",
+        description: "Machine learning framework",
+      },
+      {
+        name: "PyTorch",
+        icon: <SiPytorch />,
+        color: "text-red-400",
+        description: "Deep learning framework",
+      },
+      {
+        name: "OpenAI API",
+        icon: <SiOpenai />,
+        color: "text-violet-300",
+        description: "Advanced language models",
+      },
+      {
+        name: "Apache Spark",
+        icon: <SiApachespark />,
+        color: "text-red-500",
+        description: "Large-scale data processing",
+      },
+      {
+        name: "Python",
+        icon: <FaPython />,
+        color: "text-yellow-400",
+        description: "AI scripting language",
+      },
+      {
+        name: "scikit-learn",
+        icon: <SiScikitlearn />,
+        color: "text-blue-400",
+        description: "Machine learning library",
+      },
+      {
+        name: "MLflow",
+        icon: <SiMlflow />,
+        color: "text-purple-400",
+        description: "ML lifecycle management",
+      },
+      {
+        name: "Kubeflow",
+        icon: <SiKubernetes />,
+        color: "text-blue-300",
+        description: "ML on Kubernetes",
+      },
     ],
   },
   infrastructure: {
@@ -67,41 +107,157 @@ const techStack = {
     description:
       "Green-powered infrastructure with blockchain security and hybrid cloud solutions",
     tools: [
-      { name: "AWS", icon: <FaAws />, color: "text-yellow-300", description: "Cloud provider" },
-      { name: "GCP", icon: <SiGooglecloud />, color: "text-red-300", description: "Google Cloud Platform" },
-      { name: "Kubernetes", icon: <SiKubernetes />, color: "text-blue-400", description: "Container orchestration" },
-      { name: "Docker", icon: <FaDocker />, color: "text-blue-300", description: "Containerization" },
-      { name: "Terraform", icon: <SiTerraform />, color: "text-purple-400", description: "Infrastructure as Code" },
-      { name: "Solar Energy", icon: <FaSolarPanel />, color: "text-yellow-400", description: "Renewable power source" },
-      { name: "Wind Energy", icon: <FaWind />, color: "text-cyan-400", description: "Renewable power source" },
-      { name: "ARM Servers", icon: <FaBolt />, color: "text-green-400", description: "Energy-efficient hardware" },
+      {
+        name: "AWS",
+        icon: <FaAws />,
+        color: "text-yellow-300",
+        description: "Cloud provider",
+      },
+      {
+        name: "GCP",
+        icon: <SiGooglecloud />,
+        color: "text-red-300",
+        description: "Google Cloud Platform",
+      },
+      {
+        name: "Kubernetes",
+        icon: <SiKubernetes />,
+        color: "text-blue-400",
+        description: "Container orchestration",
+      },
+      {
+        name: "Docker",
+        icon: <FaDocker />,
+        color: "text-blue-300",
+        description: "Containerization",
+      },
+      {
+        name: "Terraform",
+        icon: <SiTerraform />,
+        color: "text-purple-400",
+        description: "Infrastructure as Code",
+      },
+      {
+        name: "Solar Energy",
+        icon: <FaSolarPanel />,
+        color: "text-yellow-400",
+        description: "Renewable power source",
+      },
+      {
+        name: "Wind Energy",
+        icon: <FaWind />,
+        color: "text-cyan-400",
+        description: "Renewable power source",
+      },
+      {
+        name: "ARM Servers",
+        icon: <FaBolt />,
+        color: "text-green-400",
+        description: "Energy-efficient hardware",
+      },
     ],
   },
   databases: {
     title: "🗄️ Database Systems",
-    description: "AI-optimized database solutions with blockchain-backed security",
+    description:
+      "AI-optimized database solutions with blockchain-backed security",
     tools: [
-      { name: "PostgreSQL", icon: <SiPostgresql />, color: "text-blue-500", description: "Relational DB" },
-      { name: "MongoDB", icon: <SiMongodb />, color: "text-green-500", description: "NoSQL DB" },
-      { name: "Cassandra", icon: <SiApachecassandra />, color: "text-blue-400", description: "Distributed DB" },
-      { name: "Redis", icon: <SiRedis />, color: "text-red-500", description: "In-memory caching" },
-      { name: "Apache Kafka", icon: <SiApachekafka />, color: "text-purple-400", description: "Distributed streaming" },
-      { name: "Web3 Storage", icon: <SiWeb3Dotjs />, color: "text-amber-400", description: "Decentralized storage" },
-      { name: "Blockchain Audits", icon: <FaLink />, color: "text-emerald-400", description: "Immutable audit logs" },
+      {
+        name: "PostgreSQL",
+        icon: <SiPostgresql />,
+        color: "text-blue-500",
+        description: "Relational DB",
+      },
+      {
+        name: "MongoDB",
+        icon: <SiMongodb />,
+        color: "text-green-500",
+        description: "NoSQL DB",
+      },
+      {
+        name: "Cassandra",
+        icon: <SiApachecassandra />,
+        color: "text-blue-400",
+        description: "Distributed DB",
+      },
+      {
+        name: "Redis",
+        icon: <SiRedis />,
+        color: "text-red-500",
+        description: "In-memory caching",
+      },
+      {
+        name: "Apache Kafka",
+        icon: <SiApachekafka />,
+        color: "text-purple-400",
+        description: "Distributed streaming",
+      },
+      {
+        name: "Web3 Storage",
+        icon: <SiWeb3Dotjs />,
+        color: "text-amber-400",
+        description: "Decentralized storage",
+      },
+      {
+        name: "Blockchain Audits",
+        icon: <FaLink />,
+        color: "text-emerald-400",
+        description: "Immutable audit logs",
+      },
     ],
   },
   development: {
     title: "💻 Development Stack",
     description: "Modern development tools for building innovative solutions",
     tools: [
-      { name: "React.js", icon: <FaReact />, color: "text-cyan-400", description: "UI library" },
-      { name: "Spring Boot", icon: <SiSpringboot />, color: "text-green-400", description: "Java framework" },
-      { name: "Node.js", icon: <FaNodeJs />, color: "text-lime-400", description: "Backend runtime" },
-      { name: "GraphQL", icon: <SiGraphql />, color: "text-pink-400", description: "API query language" },
-      { name: "Vite", icon: <SiVite />, color: "text-yellow-400", description: "Frontend tooling" },
-      { name: "Tailwind CSS", icon: <SiTailwindcss />, color: "text-blue-400", description: "Utility-first CSS" },
-      { name: "GitHub", icon: <FaGithub />, color: "text-gray-300", description: "Version control" },
-      { name: "Flask", icon: <SiFlask />, color: "text-gray-400", description: "Python micro-framework" },
+      {
+        name: "React.js",
+        icon: <FaReact />,
+        color: "text-cyan-400",
+        description: "UI library",
+      },
+      {
+        name: "Spring Boot",
+        icon: <SiSpringboot />,
+        color: "text-green-400",
+        description: "Java framework",
+      },
+      {
+        name: "Node.js",
+        icon: <FaNodeJs />,
+        color: "text-lime-400",
+        description: "Backend runtime",
+      },
+      {
+        name: "GraphQL",
+        icon: <SiGraphql />,
+        color: "text-pink-400",
+        description: "API query language",
+      },
+      {
+        name: "Vite",
+        icon: <SiVite />,
+        color: "text-yellow-400",
+        description: "Frontend tooling",
+      },
+      {
+        name: "Tailwind CSS",
+        icon: <SiTailwindcss />,
+        color: "text-blue-400",
+        description: "Utility-first CSS",
+      },
+      {
+        name: "GitHub",
+        icon: <FaGithub />,
+        color: "text-gray-300",
+        description: "Version control",
+      },
+      {
+        name: "Flask",
+        icon: <SiFlask />,
+        color: "text-gray-400",
+        description: "Python micro-framework",
+      },
     ],
   },
 };
@@ -121,7 +277,9 @@ const ArchitectureDiagram = () => (
           <div className="text-cyan-400 text-xl mr-2">👤</div>
           <h4 className="font-semibold">User Interface</h4>
         </div>
-        <p className="text-sm text-center text-gray-400">React.js, GraphQL, Web3 Integration</p>
+        <p className="text-sm text-center text-gray-400">
+          React.js, GraphQL, Web3 Integration
+        </p>
       </div>
 
       {/* AI Layer */}
@@ -130,7 +288,9 @@ const ArchitectureDiagram = () => (
           <div className="text-green-400 text-xl mr-2">🧠</div>
           <h4 className="font-semibold">AI Optimization</h4>
         </div>
-        <p className="text-sm text-center text-gray-400">TensorFlow, PyTorch, Predictive Analytics</p>
+        <p className="text-sm text-center text-gray-400">
+          TensorFlow, PyTorch, Predictive Analytics
+        </p>
       </div>
 
       {/* Security Layer */}
@@ -139,7 +299,9 @@ const ArchitectureDiagram = () => (
           <div className="text-purple-400 text-xl mr-2">🔒</div>
           <h4 className="font-semibold">Blockchain Security</h4>
         </div>
-        <p className="text-sm text-center text-gray-400">Zero Trust Architecture, Immutable Logs</p>
+        <p className="text-sm text-center text-gray-400">
+          Zero Trust Architecture, Immutable Logs
+        </p>
       </div>
 
       {/* Energy Layer */}
@@ -148,7 +310,9 @@ const ArchitectureDiagram = () => (
           <div className="text-yellow-400 text-xl mr-2">⚡</div>
           <h4 className="font-semibold">Renewable Energy</h4>
         </div>
-        <p className="text-sm text-center text-gray-400">Solar/Wind Powered, ARM Efficiency</p>
+        <p className="text-sm text-center text-gray-400">
+          Solar/Wind Powered, ARM Efficiency
+        </p>
       </div>
 
       {/* Database Layer */}
@@ -157,7 +321,9 @@ const ArchitectureDiagram = () => (
           <div className="text-blue-400 text-xl mr-2">💾</div>
           <h4 className="font-semibold">Hybrid Database System</h4>
         </div>
-        <p className="text-sm text-center text-gray-400">SQL/NoSQL, Edge Computing, Self-Healing</p>
+        <p className="text-sm text-center text-gray-400">
+          SQL/NoSQL, Edge Computing, Self-Healing
+        </p>
       </div>
     </div>
 
@@ -193,7 +359,7 @@ const TabHeader = ({ id, panelId, active, onClick, children }) => (
 );
 
 const TabPanel = ({ id, labelledBy, active, children }) => (
-  <motion.div
+  <MotionDiv
     id={id}
     role="tabpanel"
     aria-labelledby={labelledBy}
@@ -203,7 +369,7 @@ const TabPanel = ({ id, labelledBy, active, children }) => (
     className={active ? "block" : "hidden"}
   >
     {children}
-  </motion.div>
+  </MotionDiv>
 );
 
 /* ---------------------------------- Page --------------------------------- */
@@ -214,18 +380,32 @@ export default function TechStackPage() {
   return (
     <>
       <Helmet>
-        <title>SynexiAI Technology Stack | AI, Cloud & Green Infrastructure</title>
+        <title>
+          SynexiAI Technology Stack | AI, Cloud & Green Infrastructure
+        </title>
         <meta
           name="description"
           content="Discover the innovative technology stack behind SynexiAI: AI, Machine Learning, Cloud, Blockchain Security, and Renewable Infrastructure. See the tools powering tomorrow's sustainable digital world."
         />
-        <meta property="og:title" content="SynexiAI Technology Stack | AI, Cloud & Green Infrastructure" />
-        <meta property="og:description" content="Explore the tech powering SynexiAI: AI, cloud, blockchain security, green infra, and more." />
+        <meta
+          property="og:title"
+          content="SynexiAI Technology Stack | AI, Cloud & Green Infrastructure"
+        />
+        <meta
+          property="og:description"
+          content="Explore the tech powering SynexiAI: AI, cloud, blockchain security, green infra, and more."
+        />
         <meta property="og:image" content="/assets/techstack-preview.png" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="SynexiAI Technology Stack | AI, Cloud & Green Infrastructure" />
-        <meta name="twitter:description" content="Explore the tech powering SynexiAI: AI, cloud, blockchain security, green infra, and more." />
+        <meta
+          name="twitter:title"
+          content="SynexiAI Technology Stack | AI, Cloud & Green Infrastructure"
+        />
+        <meta
+          name="twitter:description"
+          content="Explore the tech powering SynexiAI: AI, cloud, blockchain security, green infra, and more."
+        />
         <meta name="twitter:image" content="/assets/techstack-preview.jpg" />
         <script type="application/ld+json">
           {JSON.stringify({
@@ -235,7 +415,11 @@ export default function TechStackPage() {
             description:
               "Discover the technology powering SynexiAI: AI, ML, Cloud, Blockchain, and Renewable Infrastructure.",
             url: "https://www.synexiai.online/tech",
-            publisher: { "@type": "Organization", name: "SynexiAI", url: "https://www.synexiai.online" },
+            publisher: {
+              "@type": "Organization",
+              name: "SynexiAI",
+              url: "https://www.synexiai.online",
+            },
           })}
         </script>
       </Helmet>
@@ -243,7 +427,7 @@ export default function TechStackPage() {
       <div className="min-h-screen  from-gray-900 to-gray-950 py-16 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           {/* Hero */}
-          <motion.div
+          <MotionDiv
             className="text-center mb-16"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -260,10 +444,11 @@ export default function TechStackPage() {
             </h1>
 
             <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-              Our cutting-edge stack combines AI optimization, sustainable infrastructure,
-              and blockchain security to build the future of database technology.
+              Our cutting-edge stack combines AI optimization, sustainable
+              infrastructure, and blockchain security to build the future of
+              database technology.
             </p>
-          </motion.div>
+          </MotionDiv>
 
           <ArchitectureDiagram />
 
@@ -295,14 +480,19 @@ export default function TechStackPage() {
               const id = `panel-${key}`;
               const labelledBy = `tab-${key}`;
               return (
-                <TabPanel key={key} id={id} labelledBy={labelledBy} active={activeTab === key}>
+                <TabPanel
+                  key={key}
+                  id={id}
+                  labelledBy={labelledBy}
+                  active={activeTab === key}
+                >
                   <p className="text-gray-300 mb-8 text-center max-w-2xl mx-auto">
                     {techStack[key].description}
                   </p>
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                     {techStack[key].tools.map((tool, idx) => (
-                      <motion.div
+                      <MotionDiv
                         key={`${key}-${tool.name}-${idx}`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -310,12 +500,18 @@ export default function TechStackPage() {
                         className="flex flex-col items-center justify-center bg-gray-800/50 border border-cyan-500/10 rounded-xl p-5 hover:border-cyan-400/30 transition-all group"
                         whileHover={{ y: -5 }}
                       >
-                        <div className={`text-4xl mb-2 ${tool.color} group-hover:scale-110 transition-transform`}>
+                        <div
+                          className={`text-4xl mb-2 ${tool.color} group-hover:scale-110 transition-transform`}
+                        >
                           {tool.icon}
                         </div>
-                        <p className="text-sm text-gray-300 text-center font-medium">{tool.name}</p>
-                        <p className="text-xs text-gray-500 mt-1 text-center">{tool.description}</p>
-                      </motion.div>
+                        <p className="text-sm text-gray-300 text-center font-medium">
+                          {tool.name}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1 text-center">
+                          {tool.description}
+                        </p>
+                      </MotionDiv>
                     ))}
                   </div>
                 </TabPanel>
@@ -325,9 +521,12 @@ export default function TechStackPage() {
 
           {/* Future Technologies */}
           <div className="rounded-2xl p-8 border border-cyan-500/20 bg-white/5 backdrop-blur-md shadow-lg">
-            <h3 className="text-3xl font-bold text-cyan-400 mb-6 text-center">🚀 Future Technology Roadmap</h3>
+            <h3 className="text-3xl font-bold text-cyan-400 mb-6 text-center">
+              🚀 Future Technology Roadmap
+            </h3>
             <p className="text-gray-300 mb-8 text-center max-w-3xl mx-auto">
-              We're continuously researching and integrating emerging technologies to stay at the forefront of innovation
+              We're continuously researching and integrating emerging
+              technologies to stay at the forefront of innovation
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -336,7 +535,8 @@ export default function TechStackPage() {
                   <FaBolt className="mr-2" /> Quantum Computing
                 </h4>
                 <p className="text-gray-400">
-                  Exploring quantum algorithms for database optimization and AI model training acceleration.
+                  Exploring quantum algorithms for database optimization and AI
+                  model training acceleration.
                 </p>
               </div>
 
@@ -345,7 +545,8 @@ export default function TechStackPage() {
                   <FaLink className="mr-2" /> Decentralized AI
                 </h4>
                 <p className="text-gray-400">
-                  Developing federated learning systems that preserve privacy while training AI models across distributed nodes.
+                  Developing federated learning systems that preserve privacy
+                  while training AI models across distributed nodes.
                 </p>
               </div>
 
@@ -354,7 +555,8 @@ export default function TechStackPage() {
                   <FaSolarPanel className="mr-2" /> Advanced Energy Harvesting
                 </h4>
                 <p className="text-gray-400">
-                  Researching next-gen energy solutions like piezoelectric systems and advanced solar technologies.
+                  Researching next-gen energy solutions like piezoelectric
+                  systems and advanced solar technologies.
                 </p>
               </div>
             </div>
@@ -372,15 +574,19 @@ export default function TechStackPage() {
               <div className="text-cyan-400 text-3xl mb-4">⚙️</div>
               <h4 className="text-xl font-bold mb-3">AI-Driven Optimization</h4>
               <p className="text-gray-300">
-                Our systems continuously learn and adapt, applying machine learning to optimize database performance in real-time.
+                Our systems continuously learn and adapt, applying machine
+                learning to optimize database performance in real-time.
               </p>
             </div>
 
             <div className="bg-gradient-to-br from-teal-900/20 to-teal-800/10 border border-teal-500/20 rounded-2xl p-6">
               <div className="text-teal-400 text-3xl mb-4">♻️</div>
-              <h4 className="text-xl font-bold mb-3">Sustainable Architecture</h4>
+              <h4 className="text-xl font-bold mb-3">
+                Sustainable Architecture
+              </h4>
               <p className="text-gray-300">
-                Every component is designed for energy efficiency, powered by renewable sources with minimal carbon footprint.
+                Every component is designed for energy efficiency, powered by
+                renewable sources with minimal carbon footprint.
               </p>
             </div>
 
@@ -388,7 +594,8 @@ export default function TechStackPage() {
               <div className="text-purple-400 text-3xl mb-4">🔐</div>
               <h4 className="text-xl font-bold mb-3">Blockchain Security</h4>
               <p className="text-gray-300">
-                Zero-trust architecture with immutable blockchain audit trails ensures unparalleled data integrity and security.
+                Zero-trust architecture with immutable blockchain audit trails
+                ensures unparalleled data integrity and security.
               </p>
             </div>
           </div>

@@ -1,18 +1,79 @@
-// components/FeatureCard.jsx
 import { motion } from "framer-motion";
+import React from "react";
 
-export default function FeatureCard({ icon, title, description, delay }) {
+const MotionArticle = motion.article;
+
+export default function FeatureCard({
+  icon,
+  title,
+  description,
+  delay = 0,
+  className = "",
+}) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
+    <MotionArticle
+      initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay }}
-      viewport={{ once: true }}
-      className="rounded-xl p-6 shadow-lg hover:shadow-cyan-500/20 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:-translate-y-2"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay }}
+      className={[
+        "group flex h-full min-h-[220px] flex-col justify-between",
+        "rounded-2xl border backdrop-blur-sm",
+        "border-[var(--border-color)]",
+        "bg-white/5 dark:bg-white/5",
+        "shadow-sm hover:shadow-cyan-500/10",
+        "transition-[transform,box-shadow,background] duration-300",
+        "p-6 md:p-8",
+        className,
+      ].join(" ")}
+      role="region"
+      aria-label={title}
     >
-      <div className="mb-4">{icon}</div>
-      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{title}</h3>
-      <p className="text-gray-600 dark:text-gray-400">{description}</p>
-    </motion.div>
+      {/* Top row: icon + title */}
+      <div>
+        <div
+          className={[
+            "mb-5 inline-flex items-center justify-center",
+            "h-12 w-12 rounded-xl",
+            "bg-cyan-500/10 border border-cyan-400/20",
+            "ring-0 group-hover:ring-2 group-hover:ring-cyan-400/30",
+            "transition-shadow",
+          ].join(" ")}
+          aria-hidden="true"
+        >
+          {/* keep whatever icon color you pass in */}
+          {icon}
+        </div>
+
+        <h3
+          className={[
+            "text-xl md:text-2xl font-semibold leading-snug",
+            "text-gray-900 dark:text-gray-100",
+          ].join(" ")}
+        >
+          {title}
+        </h3>
+
+        <p
+          className={[
+            "mt-3 text-base md:text-lg",
+            "text-gray-700 dark:text-gray-300",
+          ].join(" ")}
+        >
+          {description}
+        </p>
+      </div>
+
+      {/* Bottom accent line on hover for polish */}
+      <div
+        className={[
+          "mt-6 h-px w-full",
+          "bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent",
+          "opacity-0 group-hover:opacity-100 transition-opacity",
+        ].join(" ")}
+        aria-hidden="true"
+      />
+    </MotionArticle>
+
   );
 }

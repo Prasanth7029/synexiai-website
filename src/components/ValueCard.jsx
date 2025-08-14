@@ -1,12 +1,14 @@
+import { motion } from "framer-motion";
 // components/ValueCard.jsx
 import React from "react";
-import { motion } from "framer-motion";
+
+const MotionDiv = motion.div;
 
 export default function ValueCard({
   icon,
   title,
   description,
-  delay = 0,            // seconds, e.g. 0.1, 0.2 ...
+  delay = 0, // seconds, e.g. 0.1, 0.2 ...
   className = "",
   highlightColor = "cyan", // "cyan" | "teal" | "blue" | "purple" | "emerald"
 }) {
@@ -24,7 +26,7 @@ export default function ValueCard({
     "shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-2";
 
   return (
-    <motion.div
+    <MotionDiv
       role="article"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -40,13 +42,15 @@ export default function ValueCard({
       </div>
 
       {/* gradient title */}
-      <h4 className={`text-lg font-semibold mb-2 bg-clip-text text-transparent bg-gradient-to-r ${accent}`}>
+      <h4
+        className={`text-lg font-semibold mb-2 bg-clip-text text-transparent bg-gradient-to-r ${accent}`}
+      >
         {title}
       </h4>
 
       <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
         {description}
       </p>
-    </motion.div>
+    </MotionDiv>
   );
 }

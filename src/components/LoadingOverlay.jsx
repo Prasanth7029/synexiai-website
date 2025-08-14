@@ -1,5 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { useGlobalLoading } from "../lib/LoadingProvider";
 
@@ -27,6 +28,6 @@ export default function LoadingOverlay() {
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 }

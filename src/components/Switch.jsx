@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const Switch = ({ checked, onChange }) => {
   return (
@@ -19,7 +19,7 @@ const Switch = ({ checked, onChange }) => {
       </div>
     </StyledWrapper>
   );
-}
+};
 
 const StyledWrapper = styled.div`
   #checkbox {
@@ -44,33 +44,33 @@ const StyledWrapper = styled.div`
     background-color: #22d3ee; /* Tailwind cyan-500 */
     color: inherit;
     opacity: 1;
-    transition: none 0.35s cubic-bezier(.5,-0.35,.35,1.5) 0s;
+    transition: none 0.35s cubic-bezier(0.5, -0.35, 0.35, 1.5) 0s;
   }
 
   /***** Spin Animation *****/
 
   .bar--top {
-    bottom: calc(50% + 11px + 4px/ 2);
-    transition-property: bottom,transform;
-    transition-delay: calc(0s + 0.35s),0s;
+    bottom: calc(50% + 11px + 4px / 2);
+    transition-property: bottom, transform;
+    transition-delay: calc(0s + 0.35s), 0s;
   }
 
   .bar--middle {
-    top: calc(50% - 4px/ 2);
+    top: calc(50% - 4px / 2);
     transition-property: opacity;
     transition-delay: calc(0s + 0.35s);
   }
 
   .bar--bottom {
-    top: calc(50% + 11px + 4px/ 2);
-    transition-property: top,transform;
-    transition-delay: calc(0s + 0.35s),0s;
+    top: calc(50% + 11px + 4px / 2);
+    transition-property: top, transform;
+    transition-delay: calc(0s + 0.35s), 0s;
   }
 
   #checkbox:checked + .toggle .bar--top {
-    bottom: calc(50% - 4px/ 2);
+    bottom: calc(50% - 4px / 2);
     transform: rotate(135deg);
-    transition-delay: 0s,calc(0s + 0.35s);
+    transition-delay: 0s, calc(0s + 0.35s);
   }
 
   #checkbox:checked + .toggle .bar--middle {
@@ -80,9 +80,10 @@ const StyledWrapper = styled.div`
   }
 
   #checkbox:checked + .toggle .bar--bottom {
-    top: calc(50% - 4px/ 2);
+    top: calc(50% - 4px / 2);
     transform: rotate(225deg);
-    transition-delay: 0s,calc(0s + 0.35s);
-  }`;
+    transition-delay: 0s, calc(0s + 0.35s);
+  }
+`;
 
 export default Switch;

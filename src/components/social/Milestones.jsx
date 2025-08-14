@@ -1,3 +1,4 @@
+// src/components/social/Milestones.jsx
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -18,19 +19,29 @@ function useCountUp(target = 0, duration = 1200, start = false) {
   return value;
 }
 
+function StatCard({ label, value, delayIndex, start }) {
+  const val = useCountUp(value, 1100 + delayIndex * 200, start);
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-5 text-center">
+      <div className="text-3xl font-extrabold text-cyan-400">{val}</div>
+      <div className="text-xs opacity-80 mt-1">{label}</div>
+    </div>
+  );
+}
+
 export default function Milestones({ items = [] }) {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
   return (
     <div ref={ref} className="grid grid-cols-3 gap-4">
-      {items.map((m, i) => {
-        const val = useCountUp(m.value, 1100 + i * 200, inView);
-        return (
-          <div key={m.label} className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-5 text-center">
-            <div className="text-3xl font-extrabold text-cyan-400">{val}</div>
-            <div className="text-xs opacity-80 mt-1">{m.label}</div>
-          </div>
-        );
-      })}
+      {items.map((m, i) => (
+        <StatCard
+          key={m.label}
+          label={m.label}
+          value={m.value}
+          delayIndex={i}
+          start={inView}
+        />
+      ))}
     </div>
   );
 }

@@ -1,10 +1,42 @@
 [
-  { "route": "/", "title": "Home", "content": "SynexiAI: mission, vision, and highlights." },
-  { "route": "/about", "title": "About", "content": "Who we are, our principles, and roadmap." },
-  { "route": "/tech", "title": "Tech Stack", "content": "React, Vite, Tailwind, Spring Boot, microservices, AI." },
-    { "route": "/features", "title": "Features", "content": "Key features: AI-driven, real-time collaboration, extensible." },
-    { "route": "/roadmap", "title": "Roadmap", "content": "Future plans: AI enhancements, new integrations, community features." },
-    { "route": "/community", "title": "Community", "content": "Join our community: forums, Discord, GitHub." },
-    { "route": "/blog", "title": "Blog", "content": "Latest updates, tutorials, and insights." },
-    { "route": "/contact", "title": "Contact Us", "content": "Get in touch for support or inquiries." }
+  {
+    "route": "/",
+    "title": "Home",
+    "content": "SynexiAI: mission, vision, and highlights."
+  },
+  {
+    "route": "/about",
+    "title": "About",
+    "content": "Who we are, our principles, and roadmap."
+  },
+  {
+    "route": "/tech",
+    "title": "Tech Stack",
+    "content": "React, Vite, Tailwind, Spring Boot, microservices, AI."
+  },
+  {
+    "route": "/features",
+    "title": "Features",
+    "content": "Key features: AI-driven, real-time collaboration, extensible."
+  },
+  {
+    "route": "/roadmap",
+    "title": "Roadmap",
+    "content": "Future plans: AI enhancements, new integrations, community features."
+  },
+  {
+    "route": "/community",
+    "title": "Community",
+    "content": "Join our community: forums, Discord, GitHub."
+  },
+  {
+    "route": "/blog",
+    "title": "Blog",
+    "content": "Latest updates, tutorials, and insights."
+  },
+  {
+    "route": "/contact",
+    "title": "Contact Us",
+    "content": "Get in touch for support or inquiries."
+  }
 ]

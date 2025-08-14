@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from "react";
 
 export default function VideoEmbed({ src, title }) {
   const [active, setActive] = useState(false);
@@ -7,12 +7,15 @@ export default function VideoEmbed({ src, title }) {
 
   useEffect(() => {
     if (!ref.current || active) return;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setVisible(true);
-        io.disconnect();
-      }
-    }, { rootMargin: '200px' });
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
     io.observe(ref.current);
     return () => io.disconnect();
   }, [active]);
@@ -21,11 +24,14 @@ export default function VideoEmbed({ src, title }) {
 
   // derive a poster if your API has thumbnails; otherwise show a play overlay
   return (
-    <div ref={ref} className="relative pt-[56.25%] bg-black overflow-hidden rounded-t-xl">
-      {(active || visible) ? (
+    <div
+      ref={ref}
+      className="relative pt-[56.25%] bg-black overflow-hidden rounded-t-xl"
+    >
+      {active || visible ? (
         <iframe
           title={title}
-          src={active ? src : undefined}              // only set src after click -> zero CPU before
+          src={active ? src : undefined} // only set src after click -> zero CPU before
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen

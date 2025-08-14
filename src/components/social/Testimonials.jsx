@@ -1,11 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+const MotionBlockquote = motion.blockquote;
+
 export default function Testimonials({ items = [] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {items.map((t, i) => (
-        <motion.blockquote
+        <MotionBlockquote
           key={i}
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -17,7 +19,7 @@ export default function Testimonials({ items = [] }) {
           <footer className="mt-4 text-sm opacity-80">
             <span className="font-semibold">{t.author}</span> — {t.role}
           </footer>
-        </motion.blockquote>
+        </MotionBlockquote>
       ))}
     </div>
   );

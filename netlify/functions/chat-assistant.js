@@ -21,7 +21,8 @@ const strictSystemPrompt =
 
 function classifyIntent(text = "") {
   const t = (text || "").toLowerCase();
-  if (/(^|\b)(team|member|who.*(ceo|founder)|lead|cto)(\b|$)/i.test(t)) return "team";
+  if (/(^|\b)(team|member|who.*(ceo|founder)|lead|cto)(\b|$)/i.test(t))
+    return "team";
   if (/(project|working on|build|repo|github)/i.test(t)) return "projects";
   if (/(collab|partner|invest|work with|contact)/i.test(t)) return "collab";
   if (/(company|mission|vision|about)/i.test(t)) return "company";
@@ -46,19 +47,21 @@ function factsReply(kind) {
   switch (kind) {
     case "team":
       return ensureContactTail(
-        `Our founder is ${team.founder}. Key team members include: ${members}.`
+        `Our founder is ${team.founder}. Key team members include: ${members}.`,
       );
     case "projects":
       return ensureContactTail(`Current projects: ${projectList}.`);
     case "collab":
       return ensureContactTail(
-        `We welcome collaborations! Contact ${contact.email} or call ${contact.phone}.`
+        `We welcome collaborations! Contact ${contact.email} or call ${contact.phone}.`,
       );
     case "company":
-      return ensureContactTail(`${name} is focused on ${mission}. Our vision is ${vision}.`);
+      return ensureContactTail(
+        `${name} is focused on ${mission}. Our vision is ${vision}.`,
+      );
     default:
       return ensureContactTail(
-        `I can answer questions about ${name}. Ask about our team, projects, or mission.`
+        `I can answer questions about ${name}. Ask about our team, projects, or mission.`,
       );
   }
 }

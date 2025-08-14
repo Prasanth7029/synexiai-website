@@ -3,15 +3,27 @@ import React, { useEffect, useMemo, useState } from "react";
 function Sparkline({ values = [] }) {
   const path = useMemo(() => {
     if (!values.length) return "";
-    const w = 160, h = 40, pad = 4;
-    const min = Math.min(...values), max = Math.max(...values);
-    const norm = v => h - pad - ((v - min) / (max - min || 1)) * (h - pad * 2);
+    const w = 160,
+      h = 40,
+      pad = 4;
+    const min = Math.min(...values),
+      max = Math.max(...values);
+    const norm = (v) =>
+      h - pad - ((v - min) / (max - min || 1)) * (h - pad * 2);
     const step = (w - pad * 2) / (values.length - 1 || 1);
-    return values.map((v, i) => `${i === 0 ? "M" : "L"} ${pad + i * step} ${norm(v)}`).join(" ");
+    return values
+      .map((v, i) => `${i === 0 ? "M" : "L"} ${pad + i * step} ${norm(v)}`)
+      .join(" ");
   }, [values]);
   return (
     <svg viewBox="0 0 160 40" className="w-40 h-10">
-      <path d={path} fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-400" />
+      <path
+        d={path}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        className="text-cyan-400"
+      />
     </svg>
   );
 }
@@ -22,11 +34,14 @@ export default function MetricCard() {
 
   useEffect(() => {
     const id = setInterval(() => {
-      setSeries(s => {
-        const next = Math.max(85, Math.min(99.9, (s[s.length - 1] + (Math.random() - 0.4) * 2)));
+      setSeries((s) => {
+        const next = Math.max(
+          85,
+          Math.min(99.9, s[s.length - 1] + (Math.random() - 0.4) * 2),
+        );
         return [...s.slice(-19), Number(next.toFixed(2))];
       });
-      setValue(v => Number(series[series.length - 1]?.toFixed(2)) || v);
+      setValue((v) => Number(series[series.length - 1]?.toFixed(2)) || v);
     }, 3000);
     return () => clearInterval(id);
   }, [series]);
@@ -40,7 +55,9 @@ export default function MetricCard() {
         </div>
         <Sparkline values={series} />
       </div>
-      <p className="mt-2 text-xs opacity-75">Live metric (demo) • auto-updates</p>
+      <p className="mt-2 text-xs opacity-75">
+        Live metric (demo) • auto-updates
+      </p>
     </div>
   );
 }

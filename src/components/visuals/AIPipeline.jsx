@@ -1,6 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+const MotionCircle = motion.circle;
+
 export default function AIPipeline() {
   return (
     <section
@@ -25,13 +27,34 @@ export default function AIPipeline() {
           {/* Nodes */}
           <g>
             <circle cx="150" cy="120" r="36" className="fill-emerald-400/80" />
-            <text x="150" y="125" textAnchor="middle" className="fill-black font-semibold">Ingest</text>
+            <text
+              x="150"
+              y="125"
+              textAnchor="middle"
+              className="fill-black font-semibold"
+            >
+              Ingest
+            </text>
 
             <circle cx="600" cy="120" r="36" className="fill-cyan-400/80" />
-            <text x="600" y="125" textAnchor="middle" className="fill-black font-semibold">Train</text>
+            <text
+              x="600"
+              y="125"
+              textAnchor="middle"
+              className="fill-black font-semibold"
+            >
+              Train
+            </text>
 
             <circle cx="1050" cy="120" r="36" className="fill-blue-400/80" />
-            <text x="1050" y="125" textAnchor="middle" className="fill-black font-semibold">Serve</text>
+            <text
+              x="1050"
+              y="125"
+              textAnchor="middle"
+              className="fill-black font-semibold"
+            >
+              Serve
+            </text>
           </g>
 
           {/* Flow line */}
@@ -60,7 +83,7 @@ export default function AIPipeline() {
 
           {/* Moving dots */}
           {[0, 0.25, 0.5, 0.75].map((delay, i) => (
-            <motion.circle
+            <MotionCircle
               key={i}
               r="5"
               cy="120"
@@ -71,7 +94,7 @@ export default function AIPipeline() {
             />
           ))}
           {[0.1, 0.35, 0.6, 0.85].map((delay, i) => (
-            <motion.circle
+            <MotionCircle
               key={`b-${i}`}
               r="5"
               cy="120"
@@ -84,9 +107,15 @@ export default function AIPipeline() {
         </svg>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 text-center text-sm opacity-90">
-          <p><strong>Ingest:</strong> ETL, events, sensors</p>
-          <p><strong>Training:</strong> LLMs + classical ML, AutoTune</p>
-          <p><strong>Serving:</strong> APIs, streaming, dashboards</p>
+          <p>
+            <strong>Ingest:</strong> ETL, events, sensors
+          </p>
+          <p>
+            <strong>Training:</strong> LLMs + classical ML, AutoTune
+          </p>
+          <p>
+            <strong>Serving:</strong> APIs, streaming, dashboards
+          </p>
         </div>
       </div>
     </section>

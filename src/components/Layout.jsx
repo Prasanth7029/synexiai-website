@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 import Header from "./Header";
 import Footer from "./Footer";
-import { motion } from "framer-motion";
 import ChatWidget from "./ChatWidget";
 
 export default function Layout({ children }) {
-
   return (
     <div className="flex flex-col min-h-screen text-white">
       {/* Header */}

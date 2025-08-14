@@ -1,22 +1,44 @@
 // src/pages/VisionPage.jsx
 import React from "react";
 import Container from "../components/Container";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { FaDownload, FaHandshake, FaRocket, FaChartLine } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 /* --------------------------------- Data ---------------------------------- */
+
+const MotionDiv     = motion.div;
+const MotionSection = motion.section;
+const MotionP       = motion.p;
+const MotionH2      = motion.h2;
+const MotionH3      = motion.h3;
+
 const roadmap = [
   {
     year: "2025 – 2030 (Phase 1: Foundation)",
     goals: [
-      { text: "Launch SynexiAI's unified platform & intelligent dashboard ecosystem", status: "completed" },
-      { text: "Build AI-powered microservices (search, NLP, alerting, analytics)", status: "in-progress" },
-      { text: "Implement Zero Trust Architecture & blockchain-backed audit systems", status: "planned" },
-      { text: "Apply AI to healthcare, education, energy & civic systems", status: "planned" },
-      { text: "Lay groundwork for smart datacenter infrastructure (green energy powered)", status: "planned" },
+      {
+        text: "Launch SynexiAI's unified platform & intelligent dashboard ecosystem",
+        status: "completed",
+      },
+      {
+        text: "Build AI-powered microservices (search, NLP, alerting, analytics)",
+        status: "in-progress",
+      },
+      {
+        text: "Implement Zero Trust Architecture & blockchain-backed audit systems",
+        status: "planned",
+      },
+      {
+        text: "Apply AI to healthcare, education, energy & civic systems",
+        status: "planned",
+      },
+      {
+        text: "Lay groundwork for smart datacenter infrastructure (green energy powered)",
+        status: "planned",
+      },
     ],
     icon: "🛠️",
     color: "bg-cyan-500",
@@ -24,11 +46,26 @@ const roadmap = [
   {
     year: "2030 – 2040 (Phase 2: Expansion)",
     goals: [
-      { text: "Launch the SynexiAI Smart City prototype powered by AI + renewables", status: "planned" },
-      { text: "Operate AI-driven cloud infrastructure for public systems", status: "planned" },
-      { text: "Expand research in self-healing systems & human-AI co-design", status: "planned" },
-      { text: "Launch SynexiAI Assistant — the open citizen knowledge engine", status: "planned" },
-      { text: "Enable intelligent governance, decentralized civic apps", status: "planned" },
+      {
+        text: "Launch the SynexiAI Smart City prototype powered by AI + renewables",
+        status: "planned",
+      },
+      {
+        text: "Operate AI-driven cloud infrastructure for public systems",
+        status: "planned",
+      },
+      {
+        text: "Expand research in self-healing systems & human-AI co-design",
+        status: "planned",
+      },
+      {
+        text: "Launch SynexiAI Assistant — the open citizen knowledge engine",
+        status: "planned",
+      },
+      {
+        text: "Enable intelligent governance, decentralized civic apps",
+        status: "planned",
+      },
     ],
     icon: "🌐",
     color: "bg-teal-500",
@@ -36,10 +73,22 @@ const roadmap = [
   {
     year: "2040 – 2045+ (Phase 3: Transformation)",
     goals: [
-      { text: "Become the global tech standard in AI, cloud & sustainability", status: "planned" },
-      { text: "Build the world's first fully self-regulating smart-energy AI city", status: "planned" },
-      { text: "Shape governance through real-time citizen-AI collaboration", status: "planned" },
-      { text: "Democratize intelligence — tools that uplift every human life", status: "planned" },
+      {
+        text: "Become the global tech standard in AI, cloud & sustainability",
+        status: "planned",
+      },
+      {
+        text: "Build the world's first fully self-regulating smart-energy AI city",
+        status: "planned",
+      },
+      {
+        text: "Shape governance through real-time citizen-AI collaboration",
+        status: "planned",
+      },
+      {
+        text: "Democratize intelligence — tools that uplift every human life",
+        status: "planned",
+      },
     ],
     icon: "🚀",
     color: "bg-purple-500",
@@ -56,7 +105,7 @@ const statusColors = {
 /* ------------------------------ Subcomponents ----------------------------- */
 function RoadmapItem({ milestone, index }) {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
@@ -73,7 +122,7 @@ function RoadmapItem({ milestone, index }) {
       </div>
 
       {/* Card */}
-      <motion.div
+      <MotionDiv
         whileHover={{ y: -4 }}
         className={`rounded-2xl p-8 border border-white/10 bg-white/5 backdrop-blur-md shadow-lg 
         ${index % 2 === 0 ? "md:mr-8" : "md:ml-8"}`}
@@ -84,7 +133,7 @@ function RoadmapItem({ milestone, index }) {
 
         <ul className="space-y-4">
           {milestone.goals.map((goal, idx) => (
-            <motion.li
+            <Motionli
               key={`${milestone.year}-${idx}`}
               initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -96,11 +145,11 @@ function RoadmapItem({ milestone, index }) {
                 {statusIcons[goal.status] || "•"}
               </span>
               <span className="text-gray-200">{goal.text}</span>
-            </motion.li>
+            </Motionli>
           ))}
         </ul>
-      </motion.div>
-    </motion.div>
+      </MotionDiv>
+    </MotionDiv>
   );
 }
 
@@ -127,7 +176,7 @@ export default function VisionPage() {
 
           {/* Hero */}
           <section className="relative z-10 text-center py-16 md:py-24">
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -137,19 +186,22 @@ export default function VisionPage() {
                 <span className="bg-gradient-to-r from-cyan-400 to-teal-500 bg-clip-text text-transparent">
                   SynexiAI Vision
                 </span>
-                <span className="ml-3" aria-hidden="true">🌌</span>
+                <span className="ml-3" aria-hidden="true">
+                  🌌
+                </span>
               </h1>
 
-              <motion.p
+              <MotionP
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
                 className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed"
               >
-                Our strategic roadmap to revolutionize artificial intelligence and build sustainable, human-centric systems
-              </motion.p>
+                Our strategic roadmap to revolutionize artificial intelligence
+                and build sustainable, human-centric systems
+              </MotionP>
 
-              <motion.div
+              <MotionDiv
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
@@ -161,16 +213,19 @@ export default function VisionPage() {
                   hover:shadow-lg hover:shadow-cyan-500/30 transition-all group"
                 >
                   <span>Join Our Mission</span>
-                  <FaRocket className="ml-2 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                  <FaRocket
+                    className="ml-2 group-hover:translate-x-1 transition-transform"
+                    aria-hidden="true"
+                  />
                 </Link>
-              </motion.div>
-            </motion.div>
+              </MotionDiv>
+            </MotionDiv>
           </section>
 
           {/* Roadmap */}
           <section className="relative z-10 py-12 pl-4 sm:pl-0">
             <div className="max-w-6xl mx-auto">
-              <motion.h2
+              <MotionH2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -178,7 +233,7 @@ export default function VisionPage() {
                 className="text-3xl md:text-4xl font-bold text-center mb-16 text-cyan-400"
               >
                 Strategic Roadmap
-              </motion.h2>
+              </MotionH2>
 
               <div className="relative">
                 {/* Vertical line */}
@@ -197,7 +252,7 @@ export default function VisionPage() {
 
           {/* Milestone markers */}
           <section className="py-12">
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -206,7 +261,7 @@ export default function VisionPage() {
             >
               <div className="relative h-2 rounded-full overflow-hidden mb-8 border border-white/10 bg-white/5 backdrop-blur-md">
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-teal-500 opacity-30" />
-                {[0, 20, 40, 60, 80, 100].map((pos, idx) => (
+                {[0, 20, 40, 60, 80, 100].map((pos) => (
                   <div
                     key={pos}
                     className="absolute top-1/2 w-4 h-4 bg-cyan-400 rounded-full -translate-x-1/2 -translate-y-1/2 shadow"
@@ -217,26 +272,30 @@ export default function VisionPage() {
               </div>
 
               <div className="flex justify-between px-4">
-                {["2025", "2027", "2030", "2035", "2040", "2045+"].map((year, idx) => (
-                  <motion.div
-                    key={year}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.05, duration: 0.4 }}
-                    className="text-center"
-                  >
-                    <div className="text-cyan-400 font-bold">{year}</div>
-                    <div className="text-xs text-gray-400 mt-1">Milestone</div>
-                  </motion.div>
-                ))}
+                {["2025", "2027", "2030", "2035", "2040", "2045+"].map(
+                  (year, idx) => (
+                    <MotionDiv
+                      key={year}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.05, duration: 0.4 }}
+                      className="text-center"
+                    >
+                      <div className="text-cyan-400 font-bold">{year}</div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        Milestone
+                      </div>
+                    </MotionDiv>
+                  ),
+                )}
               </div>
-            </motion.div>
+            </MotionDiv>
           </section>
 
           {/* CTA panels */}
           <section className="grid md:grid-cols-2 gap-8 mb-24">
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -244,11 +303,18 @@ export default function VisionPage() {
               className="rounded-2xl p-8 border border-white/10 bg-white/5 backdrop-blur-md shadow-lg"
             >
               <div className="flex items-center mb-4">
-                <FaHandshake className="text-cyan-400 text-2xl mr-3" aria-hidden="true" />
-                <h3 className="text-2xl font-bold text-cyan-300">Join Our Journey</h3>
+                <FaHandshake
+                  className="text-cyan-400 text-2xl mr-3"
+                  aria-hidden="true"
+                />
+                <h3 className="text-2xl font-bold text-cyan-300">
+                  Join Our Journey
+                </h3>
               </div>
               <p className="text-gray-300 mb-6">
-                Whether you're a researcher, builder, or visionary — SynexiAI welcomes collaborators who believe in building systems that matter.
+                Whether you're a researcher, builder, or visionary — SynexiAI
+                welcomes collaborators who believe in building systems that
+                matter.
               </p>
               <Link
                 to="/contact"
@@ -259,14 +325,22 @@ export default function VisionPage() {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
                 </svg>
               </Link>
-            </motion.div>
+            </MotionDiv>
 
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -274,11 +348,17 @@ export default function VisionPage() {
               className="rounded-2xl p-8 border border-white/10 bg-white/5 backdrop-blur-md shadow-lg"
             >
               <div className="flex items-center mb-4">
-                <FaChartLine className="text-teal-400 text-2xl mr-3" aria-hidden="true" />
-                <h3 className="text-2xl font-bold text-teal-300">Investor Materials</h3>
+                <FaChartLine
+                  className="text-teal-400 text-2xl mr-3"
+                  aria-hidden="true"
+                />
+                <h3 className="text-2xl font-bold text-teal-300">
+                  Investor Materials
+                </h3>
               </div>
               <p className="text-gray-300 mb-6">
-                Access our detailed investor deck with financial projections, technology deep dives, and partnership opportunities.
+                Access our detailed investor deck with financial projections,
+                technology deep dives, and partnership opportunities.
               </p>
               <a
                 href="/assets/SynexiAI-Investor-Deck.pdf"
@@ -289,7 +369,7 @@ export default function VisionPage() {
                 <FaDownload className="mr-2" aria-hidden="true" />
                 <span>Download Investor Deck</span>
               </a>
-            </motion.div>
+            </MotionDiv>
           </section>
         </Container>
       </ErrorBoundary>

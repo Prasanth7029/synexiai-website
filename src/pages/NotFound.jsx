@@ -1,11 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { FaHome, FaGhost, FaCompass } from "react-icons/fa";
+import { motion } from "framer-motion";
+
+const MotionDiv = motion.div;
+const MotionH1 = motion.h1;
+const MotionP = motion.p;
 
 export default function NotFound() {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -14,7 +18,7 @@ export default function NotFound() {
     >
       <div className="max-w-md mx-auto">
         {/* Animated ghost icon */}
-        <motion.div
+        <MotionDiv
           animate={{
             y: [0, -15, 0],
             rotate: [0, 5, -5, 0],
@@ -27,40 +31,41 @@ export default function NotFound() {
           className="mb-8"
         >
           <FaGhost className="text-8xl mx-auto text-[#00f7ff] drop-shadow-lg" />
-        </motion.div>
+        </MotionDiv>
 
         {/* 404 text with better animation */}
-        <motion.h1
+        <MotionH1
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2, type: "spring" }}
           className="text-7xl md:text-8xl font-extrabold mb-6 text-[#00f7ff] drop-shadow-lg"
         >
           404
-        </motion.h1>
+        </MotionH1>
 
         {/* Error message */}
-        <motion.p
+        <MotionP
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
           className="text-xl md:text-2xl mb-6 font-medium"
         >
           Oops! The page you're looking for vanished into the digital void.
-        </motion.p>
+        </MotionP>
 
         {/* Additional helpful message */}
-        <motion.p
+        <MotionP
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.6 }}
           className="text-gray-600 dark:text-gray-400 mb-8"
         >
-          Maybe the URL was mistyped, or the page was moved to another dimension.
-        </motion.p>
+          Maybe the URL was mistyped, or the page was moved to another
+          dimension.
+        </MotionP>
 
         {/* Action buttons */}
-        <motion.div
+        <MotionDiv
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.8 }}
@@ -81,18 +86,18 @@ export default function NotFound() {
             <FaCompass className="mr-2" />
             Explore Content
           </Link>
-        </motion.div>
+        </MotionDiv>
 
         {/* Fun fact */}
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
           className="mt-12 p-4 bg-[#00f7ff]/10 border border-[#00f7ff]/30 rounded-lg text-sm"
         >
           <p>Did you know? The first 404 error appeared at CERN in 1990!</p>
-        </motion.div>
+        </MotionDiv>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 }

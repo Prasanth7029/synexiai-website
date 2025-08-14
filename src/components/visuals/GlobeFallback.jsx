@@ -1,7 +1,10 @@
 import React from "react";
 
 export default function GlobeFallback({ variant = "idle" }) {
-  const spin = variant === "loading" ? "spin 6s linear infinite" : "spin 18s linear infinite";
+  const spin =
+    variant === "loading"
+      ? "spin 6s linear infinite"
+      : "spin 18s linear infinite";
 
   return (
     <div className="w-full h-full grid place-items-center">
@@ -13,7 +16,7 @@ export default function GlobeFallback({ variant = "idle" }) {
           className="absolute inset-0 rounded-full"
           style={{
             background:
-              "radial-gradient(40% 40% at 35% 35%, rgba(255,255,255,.25), transparent), radial-gradient(circle at 50% 50%, #60a5fa 0%, #06b6d4 55%, #1e293b 100%)"
+              "radial-gradient(40% 40% at 35% 35%, rgba(255,255,255,.25), transparent), radial-gradient(circle at 50% 50%, #60a5fa 0%, #06b6d4 55%, #1e293b 100%)",
           }}
         />
         {/* Subtle meridians (rotate slowly) */}
@@ -21,7 +24,7 @@ export default function GlobeFallback({ variant = "idle" }) {
           className="absolute inset-0 rounded-full opacity-30 mix-blend-screen"
           style={{
             background:
-              "repeating-conic-gradient(from 0deg, rgba(255,255,255,.15) 0deg 1deg, transparent 1deg 6deg)"
+              "repeating-conic-gradient(from 0deg, rgba(255,255,255,.15) 0deg 1deg, transparent 1deg 6deg)",
           }}
         />
         {/* Latitude rings (two counter-rotating) */}

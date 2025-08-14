@@ -25,7 +25,10 @@ export default function HeroBanner() {
   const [mountParticles, setMountParticles] = useState(false);
 
   useEffect(() => {
-    const id = setInterval(() => setCurrentTextIndex(p => (p + 1) % ROTATING_TEXTS.length), TEXT_ROTATION_INTERVAL);
+    const id = setInterval(
+      () => setCurrentTextIndex((p) => (p + 1) % ROTATING_TEXTS.length),
+      TEXT_ROTATION_INTERVAL,
+    );
     return () => clearInterval(id);
   }, []);
 
@@ -35,17 +38,23 @@ export default function HeroBanner() {
     if (!video) return;
     video.addEventListener("loadeddata", onLoaded);
     const t = setTimeout(onLoaded, LOAD_TIMEOUT);
-    return () => { video.removeEventListener("loadeddata", onLoaded); clearTimeout(t); };
+    return () => {
+      video.removeEventListener("loadeddata", onLoaded);
+      clearTimeout(t);
+    };
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setShowScrollPrompt(window.scrollY < SCROLL_PROMPT_THRESHOLD);
+    const onScroll = () =>
+      setShowScrollPrompt(window.scrollY < SCROLL_PROMPT_THRESHOLD);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const reduced = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    )?.matches;
     const isDesktop = window.matchMedia?.("(min-width: 768px)")?.matches;
     if (!reduced && isDesktop) {
       const t = setTimeout(() => setMountParticles(true), 800);
@@ -65,15 +74,26 @@ export default function HeroBanner() {
                    bg-[conic-gradient(from_180deg_at_50%_50%,rgba(0,255,255,0.30),rgba(0,122,255,0.30),rgba(0,255,255,0.30))]
                    bg-[length:200%_200%] animate-[gradient-rotate_15s_linear_infinite]"
       />
-      <div aria-hidden="true" className="absolute inset-0 z-10 pointer-events-none overflow-hidden hidden md:block">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-10 pointer-events-none overflow-hidden hidden md:block"
+      >
         <div className="absolute z-10 w-[450px] h-[450px] bg-cyan-500/20 blur-[90px] rounded-full left-[5%] top-[15%] animate-float-slow" />
         <div className="absolute z-10 w-[550px] h-[550px] bg-blue-500/10 blur-[110px] rounded-full right-[5%] bottom-[5%] animate-float" />
       </div>
-      <div aria-hidden="true" className="absolute inset-0 z-[12] pointer-events-none">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-[12] pointer-events-none"
+      >
         <video
-          autoPlay loop muted playsInline preload="metadata"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
           className={`hero-video w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? "opacity-50" : "opacity-0"}`}
-          poster="/hero-poster.jpg" tabIndex={-1}
+          poster="/hero-poster.jpg"
+          tabIndex={-1}
         >
           <source src="/hero-bg.mp4" type="video/mp4" />
         </video>
@@ -93,7 +113,12 @@ export default function HeroBanner() {
                 color: { value: "#22d3ee" },
                 opacity: { value: 0.2 },
                 size: { value: 3 },
-                move: { enable: true, speed: 0.4, direction: "none", outModes: "bounce" },
+                move: {
+                  enable: true,
+                  speed: 0.4,
+                  direction: "none",
+                  outModes: "bounce",
+                },
               },
               detectRetina: true,
             }}
@@ -113,9 +138,13 @@ export default function HeroBanner() {
             className="order-2 md:order-1 w-full md:col-span-7 max-w-none mx-auto md:mx-0 text-center md:text-left px-1 sm:px-4"
           >
             {/* Mobile globe inside the column */}
-            <div className="md:hidden flex justify-center pt-6">
-              {/* If your GlobeSection expects sizePx, use sizePx={200} */}
-              <GlobeSection showHeader={false} controls={false} size={200} className="mb-2" />
+            <div className="md:hidden flex justify-center pt-3 mb-2">
+              <GlobeSection
+                showHeader={false}
+                controls={false}
+                sizePx={200} // ✅ explicit pixels for mobile
+                className="mb-2 shrink-0" // prevents layout stretch
+              />
             </div>
 
             {/* Rotating headline */}
@@ -141,21 +170,28 @@ export default function HeroBanner() {
             {/* Subtitle */}
             <motion.p
               className="text-base sm:text-lg md:text-2xl text-gray-800 dark:text-gray-300 mb-2 max-w-2xl md:max-w-none mx-auto md:mx-0"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25, duration: 0.6 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.25, duration: 0.6 }}
             >
               SynexiAI is the next-generation innovation hub where{" "}
-              <span className="text-cyan-700 dark:text-cyan-400 font-medium">Artificial Intelligence</span>, futuristic IT,
-              and bold ideas converge.
+              <span className="text-cyan-700 dark:text-cyan-400 font-medium">
+                Artificial Intelligence
+              </span>
+              , futuristic IT, and bold ideas converge.
             </motion.p>
 
             {/* CTAs */}
             <motion.div
               className="flex flex-col sm:flex-row md:justify-start justify-center gap-3 sm:gap-4 mt-4"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.6 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
             >
               <MotionLink
                 to="/about"
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
                 className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500
                            text-white rounded-xl text-base sm:text-lg font-medium shadow-lg shadow-cyan-500/30
                            transition-[transform,background-color,box-shadow] duration-300 will-change-transform md:active:scale-95"
@@ -165,7 +201,8 @@ export default function HeroBanner() {
 
               <MotionLink
                 to="/projects"
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
                 className="px-6 py-3 sm:px-8 sm:py-4 border-2 border-cyan-600 dark:border-cyan-400 text-cyan-700 dark:text-cyan-400
                            hover:bg-cyan-600/10 dark:hover:bg-cyan-400/10 rounded-xl text-base sm:text-lg font-medium transition-colors duration-300 md:active:scale-95"
               >
@@ -184,10 +221,22 @@ export default function HeroBanner() {
         {showScrollPrompt && (
           <motion.div
             className="absolute left-1/2 -translate-x-1/2 z-30 select-none bottom-14 sm:bottom-[calc(1.25rem+env(safe-area-inset-bottom))]"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.5 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.1, duration: 0.5 }}
           >
-            <motion.div className="flex flex-col items-center" animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}>
-              <p className="text-xs sm:text-sm text-gray-800 dark:text-gray-300 mb-1">Scroll down</p>
+            <motion.div
+              className="flex flex-col items-center"
+              animate={{ y: [0, 10, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 1.6,
+                ease: "easeInOut",
+              }}
+            >
+              <p className="text-xs sm:text-sm text-gray-800 dark:text-gray-300 mb-1">
+                Scroll down
+              </p>
               <FaArrowDown className="text-gray-900 dark:text-white text-lg sm:text-xl opacity-80" />
             </motion.div>
           </motion.div>

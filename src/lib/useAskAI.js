@@ -6,7 +6,9 @@ export default function useAskAI() {
     // Safe fallback:
     if (!window.__synexiaiChat) {
       console.info("[AskAI]", payload);
-      alert(`AI explanation requested for:\n${payload.title}\n\n${payload.prompt}`);
+      alert(
+        `AI explanation requested for:\n${payload.title}\n\n${payload.prompt}`,
+      );
     }
   };
 }

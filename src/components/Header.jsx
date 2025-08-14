@@ -1,8 +1,15 @@
 // src/components/Header.jsx
-import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import Hamburger from "./Hamburger";
 import { NavLink, useLocation } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { FiGithub, FiTwitter, FiLinkedin } from "react-icons/fi";
 
@@ -23,7 +30,9 @@ export default function Header() {
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved === "light" || saved === "dark") return saved;
-    } catch (_) {}
+    } catch {
+      /* no-op */
+    }
     const prefersDark =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-color-scheme: dark)").matches;
@@ -47,7 +56,9 @@ export default function Header() {
     if (persist) {
       try {
         localStorage.setItem(storageKey, next);
-      } catch {}
+      } catch {
+        // no-op
+      }
     }
 
     // Re-enable transitions on next frame
@@ -77,13 +88,18 @@ export default function Header() {
       const onChange = (e) => setTheme(e.matches ? "dark" : "light");
       mq.addEventListener?.("change", onChange);
       return () => mq.removeEventListener?.("change", onChange);
-    } catch {}
+    } catch {
+      // no-op
+    }
   }, []);
 
   // Sync across tabs
   useEffect(() => {
     const onStorage = (e) => {
-      if (e.key === storageKey && (e.newValue === "light" || e.newValue === "dark")) {
+      if (
+        e.key === storageKey &&
+        (e.newValue === "light" || e.newValue === "dark")
+      ) {
         setTheme(e.newValue);
       }
     };
@@ -153,16 +169,19 @@ export default function Header() {
       { label: "Tech", path: "/tech" },
       { label: "AI News", path: "/ai-news" },
     ],
-    []
+    [],
   );
 
   const socialLinks = useMemo(
     () => [
       { icon: <FiGithub />, url: "https://github.com/synexiai" },
       { icon: <FiTwitter />, url: "https://twitter.com" },
-      { icon: <FiLinkedin />, url: "https://www.linkedin.com/company/synexiai" },
+      {
+        icon: <FiLinkedin />,
+        url: "https://www.linkedin.com/company/synexiai",
+      },
     ],
-    []
+    [],
   );
 
   /* --------------------------------- RENDER -------------------------------- */
@@ -226,7 +245,11 @@ export default function Header() {
                         <motion.span
                           layoutId="activeNavUnderline"
                           className="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-400"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                          transition={{
+                            type: "spring",
+                            bounce: 0.2,
+                            duration: 0.6,
+                          }}
                         />
                       )}
                     </>
@@ -256,7 +279,9 @@ export default function Header() {
               <button
                 onClick={toggleTheme}
                 className="relative w-12 h-6 rounded-full bg-gray-700 dark:bg-cyan-900 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                aria-label={
+                  isDark ? "Switch to light mode" : "Switch to dark mode"
+                }
                 aria-pressed={isDark}
               >
                 <motion.div
@@ -282,7 +307,9 @@ export default function Header() {
             <button
               onClick={toggleTheme}
               className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-full text-gray-300 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
-              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              aria-label={
+                isDark ? "Switch to light mode" : "Switch to dark mode"
+              }
               aria-pressed={isDark}
             >
               {isDark ? <FaSun /> : <FaMoon />}
@@ -327,7 +354,9 @@ export default function Header() {
                       onClick={() => setMenuOpen(false)}
                       className={({ isActive }) =>
                         `block py-3 px-2 rounded-lg text-lg font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-                          isActive ? "text-white bg-cyan-500/10" : "text-cyan-300 hover:text-white hover:bg-gray-800"
+                          isActive
+                            ? "text-white bg-cyan-500/10"
+                            : "text-cyan-300 hover:text-white hover:bg-gray-800"
                         }`
                       }
                       aria-label={label}

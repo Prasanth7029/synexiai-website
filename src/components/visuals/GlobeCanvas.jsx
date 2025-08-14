@@ -19,8 +19,20 @@ export default function GlobeCanvas({ width, height }) {
   }, [width, height]);
 
   const arcs = [
-    { startLat: 37.7749, startLng: -122.4194, endLat: 40.7128, endLng: -74.006, color: ["#06b6d4", "#3b82f6"] },
-    { startLat: 51.5072, startLng: -0.1276, endLat: 28.6139, endLng: 77.2090, color: ["#22d3ee", "#34d399"] },
+    {
+      startLat: 37.7749,
+      startLng: -122.4194,
+      endLat: 40.7128,
+      endLng: -74.006,
+      color: ["#06b6d4", "#3b82f6"],
+    },
+    {
+      startLat: 51.5072,
+      startLng: -0.1276,
+      endLat: 28.6139,
+      endLng: 77.209,
+      color: ["#22d3ee", "#34d399"],
+    },
   ];
 
   return (
@@ -43,7 +55,7 @@ export default function GlobeCanvas({ width, height }) {
         antialias: true,
         powerPreference: "high-performance",
         preserveDrawingBuffer: false,
-        failIfMajorPerformanceCaveat: true
+        failIfMajorPerformanceCaveat: true,
       }}
     />
   );

@@ -13,7 +13,12 @@ import ProjectCard from "./ProjectCard.jsx";
  *  - limit?: number
  *  - className?: string (optional additional classes for outer wrapper)
  */
-export default function ProjectGrid({ items = [], state = {}, limit, className = "" }) {
+export default function ProjectGrid({
+  items = [],
+  state = {},
+  limit,
+  className = "",
+}) {
   const filtered = useMemo(() => {
     const q = (state.q || "").toLowerCase().trim();
     const selCat = (state.category || "").toLowerCase();
@@ -22,8 +27,12 @@ export default function ProjectGrid({ items = [], state = {}, limit, className =
     return items.filter((p) => {
       const title = (p.title || "").toLowerCase();
       const blurb = (p.blurb || "").toLowerCase();
-      const tech = (Array.isArray(p.tech) ? p.tech : []).map((t) => String(t).toLowerCase());
-      const tags = (Array.isArray(p.tags) ? p.tags : []).map((t) => String(t).toLowerCase());
+      const tech = (Array.isArray(p.tech) ? p.tech : []).map((t) =>
+        String(t).toLowerCase(),
+      );
+      const tags = (Array.isArray(p.tags) ? p.tags : []).map((t) =>
+        String(t).toLowerCase(),
+      );
       const cat = (p.category || "").toLowerCase();
 
       // Category match: allow "all" or empty to mean "no filter"

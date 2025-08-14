@@ -2,9 +2,17 @@ import React, { useMemo, useState } from "react";
 import ProjectFilters from "./ProjectFilters.jsx";
 import ProjectGrid from "./ProjectGrid.jsx";
 
-export default function ProjectsSection({ items = [], title = "Projects", preview = false, limit = 6 }) {
+export default function ProjectsSection({
+  items = [],
+  title = "Projects",
+  preview = false,
+  limit = 6,
+}) {
   const [state, setState] = useState({ category: "", q: "", tag: "" });
-  const allTags = useMemo(() => Array.from(new Set(items.flatMap(p => p.tags || []))), [items]);
+  const allTags = useMemo(
+    () => Array.from(new Set(items.flatMap((p) => p.tags || []))),
+    [items],
+  );
 
   return (
     <section id="projects" className="mb-20">
@@ -13,11 +21,18 @@ export default function ProjectsSection({ items = [], title = "Projects", previe
       </h2>
 
       <ProjectFilters state={state} setState={setState} allTags={allTags} />
-      <ProjectGrid items={items} state={state} limit={preview ? limit : undefined} />
+      <ProjectGrid
+        items={items}
+        state={state}
+        limit={preview ? limit : undefined}
+      />
 
       {preview && (
         <div className="mt-6 text-center">
-          <a href="#/projects" className="inline-block px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500">
+          <a
+            href="#/projects"
+            className="inline-block px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500"
+          >
             View all projects
           </a>
         </div>

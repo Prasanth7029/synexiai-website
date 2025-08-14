@@ -4,7 +4,16 @@ const listeners = new Set();
 
 export const GlobalLoading = {
   getCount: () => count,
-  inc: () => { count++; listeners.forEach(fn => fn(count)); },
-  dec: () => { count = Math.max(0, count - 1); listeners.forEach(fn => fn(count)); },
-  subscribe: (fn) => { listeners.add(fn); return () => listeners.delete(fn); }
+  inc: () => {
+    count++;
+    listeners.forEach((fn) => fn(count));
+  },
+  dec: () => {
+    count = Math.max(0, count - 1);
+    listeners.forEach((fn) => fn(count));
+  },
+  subscribe: (fn) => {
+    listeners.add(fn);
+    return () => listeners.delete(fn);
+  },
 };

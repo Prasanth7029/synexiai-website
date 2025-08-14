@@ -1,43 +1,57 @@
 // src/components/ChatWidget.jsx
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import ReactDOM from 'react-dom';
-import { chatAxios } from '../lib/chatAxios'
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaRobot, FaTimes, FaInfoCircle, FaUsers, FaProjectDiagram, FaHandshake } from 'react-icons/fa';
-import { IoMdSend } from 'react-icons/io';
-import { fnUrl } from '../lib/api.js';
-import { companyInfo } from '../lib/companyInfo.js';
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import ReactDOM from "react-dom";
+import { chatAxios } from "../lib/chatAxios";
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaRobot,
+  FaTimes,
+  FaInfoCircle,
+  FaUsers,
+  FaProjectDiagram,
+  FaHandshake,
+} from "react-icons/fa";
+import { IoMdSend } from "react-icons/io";
+import { fnUrl } from "../lib/api.js";
+import { companyInfo } from "../lib/companyInfo.js";
 
 /* -----------------------------------------------------------------------------
    Helpers
 ----------------------------------------------------------------------------- */
-const AVATAR_URL = '/assets/logoSynexiai.png';
+const AVATAR_URL = "/assets/logoSynexiai.png";
 const now = () => new Date().toISOString();
 
 // Quick actions
 const quickQuestions = [
-  { icon: <FaInfoCircle className="mr-2" />, text: 'Tell me about your company' },
-  { icon: <FaUsers className="mr-2" />, text: 'Who is on your team?' },
-  { icon: <FaProjectDiagram className="mr-2" />, text: 'What projects are you working on?' },
-  { icon: <FaHandshake className="mr-2" />, text: 'How can we collaborate?' },
-  { icon: <FaInfoCircle className="mr-2" />, text: 'Show me your site map' }, // optional RAG overview
+  {
+    icon: <FaInfoCircle className="mr-2" />,
+    text: "Tell me about your company",
+  },
+  { icon: <FaUsers className="mr-2" />, text: "Who is on your team?" },
+  {
+    icon: <FaProjectDiagram className="mr-2" />,
+    text: "What projects are you working on?",
+  },
+  { icon: <FaHandshake className="mr-2" />, text: "How can we collaborate?" },
+  { icon: <FaInfoCircle className="mr-2" />, text: "Show me your site map" }, // optional RAG overview
 ];
 
 // Sanitize + linkify (avoid XSS; keep clickable links)
-function escapeHtml(s = '') {
+function escapeHtml(s = "") {
   return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
-function linkify(text = '') {
+function linkify(text = "") {
   const escaped = escapeHtml(text);
-  const urlRE = /(\b(https?|ftp):\/\/[^\s<]+)/ig;
+  const urlRE = /(\b(https?|ftp):\/\/[^\s<]+)/gi;
   return escaped.replace(
     urlRE,
     (url) =>
-      `<a href="${url}" target="_blank" rel="noopener noreferrer" class="underline decoration-cyan-400/60 hover:decoration-cyan-300">${url}</a>`
+      `<a href="${url}" target="_blank" rel="noopener noreferrer" class="underline decoration-cyan-400/60 hover:decoration-cyan-300">${url}</a>`,
   );
 }
 
@@ -49,17 +63,17 @@ COMPANY INFORMATION (USE ONLY THESE DETAILS):
 - Mission: "${companyInfo.mission}"
 - Vision: "${companyInfo.vision}"
 - Founder: ${companyInfo.team.founder}
-- Team: ${companyInfo.team.members.join(', ')}
-- Projects: ${companyInfo.projects.join(', ')}
+- Team: ${companyInfo.team.members.join(", ")}
+- Projects: ${companyInfo.projects.join(", ")}
 - Contact: ${companyInfo.contact.email} | ${companyInfo.contact.phone}
 
 RESPONSE GUIDELINES:
 1. For company questions:
    "We are ${companyInfo.name}. ${companyInfo.mission} Our vision is ${companyInfo.vision}."
 2. For founder/team questions:
-   "Our founder is ${companyInfo.team.founder}. Key team members include: ${companyInfo.team.members.join(', ')}."
+   "Our founder is ${companyInfo.team.founder}. Key team members include: ${companyInfo.team.members.join(", ")}."
 3. For project questions:
-   "Current projects: ${companyInfo.projects.join(', ')}."
+   "Current projects: ${companyInfo.projects.join(", ")}."
 4. For collaboration:
    "We welcome collaborations! Contact ${companyInfo.contact.email} or call ${companyInfo.contact.phone}."
 5. Unknown questions:
@@ -69,9 +83,9 @@ RESPONSE GUIDELINES:
 `;
 
 const initialMessages = [
-  { role: 'system', content: enhancedSystemPrompt, timestamp: now() },
+  { role: "system", content: enhancedSystemPrompt, timestamp: now() },
   {
-    role: 'assistant',
+    role: "assistant",
     content: `👋 Hello! I'm your ${companyInfo.name} assistant.
 
 How can I help you today? Here are some suggestions:
@@ -88,22 +102,23 @@ Ask me anything!`,
 /* -----------------------------------------------------------------------------
    Component
 ----------------------------------------------------------------------------- */
-export default function ChatWidget({ side = 'right', z = 9999 }) {
+export default function ChatWidget({ side = "right", z = 9999 }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState(initialMessages);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  const sideBtn = side === 'left'
-    ? `${isMobile ? 'left-4' : 'left-6'}`
-    : `${isMobile ? 'right-4' : 'right-6'}`;
+  const sideBtn =
+    side === "left"
+      ? `${isMobile ? "left-4" : "left-6"}`
+      : `${isMobile ? "right-4" : "right-6"}`;
 
-  const sidePanel = side === 'left'
-    ? `${isMobile ? 'left-2' : 'left-6'}`
-    : `${isMobile ? 'right-2' : 'right-6'}`;
-
+  const sidePanel =
+    side === "left"
+      ? `${isMobile ? "left-2" : "left-6"}`
+      : `${isMobile ? "right-2" : "right-6"}`;
 
   const endRef = useRef(null);
   const inputRef = useRef(null);
@@ -113,8 +128,8 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Auto-open on desktop after 8s
@@ -128,21 +143,21 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
   // Scroll + focus
   useEffect(() => {
     if (open) {
-      endRef.current?.scrollIntoView({ behavior: 'smooth' });
+      endRef.current?.scrollIntoView({ behavior: "smooth" });
       inputRef.current?.focus();
     }
   }, [messages, open]);
 
   // Close on Escape
   useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   // Quick suggestions only when greeting + first reply
   const shouldShowQuickQuestions = () =>
-    messages.filter((m) => m.role !== 'system').length <= 2;
+    messages.filter((m) => m.role !== "system").length <= 2;
 
   // Send message
   const sendMessage = useCallback(
@@ -153,25 +168,29 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
       controllerRef.current = new AbortController();
       const signal = controllerRef.current.signal;
 
-      const userMsg = { role: 'user', content, timestamp: now() };
-      const payload = [...messages.filter((m) => m.role !== 'system').slice(-4), userMsg];
+      const userMsg = { role: "user", content, timestamp: now() };
+      const payload = [
+        ...messages.filter((m) => m.role !== "system").slice(-4),
+        userMsg,
+      ];
 
       setMessages((prev) => [...prev, userMsg]);
-      if (!messageContent) setInput('');
+      if (!messageContent) setInput("");
       setLoading(true);
       setError(null);
 
       try {
         const { data } = await chatAxios.post(
-          fnUrl('chat-assistant'),
+          fnUrl("chat-assistant"),
           { messages: payload },
-          { timeout: 10000, signal }
+          { timeout: 10000, signal },
         );
 
         let responseContent;
         if (data?.error) throw new Error(data.error);
         else if (data?.reply) responseContent = data.reply;
-        else if (data?.choices?.[0]?.message?.content) responseContent = data.choices[0].message.content;
+        else if (data?.choices?.[0]?.message?.content)
+          responseContent = data.choices[0].message.content;
         else {
           responseContent = `Thank you for your interest in ${companyInfo.name}! We're focused on ${companyInfo.mission.toLowerCase()}.`;
         }
@@ -183,27 +202,27 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
         setMessages((prev) => [
           ...prev,
           {
-            role: 'assistant',
+            role: "assistant",
             content: responseContent,
             timestamp: now(),
             links: Array.isArray(data?.links) ? data.links : [],
           },
         ]);
       } catch (err) {
-        if (err.name === 'CanceledError' || err.message === 'canceled') return;
+        if (err.name === "CanceledError" || err.message === "canceled") return;
 
-        console.error('Chat API error:', err);
+        console.error("Chat API error:", err);
         setError(err);
 
         const errorContent =
           err.response?.data?.error?.message ||
           err.message ||
-          'Sorry, I encountered an error. Please try again.';
+          "Sorry, I encountered an error. Please try again.";
 
         setMessages((prev) => [
           ...prev,
           {
-            role: 'assistant',
+            role: "assistant",
             content: `❗️ ${errorContent}\n\nContact us directly:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`,
             timestamp: now(),
           },
@@ -213,23 +232,25 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
         controllerRef.current = null;
       }
     },
-    [input, messages, loading]
+    [input, messages, loading],
   );
 
   // Abort in-flight request
   const stopGeneration = () => {
     try {
       controllerRef.current?.abort();
-    } catch {}
+    } catch {
+      // no-op
+    }
   };
 
   // Cleanup on unmount
   useEffect(() => () => controllerRef.current?.abort(), []);
 
-  const visibleMessages = messages.filter((m) => m.role !== 'system');
+  const visibleMessages = messages.filter((m) => m.role !== "system");
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
@@ -248,13 +269,17 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen((o) => !o)}
-        className={`fixed ${isMobile ? 'bottom-4' : 'bottom-6'} ${sideBtn} ${isMobile ? 'p-3' : 'p-4'} z-[${z}]
+        className={`fixed ${isMobile ? "bottom-4" : "bottom-6"} ${sideBtn} ${isMobile ? "p-3" : "p-4"} z-[${z}]
           rounded-full shadow-2xl text-white
           bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700
           ring-1 ring-white/20 backdrop-blur-md`}
-        aria-label={open ? 'Close chat' : 'Open chat'}
+        aria-label={open ? "Close chat" : "Open chat"}
       >
-        {open ? <FaTimes size={isMobile ? 18 : 20} /> : <FaRobot size={isMobile ? 18 : 20} />}
+        {open ? (
+          <FaTimes size={isMobile ? 18 : 20} />
+        ) : (
+          <FaRobot size={isMobile ? 18 : 20} />
+        )}
       </motion.button>
 
       {/* Chat window */}
@@ -265,7 +290,7 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-             className={`fixed ${isMobile ? 'bottom-16' : 'bottom-20'} ${sidePanel} ${isMobile ? 'w-[92vw] max-w-[420px]' : 'w-[380px]'} z-[${z}]
+            className={`fixed ${isMobile ? "bottom-16" : "bottom-20"} ${sidePanel} ${isMobile ? "w-[92vw] max-w-[420px]" : "w-[380px]"} z-[${z}]
              max-h-[80dvh] flex flex-col overflow-hidden
              rounded-2xl shadow-2xl ring-1 ring-white/10
              bg-white/5 dark:bg-white/5 backdrop-blur-xl`}
@@ -274,8 +299,14 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-cyan-600/90 to-blue-600/90 text-white shadow-md">
               <div className="flex items-center">
-                <img src={AVATAR_URL} alt="Company Logo" className="w-7 h-7 rounded-md mr-2 ring-1 ring-white/20" />
-                <span className="font-semibold">{companyInfo.name} Assistant</span>
+                <img
+                  src={AVATAR_URL}
+                  alt="Company Logo"
+                  className="w-7 h-7 rounded-md mr-2 ring-1 ring-white/20"
+                />
+                <span className="font-semibold">
+                  {companyInfo.name} Assistant
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 {loading && (
@@ -304,20 +335,28 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
               {visibleMessages.map((message, index) => (
                 <motion.div
                   key={`${message.timestamp}-${index}`}
-                  initial={{ opacity: 0, y: message.role === 'user' ? 10 : -10 }}
+                  initial={{
+                    opacity: 0,
+                    y: message.role === "user" ? 10 : -10,
+                  }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`flex max-w-[92%] ${message.role === 'user' ? 'ml-auto justify-end' : 'mr-auto justify-start'}`}
+                  className={`flex max-w-[92%] ${message.role === "user" ? "ml-auto justify-end" : "mr-auto justify-start"}`}
                 >
                   <div className="flex flex-col">
                     <div
                       className={`px-3 py-2 sm:px-4 sm:py-3 rounded-2xl text-sm leading-relaxed
-                        ${message.role === 'user'
-                          ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-sm shadow-lg'
-                          : 'text-gray-900 dark:text-gray-100 bg-white/10 border border-white/15 backdrop-blur-md shadow-lg rounded-bl-sm'}`}
+                        ${
+                          message.role === "user"
+                            ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-sm shadow-lg"
+                            : "text-gray-900 dark:text-gray-100 bg-white/10 border border-white/15 backdrop-blur-md shadow-lg rounded-bl-sm"
+                        }`}
                       // Safe render (escape + linkify + line breaks)
                       dangerouslySetInnerHTML={{
-                        __html: linkify(message.content || '').replace(/\n/g, '<br>'),
+                        __html: linkify(message.content || "").replace(
+                          /\n/g,
+                          "<br>",
+                        ),
                       }}
                     />
 
@@ -343,7 +382,12 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
 
               {/* Quick questions */}
               {shouldShowQuickQuestions() && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="grid grid-cols-2 gap-2 mt-2">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="grid grid-cols-2 gap-2 mt-2"
+                >
                   {quickQuestions.map((q, i) => (
                     <button
                       type="button"
@@ -362,12 +406,22 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
 
               {/* Loading bubble */}
               {loading && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex mr-auto justify-start">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex mr-auto justify-start"
+                >
                   <div className="px-3 py-2 rounded-2xl rounded-bl-sm bg-white/10 border border-white/15 backdrop-blur-md shadow-lg text-gray-900 dark:text-gray-100">
                     <div className="flex space-x-2">
                       <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" />
-                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.2s' }} />
-                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0.4s' }} />
+                      <div
+                        className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      />
+                      <div
+                        className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
+                        style={{ animationDelay: "0.4s" }}
+                      />
                     </div>
                   </div>
                 </motion.div>
@@ -418,7 +472,10 @@ export default function ChatWidget({ side = 'right', z = 9999 }) {
               </div>
 
               <div className="mt-2 text-[11px] text-center text-gray-600 dark:text-gray-400">
-                Powered by {companyInfo.name} • <a href="/privacy" className="underline hover:opacity-80">Privacy Policy</a>
+                Powered by {companyInfo.name} •{" "}
+                <a href="/privacy" className="underline hover:opacity-80">
+                  Privacy Policy
+                </a>
               </div>
             </div>
           </motion.div>

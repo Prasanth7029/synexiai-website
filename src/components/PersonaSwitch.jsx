@@ -1,6 +1,8 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { usePersona } from "../context/PersonaContext";
+import { motion } from "framer-motion";
+
+const MotionS = motion.span;
 
 const choices = [
   { id: "investor", label: "Investor" },
@@ -36,7 +38,7 @@ export default function PersonaSwitch({ className = "" }) {
             }
           >
             {active && (
-              <motion.span
+              <MotionS
                 layoutId="sxPersonaPill"
                 className="absolute inset-0 rounded-full"
                 style={{ background: "var(--bg-gradient)" }}

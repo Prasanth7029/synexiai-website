@@ -1,4 +1,10 @@
-import { FaRocket, FaBrain, FaHandshake, FaGlobe, FaLightbulb } from "react-icons/fa";
+import {
+  FaRocket,
+  FaBrain,
+  FaHandshake,
+  FaGlobe,
+  FaLightbulb,
+} from "react-icons/fa";
 
 export const teamMembers = [
   {
@@ -9,26 +15,27 @@ export const teamMembers = [
     image: "/assets/team/prasanth.jpg",
   },
   {
-   name: "Teja Peddiboyina",
-   role: "Chief Executive Officer",
-   bio: "Passionate about AI research and its transformative potential.",
-   expertise: ["System Architecture", "AI Research", "Product Development"],
-   image: "/assets/team/teja.jpg",
-    },
-    {
+    name: "Teja Peddiboyina",
+    role: "Chief Executive Officer",
+    bio: "Passionate about AI research and its transformative potential.",
+    expertise: ["System Architecture", "AI Research", "Product Development"],
+    image: "/assets/team/teja.jpg",
+  },
+  {
     name: "Prakash Chowdary",
     role: "Chief Technology Officer",
     bio: "Expert in AI systems, passionate about building scalable solutions.",
     expertise: ["AI Systems", "Cloud Architecture", "Scalability"],
     image: "/assets/team/prakash.jpg",
-    }
+  },
 ];
 
 export const coreValues = [
   {
     icon: <FaBrain className="text-2xl" />,
     title: "Innovation with Purpose",
-    description: "We build solutions that solve real problems, not just showcase tech.",
+    description:
+      "We build solutions that solve real problems, not just showcase tech.",
   },
   {
     icon: <FaRocket className="text-2xl" />,

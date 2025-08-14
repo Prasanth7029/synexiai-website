@@ -4,29 +4,30 @@ export const partnerOrgs = [
   { name: "Cloud Partners", url: "#" },
   { name: "AI Research", url: "#" },
   { name: "Startup Programs", url: "#" },
-  { name: "University Links", url: "#" }
+  { name: "University Links", url: "#" },
 ];
 
 export const milestones = [
   { label: "Projects shipped", value: 12 },
   { label: "Commits", value: 1500 },
-  { label: "Countries reached", value: 6 }
+  { label: "Countries reached", value: 6 },
 ];
 
 export const testimonials = [
   {
-    quote: "SynexiAI’s engineering clarity and execution velocity are outstanding.",
+    quote:
+      "SynexiAI’s engineering clarity and execution velocity are outstanding.",
     author: "Tech Advisor",
-    role: "Ex-FAANG, Cloud Architect"
+    role: "Ex-FAANG, Cloud Architect",
   },
   {
     quote: "The sustainability + AI approach is exactly what enterprises need.",
     author: "Investor",
-    role: "Early-stage VC"
+    role: "Early-stage VC",
   },
   {
     quote: "Great developer experience—clean APIs and quick iteration.",
     author: "Founder",
-    role: "SaaS CTO"
-  }
+    role: "SaaS CTO",
+  },
 ];

@@ -1,6 +1,11 @@
 import React, { useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import { FaLinkedin, FaGithub, FaTwitter, FaEnvelope } from "react-icons/fa";
+import { motion } from "framer-motion";
+
+const MotionDiv = motion.div;
+const MotionSpan = motion.span;
+const MotionP = motion.p;
+const MotionA = motion.a;
 
 export default function TeamMemberCard({
   name,
@@ -21,21 +26,25 @@ export default function TeamMemberCard({
       twitter: <FaTwitter aria-hidden="true" />,
       email: <FaEnvelope aria-hidden="true" />,
     }),
-    []
+    [],
   );
 
   const allowedPlatforms = new Set(["linkedin", "github", "twitter", "email"]);
-  const entries = Object.entries(socialLinks).filter(([p, url]) => allowedPlatforms.has(p) && !!url);
+  const entries = Object.entries(socialLinks).filter(
+    ([p, url]) => allowedPlatforms.has(p) && !!url,
+  );
 
   const normalizeSocial = (platform, url) =>
-    platform === "email" && url && !/^mailto:/i.test(url) ? `mailto:${url}` : url;
+    platform === "email" && url && !/^mailto:/i.test(url)
+      ? `mailto:${url}`
+      : url;
 
   const base =
     "relative rounded-2xl p-6 border border-white/10 bg-white/5 backdrop-blur-md " +
     "shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 overflow-hidden group";
 
   return (
-    <motion.div
+    <MotionDiv
       role="article"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -47,7 +56,7 @@ export default function TeamMemberCard({
       className={`${base} ${className}`}
     >
       {/* Decorative glow layers (non-interactive, behind content) */}
-      <motion.div
+      <MotionDiv
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-cyan-500/20 to-purple-500/20"
         initial={{ opacity: 0 }}
@@ -61,7 +70,7 @@ export default function TeamMemberCard({
 
       <div className="flex flex-col items-center text-center text-gray-900 dark:text-gray-100">
         {/* Avatar */}
-        <motion.div
+        <MotionDiv
           animate={{
             scale: isHovered ? 1.05 : 1,
             boxShadow: isHovered
@@ -86,7 +95,7 @@ export default function TeamMemberCard({
             aria-hidden="true"
             className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-green-500 border-2 border-gray-900"
           />
-        </motion.div>
+        </MotionDiv>
 
         {/* Name / role */}
         <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400">
@@ -98,9 +107,9 @@ export default function TeamMemberCard({
 
         {/* Bio with animated underline */}
         {bio && (
-          <motion.p className="relative text-sm text-gray-700 dark:text-gray-300 mt-3 pb-1">
+          <MotionP className="relative text-sm text-gray-700 dark:text-gray-300 mt-3 pb-1">
             {bio}
-            <motion.span
+            <MotionSpan
               aria-hidden="true"
               className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-cyan-400"
               animate={{
@@ -109,7 +118,7 @@ export default function TeamMemberCard({
               }}
               transition={{ duration: 0.35 }}
             />
-          </motion.p>
+          </MotionP>
         )}
 
         {/* Expertise */}
@@ -120,7 +129,7 @@ export default function TeamMemberCard({
             </h4>
             <div className="flex flex-wrap justify-center gap-2">
               {expertise.filter(Boolean).map((skill, index) => (
-                <motion.span
+                <MotionSpan
                   key={`${skill}-${index}`}
                   initial={{ scale: 0.9, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
@@ -129,7 +138,7 @@ export default function TeamMemberCard({
                   className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-white/5 border border-white/10 backdrop-blur-sm text-cyan-400"
                 >
                   {skill}
-                </motion.span>
+                </MotionSpan>
               ))}
             </div>
           </div>
@@ -140,7 +149,7 @@ export default function TeamMemberCard({
           <div className="mt-6 pt-4 w-full border-t border-white/10">
             <div className="flex justify-center gap-3">
               {entries.map(([platform, url]) => (
-                <motion.a
+                <MotionA
                   key={platform}
                   href={normalizeSocial(platform, url)}
                   target={platform === "email" ? undefined : "_blank"}
@@ -157,20 +166,20 @@ export default function TeamMemberCard({
                       platform === "linkedin"
                         ? "text-[#0A66C2]"
                         : platform === "twitter"
-                        ? "text-[#1DA1F2]"
-                        : platform === "github"
-                        ? "text-gray-300"
-                        : "text-cyan-400"
+                          ? "text-[#1DA1F2]"
+                          : platform === "github"
+                            ? "text-gray-300"
+                            : "text-cyan-400"
                     }
                   >
                     {icons[platform]}
                   </span>
-                </motion.a>
+                </MotionA>
               ))}
             </div>
           </div>
         )}
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 }
