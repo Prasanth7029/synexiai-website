@@ -1,29 +1,27 @@
 // src/lib/canUseWebGL.js
-let _cache = null;
-
 export function canUseWebGL() {
-  if (_cache !== null) return _cache;
-
-  if (typeof window === "undefined") {
-    _cache = false;
-    return _cache;
-  }
-
+  if (typeof window === 'undefined') return false;
   try {
-    const canvas = document.createElement("canvas");
-    const opts = { failIfMajorPerformanceCaveat: true, antialias: true };
-    const gl2 = canvas.getContext("webgl2", opts);
-    if (gl2) {
-      _cache = true;
-      return _cache;
-    }
+    const canvas = document.createElement('canvas');
+
+    // iOS often fails WebGL2: prefer WebGL1 first
     const gl =
-      canvas.getContext("webgl", opts) ||
-      canvas.getContext("experimental-webgl", opts);
-    _cache = !!gl;
-    return _cache;
+      canvas.getContext('webgl', { failIfMajorPerformanceCaveat: true }) ||
+      canvas.getContext('experimental-webgl', { failIfMajorPerformanceCaveat: true });
+
+    if (!gl) return false;
+
+    // Basic sanity check to avoid "software" contexts that glitch on iOS
+    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    const renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '';
+    const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);
+    const looksSoftware = /software|swiftshader|angle/i.test(renderer || '');
+
+    return !(isIOS && looksSoftware);
   } catch {
-    _cache = false;
-    return _cache;
+    return false;
   }
 }
+
+export const isIOS = () =>
+  typeof navigator !== 'undefined' && /iP(hone|ad|od)/i.test(navigator.userAgent);

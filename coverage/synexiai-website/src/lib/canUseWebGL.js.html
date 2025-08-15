@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/26</span>
+                <span class='fraction'>0/22</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/26</span>
+                <span class='fraction'>0/22</span>
             </div>
         
             
@@ -90,14 +90,7 @@
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -107,49 +100,50 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >// src/lib/canUseWebGL.js<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >let _cache = null;</span>
-&nbsp;
 <span class="cstat-no" title="statement not covered" >export function canUseWebGL() {</span>
-<span class="cstat-no" title="statement not covered" >  if (_cache !== null) return _cache;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  if (typeof window === "undefined") {</span>
-<span class="cstat-no" title="statement not covered" >    _cache = false;</span>
-<span class="cstat-no" title="statement not covered" >    return _cache;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (typeof window === 'undefined') return false;</span>
 <span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    const canvas = document.createElement("canvas");</span>
-<span class="cstat-no" title="statement not covered" >    const opts = { failIfMajorPerformanceCaveat: true, antialias: true };</span>
-<span class="cstat-no" title="statement not covered" >    const gl2 = canvas.getContext("webgl2", opts);</span>
-<span class="cstat-no" title="statement not covered" >    if (gl2) {</span>
-<span class="cstat-no" title="statement not covered" >      _cache = true;</span>
-<span class="cstat-no" title="statement not covered" >      return _cache;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    const canvas = document.createElement('canvas');</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    // iOS often fails WebGL2: prefer WebGL1 first</span>
 <span class="cstat-no" title="statement not covered" >    const gl =</span>
-<span class="cstat-no" title="statement not covered" >      canvas.getContext("webgl", opts) ||</span>
-<span class="cstat-no" title="statement not covered" >      canvas.getContext("experimental-webgl", opts);</span>
-<span class="cstat-no" title="statement not covered" >    _cache = !!gl;</span>
-<span class="cstat-no" title="statement not covered" >    return _cache;</span>
+<span class="cstat-no" title="statement not covered" >      canvas.getContext('webgl', { failIfMajorPerformanceCaveat: true }) ||</span>
+<span class="cstat-no" title="statement not covered" >      canvas.getContext('experimental-webgl', { failIfMajorPerformanceCaveat: true });</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (!gl) return false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    // Basic sanity check to avoid "software" contexts that glitch on iOS</span>
+<span class="cstat-no" title="statement not covered" >    const dbg = gl.getExtension('WEBGL_debug_renderer_info');</span>
+<span class="cstat-no" title="statement not covered" >    const renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '';</span>
+<span class="cstat-no" title="statement not covered" >    const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);</span>
+<span class="cstat-no" title="statement not covered" >    const looksSoftware = /software|swiftshader|angle/i.test(renderer || '');</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return !(isIOS &amp;&amp; looksSoftware);</span>
 <span class="cstat-no" title="statement not covered" >  } catch {</span>
-<span class="cstat-no" title="statement not covered" >    _cache = false;</span>
-<span class="cstat-no" title="statement not covered" >    return _cache;</span>
+<span class="cstat-no" title="statement not covered" >    return false;</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >export const isIOS = () =&gt;</span>
+<span class="cstat-no" title="statement not covered" >  typeof navigator !== 'undefined' &amp;&amp; /iP(hone|ad|od)/i.test(navigator.userAgent);</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -157,7 +151,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-15T02:52:35.289Z
+                at 2025-08-15T15:42:25.384Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

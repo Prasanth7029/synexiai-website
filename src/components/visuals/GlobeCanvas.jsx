@@ -1,3 +1,4 @@
+// src/components/visuals/GlobeCanvas.jsx
 // Requires: react-globe.gl + three
 import React, { useEffect, useRef } from "react";
 import Globe from "react-globe.gl";
@@ -8,11 +9,19 @@ export default function GlobeCanvas({ width, height }) {
   useEffect(() => {
     const g = globeRef.current;
     if (!g) return;
+
     try {
+      // Globe controls
       g.controls().autoRotate = true;
       g.controls().autoRotateSpeed = 0.5;
-      // keep the earth nicely framed in a square viewport
       g.pointOfView({ lat: 10, lng: 0, altitude: 2.2 });
+
+      // iOS-friendly DPR cap
+      const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);
+      const renderer = g.renderer?.();
+      if (renderer) {
+        renderer.setPixelRatio(isIOS ? 1 : Math.min(window.devicePixelRatio || 1, 2));
+      }
     } catch (e) {
       console.warn("[GlobeCanvas] setup warning", e);
     }
@@ -52,8 +61,8 @@ export default function GlobeCanvas({ width, height }) {
       atmosphereAltitude={0.15}
       rendererConfig={{
         alpha: true,
-        antialias: true,
-        powerPreference: "high-performance",
+        antialias: false, // ✅ iOS friendly
+        powerPreference: "default", // Avoid forcing high-performance on iOS
         preserveDrawingBuffer: false,
         failIfMajorPerformanceCaveat: true,
       }}

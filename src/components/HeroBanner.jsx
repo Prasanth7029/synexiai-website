@@ -27,16 +27,16 @@ export default function HeroBanner() {
   const [mountParticles, setMountParticles] = useState(false);
   const [allowMobileGlobe, setAllowMobileGlobe] = useState(false);
 
-  // Rotate headline
+  /* ----------------------------- Headline rotate ---------------------------- */
   useEffect(() => {
     const id = setInterval(
       () => setCurrentTextIndex((p) => (p + 1) % ROTATING_TEXTS.length),
-      TEXT_ROTATION_INTERVAL
+      TEXT_ROTATION_INTERVAL,
     );
     return () => clearInterval(id);
   }, []);
 
-  // Video fade-in
+  /* ------------------------------- Video fade ------------------------------- */
   useEffect(() => {
     const video = document.querySelector(".hero-video");
     const onLoaded = () => setIsLoaded(true);
@@ -49,14 +49,14 @@ export default function HeroBanner() {
     };
   }, []);
 
-  // Scroll prompt hide on scroll
+  /* ---------------------------- Scroll prompt hide -------------------------- */
   useEffect(() => {
     const onScroll = () => setShowScrollPrompt(window.scrollY < SCROLL_PROMPT_THRESHOLD);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Particles only on desktop & no reduced motion
+  /* --------------------- Desktop-only particles (no AOS) -------------------- */
   useEffect(() => {
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const isDesktop = window.matchMedia?.("(min-width: 768px)")?.matches;
@@ -66,11 +66,11 @@ export default function HeroBanner() {
     }
   }, []);
 
-  // Decide if we should render the mobile globe (recompute on resize/orientation)
+  /* -------------------- Decide if we render the mobile globe ---------------- */
   const computeMobileGlobe = useCallback(() => {
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const isPhone = !window.matchMedia?.("(min-width: 768px)")?.matches;
-    const wideEnough = (typeof window !== "undefined" ? window.innerWidth : 0) >= 320; // Changed from 360 to 320
+    const wideEnough = (typeof window !== "undefined" ? window.innerWidth : 0) >= 320;
     setAllowMobileGlobe(isPhone && wideEnough && !reduced && canUseWebGL());
   }, []);
 
@@ -88,17 +88,15 @@ export default function HeroBanner() {
   const particlesLoaded = useCallback(async () => {}, []);
 
   return (
-    // In HeroBanner.jsx, modify the section className:
     <section
       className="
         relative z-10 w-full
         min-h-[100svh]
         flex items-stretch justify-center overflow-hidden
-        pb-0
-        pt-0
+        pb-0 pt-0
       "
     >
-      {/* Backgrounds (desktop only) */}
+      {/* Background (desktop only) */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-0 pointer-events-none opacity-70 hidden md:block
@@ -166,18 +164,15 @@ export default function HeroBanner() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="order-2 md:order-1 w-full md:col-span-7 max-w-none mx-auto md:mx-0 text-center md:text-left px-1 sm:px-4"
           >
-            {/* Mobile globe (reliable mount) */}
+            {/* Mobile globe (now allowed on small screens) */}
             {allowMobileGlobe && (
               <div className="md:hidden flex justify-center pt-2 mb-2">
                 <div className="relative w-[148px] h-[148px] opacity-90">
                   <GlobeSection
                     showHeader={false}
                     controls={false}
-                    pixelRatio={Math.min(
-                      1.5,
-                      typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1
-                    )}
                     sizePx={148}
+                    allow3DOnSmall={true}   // ✅ critical for iOS/phones
                   />
                 </div>
               </div>
@@ -210,7 +205,10 @@ export default function HeroBanner() {
               transition={{ delay: 0.25, duration: 0.6 }}
             >
               SynexiAI is the next-generation innovation hub where{" "}
-              <span className="text-cyan-700 dark:text-cyan-400 font-medium">Artificial Intelligence</span>, futuristic IT, and bold ideas converge.
+              <span className="text-cyan-700 dark:text-cyan-400 font-medium">
+                Artificial Intelligence
+              </span>
+              , futuristic IT, and bold ideas converge.
             </motion.p>
 
             {/* CTAs */}
@@ -242,7 +240,7 @@ export default function HeroBanner() {
               </MotionLink>
             </motion.div>
 
-            {/* Mobile scroll prompt (static; never collides) */}
+            {/* Mobile scroll prompt */}
             {showScrollPrompt && (
               <motion.div
                 className="md:hidden mt-8 select-none"
@@ -268,7 +266,7 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        {/* Desktop scroll prompt (absolute) */}
+        {/* Desktop scroll prompt */}
         {showScrollPrompt && (
           <motion.div
             className="hidden md:block absolute left-1/2 -translate-x-1/2 z-20 select-none bottom-16 pointer-events-none"
