@@ -171,7 +171,7 @@ export default function HeroBanner() {
                   <GlobeSection
                     showHeader={false}
                     controls={false}
-                    sizePx={148}
+                    sizePx={192}
                     allow3DOnSmall={true}   // ✅ critical for iOS/phones
                   />
                 </div>
