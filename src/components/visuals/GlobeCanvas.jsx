@@ -2,6 +2,7 @@
 // Requires: react-globe.gl + three
 import React, { useEffect, useRef } from "react";
 import Globe from "react-globe.gl";
+import * as THREE from "three";
 
 export default function GlobeCanvas({ width, height }) {
   const globeRef = useRef(null);
@@ -11,16 +12,59 @@ export default function GlobeCanvas({ width, height }) {
     if (!g) return;
 
     try {
-      // Globe controls
-      g.controls().autoRotate = true;
-      g.controls().autoRotateSpeed = 0.5;
+      // Smooth autorotation and framing
+      const ctrl = g.controls();
+      ctrl.autoRotate = true;
+      ctrl.autoRotateSpeed = 0.5;
       g.pointOfView({ lat: 10, lng: 0, altitude: 2.2 });
 
-      // iOS-friendly DPR cap
+      // --- iOS-friendly clarity tweaks ---
       const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);
       const renderer = g.renderer?.();
       if (renderer) {
-        renderer.setPixelRatio(isIOS ? 1 : Math.min(window.devicePixelRatio || 1, 2));
+        // Color management (prevents washed-out look)
+        // three r152+: SRGBColorSpace, older: sRGBEncoding
+        if ("outputColorSpace" in renderer) {
+          renderer.outputColorSpace = THREE.SRGBColorSpace;
+        } else {
+          renderer.outputEncoding = THREE.sRGBEncoding;
+        }
+
+        // DPR: small bump without risking context loss on iOS
+        const sysDpr = window.devicePixelRatio || 1;
+        const targetDpr = isIOS ? Math.min(sysDpr, 1.25) : Math.min(sysDpr, 2);
+        renderer.setPixelRatio(targetDpr);
+      }
+
+      // Material quality: anisotropy + filters + color space
+      const mat = g.globeMaterial?.();
+      if (mat) {
+        const maxAniso = renderer?.capabilities?.getMaxAnisotropy?.() || 8;
+
+        // Base color map
+        if (mat.map) {
+          if ("colorSpace" in mat.map) {
+            mat.map.colorSpace = THREE.SRGBColorSpace;
+          } else {
+            mat.map.encoding = THREE.sRGBEncoding;
+          }
+          mat.map.anisotropy = Math.min(16, maxAniso);
+          mat.map.magFilter = THREE.LinearFilter;
+          mat.map.minFilter = THREE.LinearMipmapLinearFilter;
+          mat.map.needsUpdate = true;
+        }
+
+        // Bump map
+        if (mat.bumpMap) {
+          mat.bumpMap.anisotropy = Math.min(16, maxAniso);
+          mat.bumpMap.magFilter = THREE.LinearFilter;
+          mat.bumpMap.minFilter = THREE.LinearMipmapLinearFilter;
+          mat.bumpMap.needsUpdate = true;
+          // Subtle relief; too high looks noisy on mobile
+          mat.bumpScale = 0.03;
+        }
+
+        mat.needsUpdate = true;
       }
     } catch (e) {
       console.warn("[GlobeCanvas] setup warning", e);
@@ -29,17 +73,13 @@ export default function GlobeCanvas({ width, height }) {
 
   const arcs = [
     {
-      startLat: 37.7749,
-      startLng: -122.4194,
-      endLat: 40.7128,
-      endLng: -74.006,
+      startLat: 37.7749, startLng: -122.4194,
+      endLat: 40.7128, endLng: -74.006,
       color: ["#06b6d4", "#3b82f6"],
     },
     {
-      startLat: 51.5072,
-      startLng: -0.1276,
-      endLat: 28.6139,
-      endLng: 77.209,
+      startLat: 51.5072, startLng: -0.1276,
+      endLat: 28.6139, endLng: 77.2090,
       color: ["#22d3ee", "#34d399"],
     },
   ];
@@ -50,8 +90,9 @@ export default function GlobeCanvas({ width, height }) {
       width={width}
       height={height}
       backgroundColor="rgba(0,0,0,0)"
-      globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-      bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+      // 🔁 Replace these with your own higher-res assets (see checklist)
+      globeImageUrl="/assets/earth-blue-marble-4k.webp"
+      bumpImageUrl="/assets/earth-topology-4k.webp"
       arcsData={arcs}
       arcColor={"color"}
       arcDashLength={0.6}
@@ -61,8 +102,8 @@ export default function GlobeCanvas({ width, height }) {
       atmosphereAltitude={0.15}
       rendererConfig={{
         alpha: true,
-        antialias: false, // ✅ iOS friendly
-        powerPreference: "default", // Avoid forcing high-performance on iOS
+        antialias: false,         // keep false; we improve quality via DPR/filters
+        powerPreference: "default",
         preserveDrawingBuffer: false,
         failIfMajorPerformanceCaveat: true,
       }}
