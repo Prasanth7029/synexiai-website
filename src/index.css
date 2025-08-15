@@ -553,14 +553,4 @@
   }
 }
 
-/* Safe-area + chat offset helpers */
-:root {
-  --chat-offset: 88px; /* match your floating chat bubbles/dock height */
-}
-.pb-safe-chat {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--chat-offset));
-}
-.pb-safe-xs {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
-}
 

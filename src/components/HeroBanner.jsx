@@ -27,16 +27,16 @@ export default function HeroBanner() {
   const [mountParticles, setMountParticles] = useState(false);
   const [allowMobileGlobe, setAllowMobileGlobe] = useState(false);
 
-  /* ----------------------------- Headline rotation ---------------------------- */
+  // Rotate headline
   useEffect(() => {
     const id = setInterval(
       () => setCurrentTextIndex((p) => (p + 1) % ROTATING_TEXTS.length),
-      TEXT_ROTATION_INTERVAL,
+      TEXT_ROTATION_INTERVAL
     );
     return () => clearInterval(id);
   }, []);
 
-  /* ------------------------------ Video fade-in ------------------------------- */
+  // Video fade-in
   useEffect(() => {
     const video = document.querySelector(".hero-video");
     const onLoaded = () => setIsLoaded(true);
@@ -49,19 +49,16 @@ export default function HeroBanner() {
     };
   }, []);
 
-  /* --------------------------- Scroll prompt toggle --------------------------- */
+  // Scroll prompt hide on scroll
   useEffect(() => {
-    const onScroll = () =>
-      setShowScrollPrompt(window.scrollY < SCROLL_PROMPT_THRESHOLD);
+    const onScroll = () => setShowScrollPrompt(window.scrollY < SCROLL_PROMPT_THRESHOLD);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* ---------------------- Particles only for desktops ------------------------- */
+  // Particles only on desktop & no reduced motion
   useEffect(() => {
-    const reduced = window.matchMedia?.(
-      "(prefers-reduced-motion: reduce)",
-    )?.matches;
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const isDesktop = window.matchMedia?.("(min-width: 768px)")?.matches;
     if (!reduced && isDesktop) {
       const t = setTimeout(() => setMountParticles(true), 800);
@@ -69,18 +66,38 @@ export default function HeroBanner() {
     }
   }, []);
 
-  /* --------------- Guard mobile globe (WebGL + motion + size) ---------------- */
-  useEffect(() => {
+  // Decide if we should render the mobile globe (recompute on resize/orientation)
+  const computeMobileGlobe = useCallback(() => {
     const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const isPhone = !window.matchMedia?.("(min-width: 768px)")?.matches;
-    setAllowMobileGlobe(isPhone && !reduced && canUseWebGL());
+    const wideEnough = (typeof window !== "undefined" ? window.innerWidth : 0) >= 320; // Changed from 360 to 320
+    setAllowMobileGlobe(isPhone && wideEnough && !reduced && canUseWebGL());
   }, []);
+
+  useEffect(() => {
+    computeMobileGlobe();
+    window.addEventListener("resize", computeMobileGlobe);
+    window.addEventListener("orientationchange", computeMobileGlobe);
+    return () => {
+      window.removeEventListener("resize", computeMobileGlobe);
+      window.removeEventListener("orientationchange", computeMobileGlobe);
+    };
+  }, [computeMobileGlobe]);
 
   const particlesInit = useCallback(async () => {}, []);
   const particlesLoaded = useCallback(async () => {}, []);
 
   return (
-    <div className="relative z-10 w-full min-h-[93dvh] flex items-stretch justify-center overflow-hidden pb-safe-chat">
+    // In HeroBanner.jsx, modify the section className:
+    <section
+      className="
+        relative z-10 w-full
+        min-h-[100svh]
+        flex items-stretch justify-center overflow-hidden
+        pb-0
+        pt-0
+      "
+    >
       {/* Backgrounds (desktop only) */}
       <div
         aria-hidden="true"
@@ -104,7 +121,9 @@ export default function HeroBanner() {
           muted
           playsInline
           preload="metadata"
-          className={`hero-video w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? "opacity-50" : "opacity-0"}`}
+          className={`hero-video w-full h-full object-cover transition-opacity duration-1000 ${
+            isLoaded ? "opacity-50" : "opacity-0"
+          }`}
           poster="/hero-poster.jpg"
           tabIndex={-1}
         >
@@ -138,7 +157,7 @@ export default function HeroBanner() {
       )}
 
       {/* Foreground */}
-      <div className="relative z-30 flex items-center w-full min-h-[93dvh] px-4 sm:px-6">
+      <div className="relative z-30 flex items-center w-full min-h-[100svh] px-4 sm:px-6">
         <div className="w-full max-w-6xl mx-auto grid md:grid-cols-12 items-center gap-8">
           {/* Text column */}
           <motion.div
@@ -147,18 +166,18 @@ export default function HeroBanner() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="order-2 md:order-1 w-full md:col-span-7 max-w-none mx-auto md:mx-0 text-center md:text-left px-1 sm:px-4"
           >
-            {/* Mobile globe */}
+            {/* Mobile globe (reliable mount) */}
             {allowMobileGlobe && (
-              <div className="md:hidden flex justify-center pt-2 mb-1">
-                <div
-                  className="pointer-events-none opacity-70 !w-[140px] !h-[140px] shrink-0"
-                  style={{ transform: "scale(0.98)" }}
-                >
+              <div className="md:hidden flex justify-center pt-2 mb-2">
+                <div className="relative w-[148px] h-[148px] opacity-90">
                   <GlobeSection
                     showHeader={false}
                     controls={false}
-                    sizePx={140}
-                    className="!w-[140px] !h-[140px]"
+                    pixelRatio={Math.min(
+                      1.5,
+                      typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1
+                    )}
+                    sizePx={148}
                   />
                 </div>
               </div>
@@ -222,6 +241,25 @@ export default function HeroBanner() {
                 View Projects
               </MotionLink>
             </motion.div>
+
+            {/* Mobile scroll prompt (static; never collides) */}
+            {showScrollPrompt && (
+              <motion.div
+                className="md:hidden mt-8 select-none"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.0, duration: 0.5 }}
+              >
+                <motion.div
+                  className="flex flex-col items-center"
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+                >
+                  <p className="text-xs text-gray-800 dark:text-gray-300 mb-1">Scroll down</p>
+                  <FaArrowDown className="text-gray-900 dark:text-white text-lg opacity-80" />
+                </motion.div>
+              </motion.div>
+            )}
           </motion.div>
 
           {/* Desktop globe */}
@@ -230,10 +268,10 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        {/* Scroll prompt */}
+        {/* Desktop scroll prompt (absolute) */}
         {showScrollPrompt && (
           <motion.div
-            className="absolute left-1/2 -translate-x-1/2 z-30 select-none bottom-14 sm:bottom-[calc(1.25rem+env(safe-area-inset-bottom))]"
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 z-20 select-none bottom-16 pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1, duration: 0.5 }}
@@ -243,12 +281,12 @@ export default function HeroBanner() {
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
             >
-              <p className="text-xs sm:text-sm text-gray-800 dark:text-gray-300 mb-1">Scroll down</p>
-              <FaArrowDown className="text-gray-900 dark:text-white text-lg sm:text-xl opacity-80" />
+              <p className="text-sm text-gray-800 dark:text-gray-300 mb-1">Scroll down</p>
+              <FaArrowDown className="text-gray-900 dark:text-white text-xl opacity-80" />
             </motion.div>
           </motion.div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
