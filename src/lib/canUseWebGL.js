@@ -22,7 +22,7 @@ export function canUseWebGL() {
       canvas.getContext("experimental-webgl", opts);
     _cache = !!gl;
     return _cache;
-  } catch (_) {
+  } catch {
     _cache = false;
     return _cache;
   }
