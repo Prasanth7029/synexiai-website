@@ -6,7 +6,7 @@ import PrivacyPolicy from "./pages/legal/PrivacyPolicy.jsx";
 import TermsOfService from "./pages/legal/TermsOfService.jsx";
 import CookiePolicy from "./pages/legal/CookiePolicy.jsx";
 import LoaderScreen from "./components/LoaderScreen";
-import ChatDock from "./components/chat/ChatDock.jsx";
+
 
 // ⛔️ remove this line (was causing confusion / unused):
 // import ProjectsPage from "./pages/Projects.jsx";
@@ -86,8 +86,6 @@ export default function App() {
         </Suspense>
       </Router>
 
-      {/* Floating chat overlay */}
-      <ChatDock side="left" />
     </>
   );
 }
