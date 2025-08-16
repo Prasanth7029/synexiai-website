@@ -82,7 +82,7 @@ async function fetchAssistantReply(history, signal, forceGeneral = false) {
 
   if (data?.error) throw new Error(data.error);
   if (data?.reply) return data.reply;
-  return data?.choices?.[0]?.message?.content ?? "I’m here—ask me anything!";
+  return data?.choices?.[0]?.message?.content ?? "I'm here—ask me anything!";
 }
 
 /* --------------------------------------------------------------------------
@@ -356,8 +356,8 @@ export default function ChatWidget({
     position: "fixed",
     bottom: panelBottom,
     [side === "left" ? "left" : "right"]: `${isMobile ? mobileInset : desktopInset}px`,
-    width: isMobile ? "min(92vw, 420px)" : "380px",
-    maxWidth: "92vw",
+    width: isMobile ? "calc(100vw - 32px)" : "min(420px, 28vw)",
+    maxWidth: "min(92vw, 500px)",
     zIndex: z,
   };
 
@@ -442,13 +442,21 @@ export default function ChatWidget({
                         __html: linkify(stripMarkdown(message.content || "")).replace(/\n/g, "<br>"),
                       }}
                     />
+                    <div className={`text-xs mt-1 ${message.role === "user" ? "text-right" : "text-left"} text-gray-500`}>
+                      {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
                   </div>
                 </motion.div>
               ))}
 
               {/* Quick actions */}
               {shouldShowQuick() && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="grid grid-cols-2 gap-2 mt-2">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="grid grid-cols-2 gap-2 mt-4"
+                >
                   {quickQuestions.map((q, i) => (
                     <button
                       type="button"
@@ -465,7 +473,11 @@ export default function ChatWidget({
 
               {/* Typing bubble */}
               {loading && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex mr-auto justify-start">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex mr-auto justify-start"
+                >
                   <div className="px-3 py-2 rounded-2xl rounded-bl-sm bg-white/10 border border-white/15 backdrop-blur-md shadow-lg text-gray-900 dark:text-gray-100">
                     <div className="flex space-x-2">
                       <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" />
