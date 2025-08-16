@@ -22,17 +22,13 @@ import { companyInfo } from "../lib/companyInfo.js";
 const AVATAR_URL = "/assets/logoSynexiai.png";
 const now = () => new Date().toISOString();
 
+const _fabSize = 50; // kept for future tweaks, prefixed to satisfy ESLint
+
 // Quick actions
 const quickQuestions = [
-  {
-    icon: <FaInfoCircle className="mr-2" />,
-    text: "Tell me about your company",
-  },
+  { icon: <FaInfoCircle className="mr-2" />, text: "Tell me about your company" },
   { icon: <FaUsers className="mr-2" />, text: "Who is on your team?" },
-  {
-    icon: <FaProjectDiagram className="mr-2" />,
-    text: "What projects are you working on?",
-  },
+  { icon: <FaProjectDiagram className="mr-2" />, text: "What projects are you working on?" },
   { icon: <FaHandshake className="mr-2" />, text: "How can we collaborate?" },
   { icon: <FaInfoCircle className="mr-2" />, text: "Show me your site map" }, // optional RAG overview
 ];
@@ -55,7 +51,7 @@ function linkify(text = "") {
   );
 }
 
-// System prompt stays client-side (for your initial greeting context only)
+// System prompt (kept exactly as your logic expects)
 const enhancedSystemPrompt = `You are the official AI assistant for ${companyInfo.name}. Follow these rules STRICTLY:
 
 COMPANY INFORMATION (USE ONLY THESE DETAILS):
@@ -110,15 +106,11 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
   const [error, setError] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  const sideBtn =
-    side === "left"
-      ? `${isMobile ? "left-4" : "left-6"}`
-      : `${isMobile ? "right-4" : "right-6"}`;
-
-  const sidePanel =
-    side === "left"
-      ? `${isMobile ? "left-2" : "left-6"}`
-      : `${isMobile ? "right-2" : "right-6"}`;
+  // runtime layout values (avoid Tailwind dynamic class issues)
+  const desktopInset = 24; // px
+  const mobileInset = 16;  // px
+  const panelLiftDesktop = 80; // px above bottom
+  const panelLiftMobile = 72;  // px above bottom
 
   const endRef = useRef(null);
   const inputRef = useRef(null);
@@ -154,6 +146,19 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // Body scroll lock on mobile when open (prevents background scroll)
+  useEffect(() => {
+    if (!isMobile) return;
+    const body = document.body;
+    if (open) {
+      const prev = body.style.overflow;
+      body.style.overflow = "hidden";
+      return () => {
+        body.style.overflow = prev;
+      };
+    }
+  }, [open, isMobile]);
 
   // Quick suggestions only when greeting + first reply
   const shouldShowQuickQuestions = () =>
@@ -259,6 +264,29 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
   /* -----------------------------------------------------------------------------
      UI (glassy look + a11y + link cards for RAG)
   ----------------------------------------------------------------------------- */
+
+  // Safe-area aware offsets
+  const bottomFab = `calc(${isMobile ? mobileInset : desktopInset}px + env(safe-area-inset-bottom, 0px))`;
+  const panelBottom = `calc(${(isMobile ? panelLiftMobile : panelLiftDesktop)}px + env(safe-area-inset-bottom, 0px))`;
+
+  // FAB style (right/left controlled via prop)
+  const fabStyle = {
+    position: "fixed",
+    bottom: bottomFab,
+    [side === "left" ? "left" : "right"]: `${isMobile ? mobileInset : desktopInset}px`,
+    zIndex: z,
+  };
+
+  // Panel style (right/left controlled via prop)
+  const panelStyle = {
+    position: "fixed",
+    bottom: panelBottom,
+    [side === "left" ? "left" : "right"]: `${isMobile ? mobileInset : desktopInset}px`,
+    width: isMobile ? "min(92vw, 420px)" : "380px",
+    maxWidth: "92vw",
+    zIndex: z,
+  };
+
   const widget = (
     <>
       {/* Floating toggle button */}
@@ -269,17 +297,13 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen((o) => !o)}
-        className={`fixed ${isMobile ? "bottom-4" : "bottom-6"} ${sideBtn} ${isMobile ? "p-3" : "p-4"} z-[${z}]
-          rounded-full shadow-2xl text-white
+        style={fabStyle}
+        className={`rounded-full ${isMobile ? "p-3" : "p-4"} shadow-2xl text-white
           bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700
           ring-1 ring-white/20 backdrop-blur-md`}
         aria-label={open ? "Close chat" : "Open chat"}
       >
-        {open ? (
-          <FaTimes size={isMobile ? 18 : 20} />
-        ) : (
-          <FaRobot size={isMobile ? 18 : 20} />
-        )}
+        {open ? <FaTimes size={isMobile ? 18 : 20} /> : <FaRobot size={isMobile ? 18 : 20} />}
       </motion.button>
 
       {/* Chat window */}
@@ -290,8 +314,8 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className={`fixed ${isMobile ? "bottom-16" : "bottom-20"} ${sidePanel} ${isMobile ? "w-[92vw] max-w-[420px]" : "w-[380px]"} z-[${z}]
-             max-h-[80dvh] flex flex-col overflow-hidden
+            style={panelStyle}
+            className={`z-50 max-h-[80dvh] flex flex-col overflow-hidden
              rounded-2xl shadow-2xl ring-1 ring-white/10
              bg-white/5 dark:bg-white/5 backdrop-blur-xl`}
             aria-live="polite"
@@ -304,9 +328,7 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
                   alt="Company Logo"
                   className="w-7 h-7 rounded-md mr-2 ring-1 ring-white/20"
                 />
-                <span className="font-semibold">
-                  {companyInfo.name} Assistant
-                </span>
+                <span className="font-semibold">{companyInfo.name} Assistant</span>
               </div>
               <div className="flex items-center gap-2">
                 {loading && (
@@ -331,14 +353,14 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-transparent to-black/5">
+            <div
+              className={`flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-transparent to-black/5
+                          ${isMobile ? "max-h-[60svh]" : "max-h-[60vh]"}`}
+            >
               {visibleMessages.map((message, index) => (
                 <motion.div
                   key={`${message.timestamp}-${index}`}
-                  initial={{
-                    opacity: 0,
-                    y: message.role === "user" ? 10 : -10,
-                  }}
+                  initial={{ opacity: 0, y: message.role === "user" ? 10 : -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
                   className={`flex max-w-[92%] ${message.role === "user" ? "ml-auto justify-end" : "mr-auto justify-start"}`}
@@ -351,12 +373,8 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
                             ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-sm shadow-lg"
                             : "text-gray-900 dark:text-gray-100 bg-white/10 border border-white/15 backdrop-blur-md shadow-lg rounded-bl-sm"
                         }`}
-                      // Safe render (escape + linkify + line breaks)
                       dangerouslySetInnerHTML={{
-                        __html: linkify(message.content || "").replace(
-                          /\n/g,
-                          "<br>",
-                        ),
+                        __html: linkify(message.content || "").replace(/\n/g, "<br>"),
                       }}
                     />
 
@@ -406,22 +424,12 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
 
               {/* Loading bubble */}
               {loading && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex mr-auto justify-start"
-                >
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex mr-auto justify-start">
                   <div className="px-3 py-2 rounded-2xl rounded-bl-sm bg-white/10 border border-white/15 backdrop-blur-md shadow-lg text-gray-900 dark:text-gray-100">
                     <div className="flex space-x-2">
                       <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" />
-                      <div
-                        className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-                        style={{ animationDelay: "0.2s" }}
-                      />
-                      <div
-                        className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-                        style={{ animationDelay: "0.4s" }}
-                      />
+                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: "0.2s" }} />
+                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: "0.4s" }} />
                     </div>
                   </div>
                 </motion.div>
@@ -471,7 +479,10 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
                 </button>
               </div>
 
-              <div className="mt-2 text-[11px] text-center text-gray-600 dark:text-gray-400">
+              <div
+                className="mt-2 text-[11px] text-center text-gray-600 dark:text-gray-400"
+                style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+              >
                 Powered by {companyInfo.name} •{" "}
                 <a href="/privacy" className="underline hover:opacity-80">
                   Privacy Policy
@@ -483,6 +494,5 @@ export default function ChatWidget({ side = "right", z = 9999 }) {
       </AnimatePresence>
     </>
   );
-
   return ReactDOM.createPortal(widget, document.body);
 }

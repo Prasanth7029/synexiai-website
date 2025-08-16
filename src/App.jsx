@@ -87,7 +87,7 @@ export default function App() {
       </Router>
 
       {/* Floating chat overlay */}
-      <ChatDock />
+      <ChatDock side="left" />
     </>
   );
 }
