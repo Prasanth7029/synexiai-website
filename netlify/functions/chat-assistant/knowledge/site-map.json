@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-08-16T10:34:28.438Z",
+  "generatedAt": "2025-08-17T00:29:25.906Z",
   "routes": [
     "/aboutpage",
     "/contactpage",
@@ -10,7 +10,6 @@
     "/newspage",
     "/notfound",
     "/portfolio",
-    "/projects",
     "/public/404",
     "/techstackpage",
     "/visionpage"

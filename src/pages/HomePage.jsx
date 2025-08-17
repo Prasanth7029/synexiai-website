@@ -10,6 +10,9 @@ import {
   FaBrain,
 } from "react-icons/fa";
 import HeroBanner from "../components/HeroBanner";
+import BuildWithSynexiAI from "../components/sections/BuildWithSynexiAI.jsx";
+import { projects as portfolio } from "../content/projects.js";
+
 
 const MotionDiv     = motion.div;
 const MotionSection = motion.section;
@@ -33,13 +36,13 @@ import {
   testimonials,
   milestones,
 } from "../content/socialProof.js";
-import { projects } from "../content/projects.js";
+
 
 // Persona-aware content
 import { usePersona } from "../context/PersonaContext.jsx";
 import { personaCopy } from "../content/personaCopy.js";
 import usePersonaDetector from "../hooks/usePersonaDetector.js";
-import PersonaSwitch from "../components/PersonaSwitch.jsx";
+
 
 // Small skeletons for lazy sections
 function SectionSkeleton({ className = "" }) {
@@ -107,6 +110,8 @@ export default function HomePage() {
       {/* Keep hero clean */}
       <HeroBanner title={p.heroTitle} subtitle={p.heroSubtitle} />
 
+      <BuildWithSynexiAI />
+
       {/* Everything below gets its own stacking context so it never hides under the hero */}
       <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">
         {/* Persona intro row */}
@@ -114,44 +119,6 @@ export default function HomePage() {
           className="mb-12 scroll-mt-[calc(var(--header-h)+16px)]"
           id="intro"
         >
-          <MotionDiv
-            initial={prefersReduced ? false : { opacity: 0, y: 12 }}
-            whileInView={prefersReduced ? {} : { opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 flex-wrap"
-          >
-            <div className="min-w-0">
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight break-words">
-                {p.heroTitle}
-              </h1>
-              <p className="mt-3 text-lg sm:text-xl opacity-90">
-                {p.heroSubtitle}
-              </p>
-            </div>
-            <div className="min-w-0">
-              <PersonaSwitch />
-            </div>
-          </MotionDiv>
-
-          {/* Quick persona-specific CTAs */}
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            {p.ctas?.map((cta) => (
-              <Link
-                key={cta.label}
-                to={cta.to}
-                className="relative group inline-flex items-center rounded-full border border-[var(--border-color)] px-5 py-2 text-sm backdrop-blur-sm hover:shadow-lg transition"
-                data-persona={persona}
-              >
-                <span className="relative z-10">{cta.label}</span>
-                <span
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition"
-                  style={{ background: "var(--border-glow)" }}
-                />
-              </Link>
-            ))}
-          </div>
-
           {/* Pipeline + metric cards (lazy) */}
           <div className="mb-20 grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 min-w-0">
@@ -180,13 +147,13 @@ export default function HomePage() {
 
         {/* Projects Section (lazy) */}
         <section
-          id="projects"
+          id="portfolio"
           className="scroll-mt-[calc(var(--header-h)+16px)]"
         >
           <Suspense fallback={<SectionSkeleton className="h-56" />}>
             <ProjectsSection
-              items={projects}
-              title="Featured Projects"
+              items={portfolio}
+              title="Featured portfolio"
               preview
               limit={6}
             />

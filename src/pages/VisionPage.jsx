@@ -14,6 +14,7 @@ const MotionSection = motion.section;
 const MotionP       = motion.p;
 const MotionH2      = motion.h2;
 const MotionH3      = motion.h3;
+const Motionli      = motion.li;
 
 const roadmap = [
   {

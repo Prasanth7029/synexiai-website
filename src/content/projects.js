@@ -1,5 +1,5 @@
 export const PROJECT_CATEGORIES = ["AI", "Cloud", "Energy", "Tools"];
-
+export { projects as portfolio } from "./projects.js";
 export const projects = [
   {
     id: "ai-optimizer",

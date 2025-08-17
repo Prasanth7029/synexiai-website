@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { projects } from "../content/projects.js";
+import ProjectsSection from "../components/projects/ProjectsSection.jsx";
 
 const MotionDiv     = motion.div;
 
@@ -379,6 +381,10 @@ export default function Portfolio() {
             />
           </div>
         </MotionDiv>
+
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">
+              <ProjectsSection items={projects} title="Project Showcase" />
+            </div>
 
         {/* GitHub / Foundation */}
         <MotionDiv

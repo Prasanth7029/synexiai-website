@@ -163,7 +163,7 @@ const ContentCard = React.memo(function ContentCard({
       transition={{ type: "spring", stiffness: 300 }}
       className={`relative bg-white/5 dark:bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${
         layout === "carousel" ? (isMobile ? "w-[85vw]" : "w-[360px]") : "w-full"
-      } h-[480px]`}
+      } ${isMobile ? "h-[420px]" : "h-[480px]"}`}
     >
       {/* Video */}
       {article.type === "video" && (
@@ -301,7 +301,7 @@ const ContentCarousel = React.memo(function ContentCarousel({
       <div className="relative">
         <div
           ref={carouselRef}
-          className="flex space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory
+          className="flex space-x-4 sm:space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory
                      [scroll-snap-type:x_proximity] [scroll-behavior:smooth] [-webkit-overflow-scrolling:touch]"
         >
           {items.map((item, index) => (

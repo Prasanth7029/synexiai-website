@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense, lazy } from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import Layout from "./components/Layout";
 import PrivacyPolicy from "./pages/legal/PrivacyPolicy.jsx";
@@ -8,13 +8,9 @@ import CookiePolicy from "./pages/legal/CookiePolicy.jsx";
 import LoaderScreen from "./components/LoaderScreen";
 
 
-// ⛔️ remove this line (was causing confusion / unused):
-// import ProjectsPage from "./pages/Projects.jsx";
-
 // Lazy pages (single source of truth)
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
 const AboutPage = lazy(() => import("./pages/AboutPage.jsx"));
-const ProjectsPage = lazy(() => import("./pages/Projects.jsx")); // ✅ use this one
 const PortfolioPage = lazy(() => import("./pages/Portfolio.jsx"));
 const VisionPage = lazy(() => import("./pages/VisionPage.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -69,7 +65,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
-              <Route path="/projects" element={<ProjectsPage />} />{" "}
+              <Route path="/projects" element={<Navigate to="/portfolio" replace />} />
               {/* curated showcase */}
               <Route path="/portfolio" element={<PortfolioPage />} />{" "}
               {/* GitHub + roadmap */}

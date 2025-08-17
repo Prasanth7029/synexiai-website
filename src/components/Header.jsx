@@ -162,7 +162,6 @@ export default function Header() {
     () => [
       { label: "Home", path: "/" },
       { label: "About", path: "/about" },
-      { label: "Projects", path: "/projects" },
       { label: "Portfolio", path: "/portfolio" },
       { label: "Vision", path: "/vision" },
       { label: "Contact", path: "/contact" },

@@ -1,40 +1,50 @@
 import React, { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import ProjectFilters from "./ProjectFilters.jsx";
 import ProjectGrid from "./ProjectGrid.jsx";
 
 export default function ProjectsSection({
   items = [],
-  title = "Projects",
+  title = "Featured Portfolio",
   preview = false,
   limit = 6,
+  id = "portfolio",
+  ctaLabel = "View all work",
+  ctaTo = "/portfolio",
 }) {
+  const safeItems = Array.isArray(items) ? items : [];
   const [state, setState] = useState({ category: "", q: "", tag: "" });
+
   const allTags = useMemo(
-    () => Array.from(new Set(items.flatMap((p) => p.tags || []))),
-    [items],
+    () => Array.from(new Set(safeItems.flatMap((p) => p?.tags ?? []))),
+    [safeItems],
   );
 
+  const hasMore = preview && safeItems.length > limit;
+
   return (
-    <section id="projects" className="mb-20">
+    <section id={id} className="mb-20">
       <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
         {title}
       </h2>
 
       <ProjectFilters state={state} setState={setState} allTags={allTags} />
+
       <ProjectGrid
-        items={items}
+        items={safeItems}
         state={state}
         limit={preview ? limit : undefined}
       />
 
-      {preview && (
+      {hasMore && (
         <div className="mt-6 text-center">
-          <a
-            href="#/projects"
+          <Link
+            to={ctaTo}
             className="inline-block px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500"
+            aria-label="Go to the full portfolio page"
           >
-            View all projects
-          </a>
+            {ctaLabel}
+          </Link>
         </div>
       )}
     </section>
