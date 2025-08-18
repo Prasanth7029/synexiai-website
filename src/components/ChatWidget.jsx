@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaRobot, FaTimes, FaInfoCircle, FaUsers, FaProjectDiagram, FaHandshake } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 
-// Reuse your existing helpers
 import { chatAxios } from "../lib/chatAxios";
 import { fnUrl } from "../lib/api.js";
 import { companyInfo } from "../lib/companyInfo.js";
@@ -15,31 +14,25 @@ import { companyInfo } from "../lib/companyInfo.js";
  * -------------------------------------------------------------------------- */
 const AVATAR_URL = "/assets/logoSynexiai.png";
 const now = () => new Date().toISOString();
-const _fabSize = 50; // reserved for tweaks
 
 function escapeHtml(s = "") {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 function linkify(text = "") {
-  const escaped = escapeHtml(text);
-  const urlRE = /(\b(https?|ftp):\/\/[^\s<]+)/gi;
+  const escaped = escapeHtml(text || "");
   return escaped.replace(
-    urlRE,
+    /(\b(https?|ftp):\/\/[^\s<]+)/gi,
     (url) =>
       `<a href="${url}" target="_blank" rel="noopener noreferrer" class="underline decoration-cyan-400/60 hover:decoration-cyan-300">${url}</a>`,
   );
 }
 function stripMarkdown(text = "") {
   return (text || "")
-    .replace(/\*\*(.*?)\*\*/g, "$1") // **bold**
-    .replace(/__(.*?)__/g, "$1") // __underline__ (md)
-    .replace(/`([^`]*)`/g, "$1") // `code`
-    .replace(/^#+\s*(.*)$/gm, "$1") // # headings
-    .replace(/\[(.*?)\]\((.*?)\)/g, "$1 ($2)"); // [text](url)
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/__(.*?)__/g, "$1")
+    .replace(/`([^`]*)`/g, "$1")
+    .replace(/^#+\s*(.*)$/gm, "$1")
+    .replace(/\[(.*?)\]\((.*?)\)/g, "$1 ($2)");
 }
 
 /* --------------------------------------------------------------------------
@@ -53,10 +46,8 @@ function looksLikeBrandBlurb(t = "") {
 }
 function buildSystemPrompt(userText = "", forceGeneral = false) {
   if (forceGeneral || !isBrandQuestion(userText)) {
-    // Default: free, general-purpose assistant
     return `You are a helpful, general-purpose AI assistant. Answer the user's question directly and do NOT insert company marketing, mission, or contact info unless the user explicitly asks about the company/team/projects/collaboration/contact. Keep answers accurate, concise, and conversational.`;
   }
-  // Brand-aware mode (only when the user asks brand things)
   return `You are SynexiAI's site assistant.
 If the user asks about the company/team/projects/collaboration/contact, use ONLY these official details:
 - Name: ${companyInfo.name}
@@ -68,40 +59,27 @@ If the user asks about the company/team/projects/collaboration/contact, use ONLY
 - Contact: ${companyInfo.contact.email} | ${companyInfo.contact.phone}
 For unrelated questions, answer generally and do NOT add company marketing or contact info.`;
 }
-
 async function fetchAssistantReply(history, signal, forceGeneral = false) {
   const lastUser = [...history].reverse().find((m) => m.role === "user");
   const sys = buildSystemPrompt(lastUser?.content || "", forceGeneral);
   const messages = [{ role: "system", content: sys }, ...history.map((m) => ({ role: m.role, content: m.content }))];
-
-  const { data } = await chatAxios.post(
-    fnUrl("chat-assistant"),
-    { messages },
-    { timeout: 20000, signal },
-  );
-
+  const { data } = await chatAxios.post(fnUrl("chat-assistant"), { messages }, { timeout: 20000, signal });
   if (data?.error) throw new Error(data.error);
   if (data?.reply) return data.reply;
   return data?.choices?.[0]?.message?.content ?? "I'm here—ask me anything!";
 }
 
 /* --------------------------------------------------------------------------
- * Optional: Project explain block (kept for future triggers)
+ * Optional: Project explain block
  * -------------------------------------------------------------------------- */
 function roadmapFromStatus(status) {
   switch ((status || "").toLowerCase()) {
-    case "poc":
-      return ["Validate core hypothesis with 2–3 datasets", "Collect feedback & refine metrics", "Decide go/no-go"];
-    case "alpha":
-      return ["Hardening & load testing", "Auth, quotas, rate limits", "Internal dogfood rollout"];
-    case "mvp":
-      return ["Pilot with 3–5 users", "Observability & rollback paths", "Docs, pricing, onboarding"];
-    case "stable":
-      return ["Scale adoption & SLAs", "Plugins/SDKs & integrations", "Security reviews & compliance"];
-    case "design":
-      return ["Write spec & acceptance criteria", "UX flows & mockups", "Milestones & success metrics"];
-    default:
-      return ["Define success metrics", "Iterate quickly with user feedback", "Plan GA criteria"];
+    case "poc": return ["Validate core hypothesis with 2–3 datasets", "Collect feedback & refine metrics", "Decide go/no-go"];
+    case "alpha": return ["Hardening & load testing", "Auth, quotas, rate limits", "Internal dogfood rollout"];
+    case "mvp": return ["Pilot with 3–5 users", "Observability & rollback paths", "Docs, pricing, onboarding"];
+    case "stable": return ["Scale adoption & SLAs", "Plugins/SDKs & integrations", "Security reviews & compliance"];
+    case "design": return ["Write spec & acceptance criteria", "UX flows & mockups", "Milestones & success metrics"];
+    default: return ["Define success metrics", "Iterate quickly with user feedback", "Plan GA criteria"];
   }
 }
 function formatProjectAnswer(ctx, plain = false) {
@@ -110,10 +88,7 @@ function formatProjectAnswer(ctx, plain = false) {
   const value = p.blurb || "a practical initiative to deliver measurable gains in speed, reliability, and cost.";
   const stack = p.tech && p.tech.length ? p.tech.join(", ") : "TBD";
   const roadmap = roadmapFromStatus(p.status);
-
-  if (plain) {
-    return `${title} is ${value} It uses ${stack === "TBD" ? "modern tools" : stack} to achieve this. The next steps are ${roadmap.join(", ")}.`;
-  }
+  if (plain) return `${title} is ${value} It uses ${stack === "TBD" ? "modern tools" : stack} to achieve this. The next steps are ${roadmap.join(", ")}.`;
   return `Project: ${title}\n\nValue — ${value}\n\nStack — ${stack}\n\nRoadmap\n${roadmap.map((s) => "- " + s).join("\n")}`;
 }
 function buildUserPromptFromPayload(payload = {}) {
@@ -123,14 +98,13 @@ function buildUserPromptFromPayload(payload = {}) {
 }
 
 /* --------------------------------------------------------------------------
- * Initial greeting (kept lightweight; real system is dynamic per turn)
+ * Initial greeting
  * -------------------------------------------------------------------------- */
 const initialGreeting = {
   role: "assistant",
   content: `👋 Hello! I'm your ${companyInfo.name} assistant.\n\nAsk me anything — general questions or about SynexiAI. Try:\n• Tell me about ${companyInfo.name}\n• Who leads your team?\n• What projects are you working on?\n• How can we collaborate?`,
   timestamp: now(),
 };
-
 const quickQuestions = [
   { icon: <FaInfoCircle className="mr-2" />, text: "Tell me about your company" },
   { icon: <FaUsers className="mr-2" />, text: "Who is on your team?" },
@@ -140,14 +114,19 @@ const quickQuestions = [
 ];
 
 /* --------------------------------------------------------------------------
- * Component (Unified Free-Chat)
+ * Component
  * -------------------------------------------------------------------------- */
 export default function ChatWidget({
   side = "right",
   z = 9999,
-  autoOpenDesktopMs = 0, // default OFF for a normal AI chat feel
+  autoOpenDesktopMs = 0,
   persistKey = "sx_chat",
+  desktopWidthPx = 320,         // narrower fixed width
+  density = "compact",          // "compact" | "normal"
+  scaleDesktop = 0.9,           // slight shrink on desktop
 }) {
+  const isCompact = density === "compact";
+
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState(() => {
     try {
@@ -162,18 +141,61 @@ export default function ChatWidget({
   const [error, setError] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
+  const [kbOffset, setKbOffset] = useState(0);
+  const [safeTop, setSafeTop] = useState(0);
+
   const endRef = useRef(null);
   const inputRef = useRef(null);
   const controllerRef = useRef(null);
   const contextRef = useRef(null);
   const lastBridgeRef = useRef({ key: "", ts: 0 });
 
-  // responsiveness
+  /* ---------- responsiveness ---------- */
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= 768);
     onResize();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // detect sticky headers so panel never hides under them
+  useEffect(() => {
+    const scan = () => {
+      const cand = Array.from(document.querySelectorAll("header, nav, .site-header, #header, #navbar, [data-sticky]"));
+      let h = 0;
+      for (const el of cand) {
+        const cs = window.getComputedStyle(el);
+        if (cs.position === "fixed" || cs.position === "sticky") {
+          const r = el.getBoundingClientRect();
+          if (r.top <= 2 && r.bottom > 0) h = Math.max(h, r.height);
+        }
+      }
+      setSafeTop(Math.min(160, Math.round(h)) || 0);  // Fixed this line - added missing parenthesis
+    };
+    scan();
+    window.addEventListener("resize", scan);
+    window.addEventListener("scroll", scan, { passive: true });
+    return () => {
+      window.removeEventListener("resize", scan);
+      window.removeEventListener("scroll", scan);
+    };
+  }, []);
+
+  // visual viewport (iOS/Android keyboards)
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () => {
+      const bottomInset = Math.max(0, (window.innerHeight - vv.height - vv.offsetTop) || 0);
+      setKbOffset(bottomInset);
+    };
+    update();
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+    };
   }, []);
 
   // body scroll lock on mobile
@@ -200,15 +222,13 @@ export default function ChatWidget({
   useEffect(() => {
     try {
       sessionStorage.setItem(persistKey, JSON.stringify(messages));
-    } catch {
-      /* no-op */
-    }
+    } catch {}
   }, [messages, persistKey]);
 
   // scroll & focus
   useEffect(() => {
     if (open) {
-      endRef.current?.scrollIntoView({ behavior: "smooth" });
+      endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       inputRef.current?.focus();
     }
   }, [messages, open]);
@@ -220,7 +240,7 @@ export default function ChatWidget({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // bridge: synexiai:ask (kept compatible with old Dock)
+  // bridge: synexiai:ask
   useEffect(() => {
     async function onAsk(e) {
       const payload = e.detail || {};
@@ -233,17 +253,11 @@ export default function ChatWidget({
       setOpen(true);
 
       const userText = buildUserPromptFromPayload(payload);
-      if (payload.autoSend) {
-        await sendMessage(userText);
-      } else {
-        setInput(userText);
-      }
+      if (payload.autoSend) await sendMessage(userText);
+      else setInput(userText);
     }
     window.addEventListener("synexiai:ask", onAsk);
-    window.__synexiaiChat = {
-      open: () => setOpen(true),
-      openWith: (payload) => onAsk({ detail: payload }),
-    };
+    window.__synexiaiChat = { open: () => setOpen(true), openWith: (p) => onAsk({ detail: p }) };
     return () => window.removeEventListener("synexiai:ask", onAsk);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages, loading]);
@@ -251,15 +265,15 @@ export default function ChatWidget({
   const stopGeneration = () => {
     try {
       controllerRef.current?.abort();
-    } catch {
-      /* no-op */
-    }
+      setLoading(false);
+    } catch {}
   };
   useEffect(() => () => controllerRef.current?.abort(), []);
 
-  const visibleMessages = messages; // no system msg now; all are visible
+  const visibleMessages = messages;
   const shouldShowQuick = () => visibleMessages.length <= 2;
 
+  /* ---------- send ---------- */
   const sendMessage = useCallback(
     async (messageContent = null) => {
       const content = (messageContent ?? input).trim();
@@ -272,34 +286,52 @@ export default function ChatWidget({
       setError(null);
 
       try {
+        // Abort controller for "Stop" button
         controllerRef.current = new AbortController();
         const signal = controllerRef.current.signal;
 
+        // Build a compact history window (user/assistant only)
+        const historyWindow = 20;
+        const history = [...messages.slice(-historyWindow), userMsg].filter(
+          (m) => m.role === "user" || m.role === "assistant",
+        );
+
+        const ctx = contextRef.current;
         let responseContent;
 
-        // Optional project context → plain explanation for casual prompts
-        const ctx = contextRef.current;
         if (ctx?.project) {
-          const plain = /what is this|tell me|explain in simple|in plain/i.test(content);
-          responseContent = formatProjectAnswer(ctx, plain);
+          // Inject project context into the AI as a system message,
+          // so responses are natural (not hardcoded), but grounded.
+          const plain = /what is this|tell me|explain( in simple| to a|)$/i.test(content);
+          const projectContext = formatProjectAnswer(ctx, plain);
+
+          // Ask the AI, providing the project block as additional context
+          const contextualHistory = [
+            { role: "system", content: `Context for the assistant:\n${projectContext}` },
+            ...history,
+          ];
+
+          responseContent = await fetchAssistantReply(contextualHistory, signal);
         } else {
-          // Keep more history so follow-ups make sense
-          const historyWindow = 20; // larger window for better context
-          const history = [...messages.slice(-historyWindow), userMsg]
-            .filter((m) => m.role === "user" || m.role === "assistant");
-
-          // 1st pass with context-aware system
+          // Normal flow: general brand-aware assistant
           responseContent = await fetchAssistantReply(history, signal);
+        }
 
-          // If backend injected brand blurb for a non-brand ask → force general once
-          if (!isBrandQuestion(content) && looksLikeBrandBlurb(responseContent)) {
-            responseContent = await fetchAssistantReply(history, signal, true);
-          }
+        // If user didn't ask brand stuff but model added a company blurb, re-ask forcing general
+        if (!isBrandQuestion(content) && looksLikeBrandBlurb(responseContent)) {
+          const forceGeneralHistory = ctx?.project
+            ? [
+                { role: "system", content: "Context:\n" + formatProjectAnswer(ctx, false) },
+                ...history,
+              ]
+            : history;
 
-          // If the ask is brandy & contact is missing → append contact once
-          if (isBrandQuestion(content) && !responseContent.includes(companyInfo.contact.email)) {
-            responseContent += `\n\nFor direct inquiries:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`;
-          }
+          responseContent = await fetchAssistantReply(forceGeneralHistory, signal, true);
+        }
+
+        // If user DID ask brand stuff, ensure contact is present
+        if (isBrandQuestion(content) && !responseContent.includes(companyInfo.contact.email)) {
+          responseContent += `\n\nFor direct inquiries:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`;
         }
 
         setMessages((prev) => [
@@ -336,47 +368,70 @@ export default function ChatWidget({
   };
 
   /* --------------------------------------------------------------------------
-   * UI
+   * Layout + sizing (smaller desktop, safe areas, keyboard)
    * -------------------------------------------------------------------------- */
   const desktopInset = 24;
   const mobileInset = 16;
-  const panelLiftDesktop = 80;
-  const panelLiftMobile = 72;
+  const panelLiftDesktop = 70;
+  const panelLiftMobile = 62;
 
-  const bottomFab = `calc(${isMobile ? mobileInset : desktopInset}px + env(safe-area-inset-bottom, 0px))`;
-  const panelBottom = `calc(${isMobile ? panelLiftMobile : panelLiftDesktop}px + env(safe-area-inset-bottom, 0px))`;
+  const bottomFab = `calc(${isMobile ? mobileInset : desktopInset}px + env(safe-area-inset-bottom, 0px) + ${kbOffset}px)`;
+  const panelBottomBase = `calc(${isMobile ? panelLiftMobile : panelLiftDesktop}px + env(safe-area-inset-bottom, 0px) + ${kbOffset}px)`;
+
+  // dynamic max height (respect header + keyboard)
+  const topClear = (safeTop || 0) + 100;
+  const panelMaxHeight = `calc(100svh - (${topClear}px + ${isMobile ? panelLiftMobile : panelLiftDesktop}px + env(safe-area-inset-bottom, 0px) + ${kbOffset}px))`;
+
+  const scale = isMobile ? 1 : scaleDesktop;
 
   const fabStyle = {
     position: "fixed",
     bottom: bottomFab,
     [side === "left" ? "left" : "right"]: `${isMobile ? mobileInset : desktopInset}px`,
-    zIndex: z,
-  };
-  const panelStyle = {
-    position: "fixed",
-    bottom: panelBottom,
-    [side === "left" ? "left" : "right"]: `${isMobile ? mobileInset : desktopInset}px`,
-    width: isMobile ? "calc(100vw - 32px)" : "min(420px, 28vw)",
-    maxWidth: "min(92vw, 500px)",
-    zIndex: z,
+    zIndex: z + 1,
   };
 
+  const panelStyle = {
+    position: "fixed",
+    bottom: panelBottomBase,
+    [side === "left" ? "left" : "right"]: `${isMobile ? mobileInset : desktopInset}px`,
+    width: isMobile ? "calc(100vw - 32px)" : `${desktopWidthPx}px`,
+    maxWidth: isMobile ? "calc(100vw - 32px)" : `${desktopWidthPx}px`,
+    zIndex: z + 2,
+    maxHeight: panelMaxHeight,
+    transform: `scale(${scale})`,
+    transformOrigin: side === "left" ? "left bottom" : "right bottom",
+  };
+
+  // compensate the visual scale so panel still hugs the corner
+  const scaledOffset = (1 - scale) * (isMobile ? mobileInset : desktopInset);
+  panelStyle.bottom = `calc(${panelBottomBase} + ${scaledOffset}px)`;
+
+  /* --------------------------------------------------------------------------
+   * UI
+   * -------------------------------------------------------------------------- */
   const widget = (
     <>
-      {/* FAB */}
-      <motion.button
-        type="button"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setOpen((o) => !o)}
-        style={fabStyle}
-        className={`rounded-full ${isMobile ? "p-3" : "p-4"} shadow-2xl text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 ring-1 ring-white/20 backdrop-blur-md`}
-        aria-label={open ? "Close chat" : "Open chat"}
-      >
-        {open ? <FaTimes size={isMobile ? 18 : 20} /> : <FaRobot size={isMobile ? 18 : 20} />}
-      </motion.button>
+      {/* FAB — hide while open to avoid overlap */}
+      <AnimatePresence>
+        {!open && (
+          <motion.button
+            key="sx-fab"
+            type="button"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setOpen(true)}
+            style={fabStyle}
+            className={`rounded-full ${isMobile ? "p-3" : "p-3.5"} shadow-2xl text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 ring-1 ring-white/20 backdrop-blur-md`}
+            aria-label="Open chat"
+          >
+            <FaRobot size={isMobile ? 18 : 20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Panel */}
       <AnimatePresence>
@@ -387,14 +442,16 @@ export default function ChatWidget({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             style={panelStyle}
-            className="z-50 max-h-[80dvh] flex flex-col overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10 bg-white/5 dark:bg-white/5 backdrop-blur-xl"
+            className="z-50 flex flex-col overflow-hidden rounded-2xl shadow-[0_20px_60px_-10px_rgba(14,165,233,0.35)] ring-1 ring-white/10 bg-white/5 dark:bg-white/5 backdrop-blur-xl backdrop-saturate-[1.8]"
             aria-live="polite"
+            role="dialog"
+            aria-modal="true"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-cyan-600/90 to-blue-600/90 text-white shadow-md">
+            <div className={`flex items-center justify-between ${isCompact ? "px-3 py-2.5" : "px-4 py-3"} bg-gradient-to-r from-cyan-600/90 to-blue-600/90 text-white shadow-md`}>
               <div className="flex items-center">
-                <img src={AVATAR_URL} alt="Company Logo" className="w-7 h-7 rounded-md mr-2 ring-1 ring-white/20" />
-                <span className="font-semibold">{companyInfo.name} Assistant</span>
+                <img src={AVATAR_URL} alt="Company Logo" className={`${isCompact ? "w-6 h-6" : "w-7 h-7"} rounded-md mr-2 ring-1 ring-white/20`} />
+                <span className={`${isCompact ? "text-sm" : "text-base"} font-semibold`}>{companyInfo.name} Assistant</span>
               </div>
               <div className="flex items-center gap-2">
                 {loading && (
@@ -408,7 +465,7 @@ export default function ChatWidget({
                 )}
                 <button
                   type="button"
-                  onClick={() => setOpen(false)}
+                  onClick={() => { stopGeneration(); setOpen(false); }}
                   className="text-white/90 hover:text-white p-1 focus:outline-none"
                   aria-label="Close chat"
                 >
@@ -418,22 +475,18 @@ export default function ChatWidget({
             </div>
 
             {/* Messages */}
-            <div
-              className={`flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-transparent to-black/5 ${
-                isMobile ? "max-h-[60svh]" : "max-h-[60vh]"
-              }`}
-            >
+            <div className={`${isCompact ? "p-3" : "p-4"} flex-1 overflow-y-auto space-y-3 bg-gradient-to-b from-transparent to-black/5`}>
               {visibleMessages.map((message, i) => (
                 <motion.div
                   key={`${message.timestamp || i}-${i}`}
                   initial={{ opacity: 0, y: message.role === "user" ? 10 : -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.18 }}
                   className={`flex max-w-[92%] ${message.role === "user" ? "ml-auto justify-end" : "mr-auto justify-start"}`}
                 >
                   <div className="flex flex-col">
                     <div
-                      className={`px-3 py-2 sm:px-4 sm:py-3 rounded-2xl text-sm leading-relaxed ${
+                      className={`${isCompact ? "px-2.5 py-1.5 text-[13px]" : "px-3 py-2 text-sm"} rounded-2xl leading-relaxed ${
                         message.role === "user"
                           ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-sm shadow-lg"
                           : "text-gray-900 dark:text-gray-100 bg-white/10 border border-white/15 backdrop-blur-md shadow-lg rounded-bl-sm"
@@ -443,7 +496,7 @@ export default function ChatWidget({
                       }}
                     />
                     <div className={`text-xs mt-1 ${message.role === "user" ? "text-right" : "text-left"} text-gray-500`}>
-                      {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
                 </motion.div>
@@ -454,8 +507,8 @@ export default function ChatWidget({
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="grid grid-cols-2 gap-2 mt-4"
+                  transition={{ delay: 0.15 }}
+                  className="grid grid-cols-2 gap-2 mt-2"
                 >
                   {quickQuestions.map((q, i) => (
                     <button
@@ -473,11 +526,7 @@ export default function ChatWidget({
 
               {/* Typing bubble */}
               {loading && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex mr-auto justify-start"
-                >
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex mr-auto justify-start">
                   <div className="px-3 py-2 rounded-2xl rounded-bl-sm bg-white/10 border border-white/15 backdrop-blur-md shadow-lg text-gray-900 dark:text-gray-100">
                     <div className="flex space-x-2">
                       <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" />
@@ -487,12 +536,11 @@ export default function ChatWidget({
                   </div>
                 </motion.div>
               )}
-
               <div ref={endRef} />
             </div>
 
             {/* Composer */}
-            <div className="p-3 border-t border-white/10 bg-white/5 backdrop-blur-md">
+            <div className={`${isCompact ? "p-2.5" : "p-3"} border-t border-white/10 bg-white/5 backdrop-blur-md`} style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
               {error && (
                 <div className="mb-2 px-3 py-2 text-xs text-rose-600 dark:text-rose-300 bg-rose-100/70 dark:bg-rose-900/40 rounded-lg">
                   Error: {error.message}
@@ -511,21 +559,21 @@ export default function ChatWidget({
                   onKeyDown={handleKeyDown}
                   placeholder="Type your message..."
                   disabled={loading}
-                  className="flex-1 px-4 py-2 rounded-xl bg-white/10 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 border border-white/15 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 disabled:opacity-50 backdrop-blur-md"
+                  className={`flex-1 ${isCompact ? "px-3 py-1.5 text-[13px]" : "px-4 py-2"} rounded-xl bg-white/10 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 border border-white/15 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 disabled:opacity-50 backdrop-blur-md`}
                   aria-label="Type your message"
                 />
                 <button
                   type="button"
                   onClick={() => sendMessage()}
                   disabled={loading || !input.trim()}
-                  className="p-2 rounded-xl shadow-md bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`${isCompact ? "p-1.5" : "p-2"} rounded-xl shadow-md bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
                   aria-label="Send message"
                 >
-                  <IoMdSend size={18} />
+                  <IoMdSend size={isCompact ? 16 : 18} />
                 </button>
               </div>
 
-              <div className="mt-2 text-[11px] text-center text-gray-600 dark:text-gray-400" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+              <div className={`${isCompact ? "mt-1 text-[10px]" : "mt-2 text-[11px]"} text-center text-gray-600 dark:text-gray-400`}>
                 Free chat by {companyInfo.name} • <a href="/privacy" className="underline hover:opacity-80">Privacy Policy</a>
               </div>
             </div>

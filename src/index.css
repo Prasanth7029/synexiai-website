@@ -557,3 +557,16 @@
 @layer utilities {
   .auto-rows-fr { grid-auto-rows: 1fr; }
 }
+
+/* Chat-only typographic scale */
+.sx-chat {
+  --sx-rem: 0.92rem;         /* ~8% smaller */
+  font-size: var(--sx-rem);  /* this sets the base for elements that use em */
+}
+
+/* make Tailwind rem-based sizes “feel” smaller by wrapping critical areas */
+.sx-chat .text-sm      { font-size: 0.9em; }
+.sx-chat .text-base    { font-size: 1em;   }
+.sx-chat .text-xs      { font-size: 0.8em; }
+.sx-chat input,
+.sx-chat button        { font-size: 0.95em; }

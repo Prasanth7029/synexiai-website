@@ -30,7 +30,7 @@ export default function Layout({ children }) {
  </motion.div>
 
  {/* Chat */}
- <ChatWidget side="right" z={9999} />
+ <ChatWidget side="right" z={9999} desktopWidthPx={360}/>
  </div>
  );
 }
