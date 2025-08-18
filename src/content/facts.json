@@ -1,0 +1,30 @@
+[
+  {
+    "category": "Astronomy",
+    "fact": "Jupiter’s moon Europa likely has a subsurface ocean beneath an ice shell tens of kilometers thick."
+  },
+  {
+    "category": "Renewable Energy",
+    "fact": "Modern utility-scale wind turbines typically reach capacity factors of 35–50% depending on site conditions."
+  },
+  {
+    "category": "Computer Science",
+    "fact": "The Big-O of binary search is O(log n) because the search space halves each step."
+  },
+  {
+    "category": "Physics",
+    "fact": "Graphene is a single layer of carbon atoms arranged in a hexagonal lattice, noted for exceptional strength and conductivity."
+  },
+  {
+    "category": "History of Tech",
+    "fact": "The first programmable, general-purpose electronic computer ENIAC was completed in 1945."
+  },
+  {
+    "category": "Biology",
+    "fact": "Mitochondria generate most of a cell’s ATP through oxidative phosphorylation."
+  },
+  {
+    "category": "Energy Storage",
+    "fact": "Lithium iron phosphate (LFP) batteries trade lower energy density for longer cycle life and thermal stability."
+  }
+]
