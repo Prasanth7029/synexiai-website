@@ -7,6 +7,7 @@ import { FaReact, FaServer, FaBell, FaChartLine, FaBrain } from "react-icons/fa"
 import HeroBanner from "../components/HeroBanner";
 import BuildWithSynexiAI from "../components/sections/BuildWithSynexiAI.jsx";
 import { projects as portfolio } from "../content/projects.js";
+import AIFactRotator from "../components/AIFactRotator.jsx";
 
 const MotionDiv = motion.div;
 
@@ -58,8 +59,13 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <HeroBanner title={p.heroTitle} subtitle={p.heroSubtitle} />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 my-10">
+          <AIFactRotator />
+      </div>
 
       <BuildWithSynexiAI />
+
+
 
       {/* Main content container */}
       <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">
