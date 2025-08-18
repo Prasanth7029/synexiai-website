@@ -6,27 +6,31 @@ import Footer from "./Footer";
 import ChatWidget from "./ChatWidget";
 
 export default function Layout({ children }) {
-  return (
-    <div className="flex flex-col min-h-screen text-white">
-      {/* Header */}
-      <Header />
+ return (
+ <div className="flex flex-col min-h-svh antialiased bg-[var(--bg-gradient)] text-[var(--text-color)]">
+ {/* Header */}
+ <Header />
 
-      {/* Page Content */}
-      <main id="main" className="min-h-screen">
-        {children}
-      </main>
+ {/* Page Content */}
+ <main
+ id="main"
+ className="flex-1 pb-24 sm:pb-0"
+ /* pb-24 ensures floating chat doesn't cover bottom content on small screens */
+ >
+ {children}
+ </main>
 
-      {/* Footer */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-      >
-        <Footer />
-      </motion.div>
+ {/* Footer */}
+ <motion.div
+ initial={{ opacity: 0, y: 30 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+ >
+ <Footer />
+ </motion.div>
 
-      {/* Chat */}
-      <ChatWidget side="right" z={9999} />
-    </div>
-  );
+ {/* Chat */}
+ <ChatWidget side="right" z={9999} />
+ </div>
+ );
 }

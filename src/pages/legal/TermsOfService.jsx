@@ -4,230 +4,230 @@ import { Helmet } from "react-helmet-async";
 const UPDATED = "August 11, 2025";
 
 export default function TermsOfService() {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+ useEffect(() => {
+ window.scrollTo(0, 0);
+ }, []);
 
-  return (
-    <>
-      <Helmet>
-        <title>Terms of Service | SynexiAI</title>
-        <meta
-          name="description"
-          content="Terms and conditions for using SynexiAI services and website."
-        />
-        <meta name="robots" content="index, follow" />
-      </Helmet>
+ return (
+ <>
+ <Helmet>
+ <title>Terms of Service | SynexiAI</title>
+ <meta
+ name="description"
+ content="Terms and conditions for using SynexiAI services and website."
+ />
+ <meta name="robots" content="index, follow" />
+ </Helmet>
 
-      <main className="min-h-screen bg-[var(--bg-gradient)] text-[var(--text-color)]">
-        {/* tighter vertical padding */}
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-4 py-12 sm:py-14">
-          {/* tighter card padding */}
-          <div className="bg-[var(--card-bg)] text-[var(--card-text)] rounded-2xl shadow-xl p-5 sm:p-7 lg:p-8 backdrop-blur-sm border border-[var(--border-color)]">
-            {/* smaller hero */}
-            <div className="text-center mb-6">
-              <h1 className="text-2xl sm:text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]">
-                Terms of Service
-              </h1>
-              <p className="text-sm md:text-base opacity-90">
-                Last updated: {UPDATED}
-              </p>
-            </div>
+ <main className="min-h-screen bg-[var(--bg-gradient)] text-[var(--text-color)]">
+ {/* tighter vertical padding */}
+ <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-4 py-12 sm:py-14">
+ {/* tighter card padding */}
+ <div className="bg-[var(--card-bg)] text-[var(--card-text)] rounded-2xl shadow-xl p-5 sm:p-7 lg:p-8 border border-[var(--border-color)]">
+ {/* smaller hero */}
+ <div className="text-center mb-6">
+ <h1 className="text-2xl sm:text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]">
+ Terms of Service
+ </h1>
+ <p className="text-sm md:text-base opacity-90">
+ Last updated: {UPDATED}
+ </p>
+ </div>
 
-            {/* compact prose + tighter leading + smaller margins */}
-            <div
-              className="
-              prose prose-xs md:prose-sm dark:prose-invert max-w-none
-              prose-p:leading-snug prose-li:leading-snug
-              prose-headings:mt-6 prose-headings:mb-2
-              prose-ul:my-2 prose-ol:my-2
-            "
-            >
-              <p>
-                These Terms of Service (“Terms”) govern your access to and use
-                of
-                <strong> SynexiAI</strong> services and{" "}
-                <code>synexiai.online</code> (the “Services”). By using the
-                Services, you agree to these Terms.
-              </p>
+ {/* compact prose + tighter leading + smaller margins */}
+ <div
+ className="
+ prose prose-xs md:prose-sm dark:prose-invert max-w-none
+ prose-p:leading-snug prose-li:leading-snug
+ prose-headings:mt-6 prose-headings:mb-2
+ prose-ul:my-2 prose-ol:my-2
+ "
+ >
+ <p>
+ These Terms of Service (“Terms”) govern your access to and use
+ of
+ <strong> SynexiAI</strong> services and{" "}
+ <code>synexiai.online</code> (the “Services”). By using the
+ Services, you agree to these Terms.
+ </p>
 
-              {/* Collapsible sections to reduce scrolling */}
-              <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)]">
-                <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
-                  <span>Acceptable Use</span>
-                  <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <ul className="space-y-1.5">
-                    <li className="flex items-start">
-                      <span className="badge-check" />
-                      <span>
-                        Do not misuse, disrupt, or harm the Services or others’
-                        use of them.
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="badge-check" />
-                      <span>
-                        Do not attempt to reverse engineer or circumvent
-                        security.
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="badge-check" />
-                      <span>
-                        Comply with applicable laws and third-party rights.
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </details>
+ {/* Collapsible sections to reduce scrolling */}
+ <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)]">
+ <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
+ <span>Acceptable Use</span>
+ <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
+ +
+ </span>
+ </summary>
+ <div className="mt-3">
+ <ul className="space-y-1.5">
+ <li className="flex items-start">
+ <span className="badge-check" />
+ <span>
+ Do not misuse, disrupt, or harm the Services or others’
+ use of them.
+ </span>
+ </li>
+ <li className="flex items-start">
+ <span className="badge-check" />
+ <span>
+ Do not attempt to reverse engineer or circumvent
+ security.
+ </span>
+ </li>
+ <li className="flex items-start">
+ <span className="badge-check" />
+ <span>
+ Comply with applicable laws and third-party rights.
+ </span>
+ </li>
+ </ul>
+ </div>
+ </details>
 
-              <details
-                className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"
-                open
-              >
-                <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
-                  <span>AI Chat &amp; Content</span>
-                  <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <p>
-                    Content generated by or via our AI chat is provided “as is”
-                    for informational purposes and may be inaccurate. You are
-                    responsible for evaluating outputs and using them at your
-                    own discretion.
-                  </p>
-                </div>
-              </details>
+ <details
+ className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"
+ open
+ >
+ <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
+ <span>AI Chat &amp; Content</span>
+ <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
+ +
+ </span>
+ </summary>
+ <div className="mt-3">
+ <p>
+ Content generated by or via our AI chat is provided “as is”
+ for informational purposes and may be inaccurate. You are
+ responsible for evaluating outputs and using them at your
+ own discretion.
+ </p>
+ </div>
+ </details>
 
-              <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
-                <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
-                  <span>Intellectual Property</span>
-                  <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <p>
-                    The Services, including logos, trademarks, code, and
-                    content, are owned by SynexiAI or licensors. You may not
-                    copy, modify, or distribute proprietary content without
-                    permission.
-                  </p>
-                </div>
-              </details>
+ <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
+ <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
+ <span>Intellectual Property</span>
+ <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
+ +
+ </span>
+ </summary>
+ <div className="mt-3">
+ <p>
+ The Services, including logos, trademarks, code, and
+ content, are owned by SynexiAI or licensors. You may not
+ copy, modify, or distribute proprietary content without
+ permission.
+ </p>
+ </div>
+ </details>
 
-              <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
-                <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
-                  <span>Disclaimers</span>
-                  <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <p>
-                    The Services are provided on an “AS IS” and “AS AVAILABLE”
-                    basis without warranties of any kind. We disclaim all
-                    warranties to the maximum extent permitted by law.
-                  </p>
-                </div>
-              </details>
+ <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
+ <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
+ <span>Disclaimers</span>
+ <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
+ +
+ </span>
+ </summary>
+ <div className="mt-3">
+ <p>
+ The Services are provided on an “AS IS” and “AS AVAILABLE”
+ basis without warranties of any kind. We disclaim all
+ warranties to the maximum extent permitted by law.
+ </p>
+ </div>
+ </details>
 
-              <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
-                <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
-                  <span>Limitation of Liability</span>
-                  <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <p>
-                    To the fullest extent permitted by law, SynexiAI shall not
-                    be liable for indirect, incidental, special, consequential,
-                    or punitive damages, or any loss of data, profits, or
-                    revenue.
-                  </p>
-                </div>
-              </details>
+ <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
+ <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
+ <span>Limitation of Liability</span>
+ <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
+ +
+ </span>
+ </summary>
+ <div className="mt-3">
+ <p>
+ To the fullest extent permitted by law, SynexiAI shall not
+ be liable for indirect, incidental, special, consequential,
+ or punitive damages, or any loss of data, profits, or
+ revenue.
+ </p>
+ </div>
+ </details>
 
-              <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
-                <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
-                  <span>Termination</span>
-                  <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <p>
-                    We may suspend or terminate access if you violate these
-                    Terms or for security or operational reasons.
-                  </p>
-                </div>
-              </details>
+ <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
+ <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
+ <span>Termination</span>
+ <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
+ +
+ </span>
+ </summary>
+ <div className="mt-3">
+ <p>
+ We may suspend or terminate access if you violate these
+ Terms or for security or operational reasons.
+ </p>
+ </div>
+ </details>
 
-              <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
-                <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
-                  <span>Changes to Terms</span>
-                  <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <p>
-                    We may update these Terms periodically. Continued use after
-                    changes constitutes acceptance of the updated Terms.
-                  </p>
-                </div>
-              </details>
+ <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
+ <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
+ <span>Changes to Terms</span>
+ <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
+ +
+ </span>
+ </summary>
+ <div className="mt-3">
+ <p>
+ We may update these Terms periodically. Continued use after
+ changes constitutes acceptance of the updated Terms.
+ </p>
+ </div>
+ </details>
 
-              <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
-                <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
-                  <span>Governing Law</span>
-                  <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <p>
-                    These Terms are governed by the laws of the jurisdiction
-                    where SynexiAI is established, without regard to
-                    conflict-of-law principles.
-                  </p>
-                </div>
-              </details>
+ <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
+ <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
+ <span>Governing Law</span>
+ <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
+ +
+ </span>
+ </summary>
+ <div className="mt-3">
+ <p>
+ These Terms are governed by the laws of the jurisdiction
+ where SynexiAI is established, without regard to
+ conflict-of-law principles.
+ </p>
+ </div>
+ </details>
 
-              <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
-                <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
-                  <span>Contact</span>
-                  <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <div className="mt-3">
-                  <p>
-                    Email:{" "}
-                    <a
-                      href="mailto:legal@synexiai.online"
-                      className="link-accent"
-                    >
-                      legal@synexiai.online
-                    </a>
-                  </p>
-                  <p className="text-xs opacity-70">
-                    This page is provided for informational purposes and is not
-                    legal advice.
-                  </p>
-                </div>
-              </details>
-            </div>
-          </div>
-        </section>
-      </main>
-    </>
-  );
+ <details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3">
+ <summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between">
+ <span>Contact</span>
+ <span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45">
+ +
+ </span>
+ </summary>
+ <div className="mt-3">
+ <p>
+ Email:{" "}
+ <a
+ href="mailto:legal@synexiai.online"
+ className="link-accent"
+ >
+ legal@synexiai.online
+ </a>
+ </p>
+ <p className="text-xs opacity-70">
+ This page is provided for informational purposes and is not
+ legal advice.
+ </p>
+ </div>
+ </details>
+ </div>
+ </div>
+ </section>
+ </main>
+ </>
+ );
 }

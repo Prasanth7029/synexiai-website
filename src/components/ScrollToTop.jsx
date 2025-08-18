@@ -8,14 +8,14 @@ import { useLocation } from "react-router-dom";
  * - Optional smooth/instant behavior
  */
 export default function ScrollToTop({ behavior = "smooth" }) {
-  const { pathname, search } = useLocation();
+ const { pathname, search } = useLocation();
 
-  useEffect(() => {
-    // Ensure we scroll after the new page paints
-    requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, left: 0, behavior });
-    });
-  }, [pathname, search, behavior]);
+ useEffect(() => {
+ // Ensure we scroll after the new page paints
+ requestAnimationFrame(() => {
+ window.scrollTo({ top: 0, left: 0, behavior });
+ });
+ }, [pathname, search, behavior]);
 
-  return null;
+ return null;
 }

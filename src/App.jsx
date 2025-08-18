@@ -20,68 +20,68 @@ const NewsPage = lazy(() => import("./pages/NewsPage"));
 
 // Defer AOS
 function useDeferredAOS() {
-  useEffect(() => {
-    let cancelled = false;
-    const init = async () => {
-      try {
-        const [{ default: AOS }] = await Promise.all([
-          import("aos"),
-          import("aos/dist/aos.css"),
-        ]);
-        if (!cancelled) {
-          AOS.init({
-            duration: 1000,
-            easing: "ease-out",
-            once: true,
-            mirror: false,
-          });
-          AOS.refresh();
-        }
-      } catch {
-        // no-op
-      }
-    };
-    if ("requestIdleCallback" in window)
-      window.requestIdleCallback(() => init());
-    else {
-      const t = setTimeout(init, 1200);
-      return () => clearTimeout(t);
-    }
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+ useEffect(() => {
+ let cancelled = false;
+ const init = async () => {
+ try {
+ const [{ default: AOS }] = await Promise.all([
+ import("aos"),
+ import("aos/dist/aos.css"),
+ ]);
+ if (!cancelled) {
+ AOS.init({
+ duration: 1000,
+ easing: "ease-out",
+ once: true,
+ mirror: false,
+ });
+ AOS.refresh();
+ }
+ } catch {
+ // no-op
+ }
+ };
+ if ("requestIdleCallback" in window)
+ window.requestIdleCallback(() => init());
+ else {
+ const t = setTimeout(init, 1200);
+ return () => clearTimeout(t);
+ }
+ return () => {
+ cancelled = true;
+ };
+ }, []);
 }
 
 export default function App() {
-  useDeferredAOS();
+ useDeferredAOS();
 
-  return (
-    <>
-      <Router>
-        <ScrollToTop behavior="smooth" />
-        <Suspense fallback={<LoaderScreen />}>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/projects" element={<Navigate to="/portfolio" replace />} />
-              {/* curated showcase */}
-              <Route path="/portfolio" element={<PortfolioPage />} />{" "}
-              {/* GitHub + roadmap */}
-              <Route path="/vision" element={<VisionPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/tech" element={<TechStackPage />} />
-              <Route path="/ai-news" element={<NewsPage />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/terms" element={<TermsOfService />} />
-              <Route path="/cookie-policy" element={<CookiePolicy />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-        </Suspense>
-      </Router>
+ return (
+ <>
+ <Router>
+ <ScrollToTop behavior="smooth" />
+ <Suspense fallback={<LoaderScreen />}>
+ <Layout>
+ <Routes>
+ <Route path="/" element={<HomePage />} />
+ <Route path="/about" element={<AboutPage />} />
+ <Route path="/projects" element={<Navigate to="/portfolio" replace />} />
+ {/* curated showcase */}
+ <Route path="/portfolio" element={<PortfolioPage />} />{" "}
+ {/* GitHub + roadmap */}
+ <Route path="/vision" element={<VisionPage />} />
+ <Route path="/contact" element={<ContactPage />} />
+ <Route path="/tech" element={<TechStackPage />} />
+ <Route path="/ai-news" element={<NewsPage />} />
+ <Route path="/privacy" element={<PrivacyPolicy />} />
+ <Route path="/terms" element={<TermsOfService />} />
+ <Route path="/cookie-policy" element={<CookiePolicy />} />
+ <Route path="*" element={<NotFound />} />
+ </Routes>
+ </Layout>
+ </Suspense>
+ </Router>
 
-    </>
-  );
+ </>
+ );
 }
