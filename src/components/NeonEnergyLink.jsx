@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiRefreshCw, FiZap, FiHelpCircle, FiClock, FiTarget, FiInfo } from "react-icons/fi";
 import { FaTrophy } from "react-icons/fa";
@@ -135,220 +135,67 @@ function makeBoard(size) {
 }
 function opposite(d){ return d==="U"?"D":d==="D"?"U":d==="L"?"R":"L"; }
 
-export default function NeonEnergyLink({
-  size = DEFAULT_SIZE,
-  onWin = () => {},
-}) {
-  const [board, setBoard] = useState(() => makeBoard(size));
-  const [moves, setMoves] = useState(0);
-  const [startAt] = useState(() => Date.now());
-  const [done, setDone] = useState(false);
-  const [hint, setHint] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
-  const [difficulty, setDifficulty] = useState(size);
-  const [best, setBest] = useState(() => {
-    try { return Number(localStorage.getItem("sx_energy_best")||0); } catch { return 0; }
-  });
-
-  // fixed endpoints
-  const src = { x:0, y:0 };
-  const dst = { x:size-1, y:size-1 };
-
-  const elapsed = Math.max(0, Math.floor((Date.now() - startAt)/1000));
-  useTick(500, () => { /* just to refresh timer */ });
-
-  const flow = useMemo(() => computeFlow(board, src, dst, size), [board, size]);
-
-  useEffect(() => {
-    if (flow.connected && !done) {
-      setDone(true);
-      const score = Math.max(10, Math.floor(10000 / (1 + moves * 7 + elapsed)));
-      const nextBest = Math.max(best, score);
-      setBest(nextBest);
-      try { localStorage.setItem("sx_energy_best", String(nextBest)); } catch {}
-      onWin({ moves, elapsed, score });
-    }
-  }, [flow.connected, done, moves, elapsed, best, onWin]);
-
-  const rotate = (x,y) => {
-    if (done) return;
-    setBoard(prev => {
-      const next = prev.map(row => row.slice());
-      next[y][x] = { ...next[y][x], rot: (next[y][x].rot + 1) % 4 };
-      return next;
-    });
-    setMoves(m => m+1);
-  };
-
-  const reset = () => {
-    setBoard(makeBoard(size));
-    setMoves(0);
-    setDone(false);
-    setHint(false);
-  };
-
-  const changeDifficulty = (newSize) => {
-    setDifficulty(newSize);
-    setBoard(makeBoard(newSize));
-    setMoves(0);
-    setDone(false);
-    setHint(false);
-  };
-
-  return (
-    <div className="rounded-2xl border border-white/15 bg-[rgba(255,255,255,0.06)] backdrop-blur-xl p-3 sm:p-4 shadow-[0_20px_60px_-10px_rgba(56,189,248,0.35)] max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 grid place-items-center rounded-xl bg-gradient-to-br from-emerald-300/80 to-cyan-500/80 text-black shadow">
-            <FiZap className="text-lg" />
-          </div>
-          <div>
-            <h3 className="text-lg sm:text-xl font-semibold">Neon Grid — Energy Link</h3>
-            <p className="text-xs opacity-70">Rotate tiles to link the <strong>source</strong> to the <strong>core</strong>.</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 text-xs self-stretch sm:self-auto">
-          <Badge icon={<FiClock />} label={`${formatTime(elapsed)}`} />
-          <Badge icon={<FiTarget />} label={`${moves} moves`} />
-          <Badge icon={<FaTrophy />} label={`Best ${best}`} />
-        </div>
-      </div>
-
-      {/* Difficulty Selector */}
-      <div className="mb-4 flex flex-wrap gap-2">
-        <span className="text-xs opacity-70 self-center">Difficulty:</span>
-        {[4, 5, 6, 7].map((level) => (
-          <button
-            key={level}
-            onClick={() => changeDifficulty(level)}
-            className={`px-2.5 py-1 text-xs rounded-lg border ${
-              difficulty === level
-                ? 'border-cyan-400 bg-cyan-400/10 text-cyan-300'
-                : 'border-white/20 bg-white/5 hover:bg-white/10'
-            }`}
-          >
-            {level === 4 ? 'Easy' : level === 5 ? 'Medium' : level === 6 ? 'Hard' : 'Expert'}
-          </button>
-        ))}
-        <button
-          onClick={() => setShowInstructions(!showInstructions)}
-          className="ml-auto px-2.5 py-1 text-xs rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 flex items-center gap-1"
-        >
-          <FiInfo size={14} /> Help
-        </button>
-      </div>
-
-      {/* Instructions */}
-      <AnimatePresence>
-        {showInstructions && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mb-4 overflow-hidden"
-          >
-            <div className="text-sm rounded-xl border border-white/15 bg-white/10 p-3">
-              <h4 className="font-medium mb-2">How to Play:</h4>
-              <ul className="list-disc pl-5 space-y-1 text-xs opacity-90">
-                <li>Rotate tiles by clicking on them to create a continuous path</li>
-                <li>Connect the <span className="text-emerald-300">source</span> (top-left) to the <span className="text-purple-300">core</span> (bottom-right)</li>
-                <li>Pipes must have matching connections to allow energy flow</li>
-                <li>Complete the puzzle with the fewest moves for a higher score</li>
-              </ul>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Board */}
-      <div
-        className="grid gap-1 sm:gap-1.5 mx-auto"
-        style={{
-          gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
-          maxWidth: size > 6 ? '100%' : '20rem'
-        }}
-      >
-        {board.map((row, y) =>
-          row.map((cell, x) => {
-            const isSource = x===src.x && y===src.y;
-            const isDest = x===dst.x && y===dst.y;
-            const isPath = flow.pathSet.has(`${x}:${y}`);
-            return (
-              <motion.button
-                key={`${x}-${y}`}
-                onClick={() => rotate(x,y)}
-                whileTap={{ scale: 0.96 }}
-                className={[
-                  "aspect-square rounded-xl relative border transition-colors",
-                  "bg-white/5 border-white/10 hover:bg-white/10",
-                  isPath ? "ring-2 ring-cyan-400/70 bg-cyan-400/5" : "ring-0",
-                  size > 6 ? "rounded-lg" : "rounded-xl"
-                ].join(" ")}
-              >
-                {/* tile art */}
-                <TileArt type={cell.type} rot={cell.rot} glow={isPath} size={size} />
-                {/* markers */}
-                {isSource && <CornerMark className="left-1 top-1 from-emerald-300 to-cyan-400" />}
-                {isDest && <CornerMark className="right-1 bottom-1 from-fuchsia-300 to-violet-500" />}
-              </motion.button>
-            );
-          })
-        )}
-      </div>
-
-      {/* Controls */}
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <button
-          onClick={reset}
-          className="px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 flex items-center gap-2 text-sm"
-        >
-          <FiRefreshCw size={16} /> New Grid
-        </button>
-        <button
-          onClick={() => setHint(h => !h)}
-          className="px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 flex items-center gap-2 text-sm"
-        >
-          <FiHelpCircle size={16} /> {hint ? "Hide Hint" : "Show Hint"}
-        </button>
-
-        <div className="ml-auto text-xs opacity-75 hidden sm:block">
-          Connect all the way to light up the core.
-        </div>
-      </div>
-
-      {/* Hint */}
-      <AnimatePresence>
-        {hint && (
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            className="mt-3 text-sm rounded-xl border border-white/15 bg-white/10 p-3"
-          >
-            <p className="text-xs">Tip: Focus on ensuring openings match between neighbors. Start from the <strong>source</strong> tile and work your way toward the <strong>core</strong>.</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Win state */}
-      <AnimatePresence>
-        {done && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            className="mt-4 rounded-xl border border-white/15 bg-gradient-to-r from-emerald-400/15 to-cyan-400/10 p-4"
-          >
-            <div className="text-emerald-300 font-semibold flex items-center gap-2">
-              <FiZap className="text-cyan-400" /> Core linked! Clean energy flowing. ⚡️
-            </div>
-            <div className="text-sm opacity-80 mt-1">Time: {formatTime(elapsed)} • Moves: {moves}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+// tiny hook for viewport width (mobile friendly)
+function useViewportWidth() {
+  const [w, setW] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 390,
   );
+  useEffect(() => {
+    const on = () => setW(window.innerWidth);
+    window.addEventListener("resize", on);
+    return () => window.removeEventListener("resize", on);
+  }, []);
+  return w;
+}
+
+function useTick(ms, fn) {
+  useEffect(() => {
+    const t = setInterval(fn, ms);
+    return () => clearInterval(t);
+  }, [ms, fn]);
+}
+
+function computeFlow(board, src, dst, size) {
+  // BFS along matching openings
+  const q = [[src.x, src.y]];
+  const seen = new Set([`${src.x}:${src.y}`]);
+  const pathSet = new Set();
+
+  while (q.length) {
+    const [x,y] = q.shift();
+    pathSet.add(`${x}:${y}`);
+
+    // Check if cell exists
+    if (!board[y] || !board[y][x]) continue;
+
+    const cell = board[y][x];
+    const outs = openings(cell.type, cell.rot);
+
+    for (const d of outs) {
+      const [nx,ny,need] = neighbor(x,y,d);
+
+      // Check if neighbor is in bounds and exists
+      if (!inBounds(nx,ny, size) || !board[ny] || !board[ny][nx]) continue;
+
+      const next = board[ny][nx];
+      const opensBack = openings(next.type, next.rot).includes(need);
+
+      if (opensBack) {
+        const key = `${nx}:${ny}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          q.push([nx,ny]);
+        }
+      }
+    }
+  }
+
+  return { connected: seen.has(`${dst.x}:${dst.y}`), pathSet };
+}
+
+function formatTime(s) {
+  const mm = Math.floor(s/60), ss = s%60;
+  return `${mm}:${String(ss).padStart(2,"0")}`;
 }
 
 /* --------------------------- visual subcomponents --------------------------- */
@@ -424,54 +271,238 @@ function PipeSeg({ x1,y1,x2,y2, glow, strokeWidth }) {
   );
 }
 
-/* --------------------------------- helpers --------------------------------- */
+export default function NeonEnergyLink({
+  size = DEFAULT_SIZE,
+  onWin = () => {},
+}) {
+  const [board, setBoard] = useState(() => makeBoard(size));
+  const [moves, setMoves] = useState(0);
+  const [startAt] = useState(() => Date.now());
+  const [done, setDone] = useState(false);
+  const [hint, setHint] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [difficulty, setDifficulty] = useState(size);
+  const [best, setBest] = useState(() => {
+    try { return Number(localStorage.getItem("sx_energy_best")||0); } catch { return 0; }
+  });
 
-function useTick(ms, fn) {
+  const vw = useViewportWidth();
+
+  // --- Improved Mobile-first tile sizing ---
+  // Estimate available content width, cap at common mobile widths, and adjust for gaps
+  const contentMax = Math.min(vw - 32, 420); // Tighter cap for mobile
+  const tilePx = Math.max(
+    32, // Minimum for touch targets
+    Math.min(60, Math.floor((contentMax - 4 * (size - 1)) / size)) // Reduced gap to 4px for denser layout on small screens
+  );
+
+  // fixed endpoints
+  const src = { x:0, y:0 };
+  const dst = { x:size-1, y:size-1 };
+
+  const elapsed = Math.max(0, Math.floor((Date.now() - startAt)/1000));
+  useTick(500, () => { /* just to refresh timer */ });
+
+  const flow = useMemo(() => computeFlow(board, src, dst, size), [board, size]);
+
   useEffect(() => {
-    const t = setInterval(fn, ms);
-    return () => clearInterval(t);
-  }, [ms, fn]);
-}
-
-function computeFlow(board, src, dst, size) {
-  // BFS along matching openings
-  const q = [[src.x, src.y]];
-  const seen = new Set([`${src.x}:${src.y}`]);
-  const pathSet = new Set();
-
-  while (q.length) {
-    const [x,y] = q.shift();
-    pathSet.add(`${x}:${y}`);
-
-    // Check if cell exists
-    if (!board[y] || !board[y][x]) continue;
-
-    const cell = board[y][x];
-    const outs = openings(cell.type, cell.rot);
-
-    for (const d of outs) {
-      const [nx,ny,need] = neighbor(x,y,d);
-
-      // Check if neighbor is in bounds and exists
-      if (!inBounds(nx,ny, size) || !board[ny] || !board[ny][nx]) continue;
-
-      const next = board[ny][nx];
-      const opensBack = openings(next.type, next.rot).includes(need);
-
-      if (opensBack) {
-        const key = `${nx}:${ny}`;
-        if (!seen.has(key)) {
-          seen.add(key);
-          q.push([nx,ny]);
-        }
-      }
+    if (flow.connected && !done) {
+      setDone(true);
+      const score = Math.max(10, Math.floor(10000 / (1 + moves * 7 + elapsed)));
+      const nextBest = Math.max(best, score);
+      setBest(nextBest);
+      try { localStorage.setItem("sx_energy_best", String(nextBest)); } catch {}
+      onWin({ moves, elapsed, score });
     }
-  }
+  }, [flow.connected, done, moves, elapsed, best, onWin]);
 
-  return { connected: seen.has(`${dst.x}:${dst.y}`), pathSet };
-}
+  const rotate = (x,y) => {
+    if (done) return;
+    setBoard(prev => {
+      const next = prev.map(row => row.slice());
+      next[y][x] = { ...next[y][x], rot: (next[y][x].rot + 1) % 4 };
+      return next;
+    });
+    setMoves(m => m+1);
+  };
 
-function formatTime(s) {
-  const mm = Math.floor(s/60), ss = s%60;
-  return `${mm}:${String(ss).padStart(2,"0")}`;
+  const reset = () => {
+    setBoard(makeBoard(size));
+    setMoves(0);
+    setDone(false);
+    setHint(false);
+  };
+
+  const changeDifficulty = (newSize) => {
+    setDifficulty(newSize);
+    setBoard(makeBoard(newSize));
+    setMoves(0);
+    setDone(false);
+    setHint(false);
+  };
+
+  return (
+    <div
+      className={[
+        "w-full mx-auto max-w-[420px]", // Enforce max width to prevent overflow
+        "rounded-2xl border border-white/15",
+        "bg-[rgba(255,255,255,0.06)] backdrop-blur-xl",
+        "shadow-[0_20px_60px_-10px_rgba(56,189,248,0.35)]",
+        "p-3 sm:p-4",
+        "overflow-hidden", // Prevent any internal overflow
+        "pb-[max(env(safe-area-inset-bottom),1rem)]", // Increased safe area padding
+      ].join(" ")}
+    >
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3 sm:mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 grid place-items-center rounded-xl bg-gradient-to-br from-emerald-300/80 to-cyan-500/80 text-black shadow">
+            <FiZap className="text-base sm:text-lg" />
+          </div>
+          <div>
+            <h3 className="text-base sm:text-xl font-semibold">Neon Grid — Energy Link</h3>
+            <p className="text-[11px] sm:text-xs opacity-70">
+              Rotate tiles to link the <strong>source</strong> to the <strong>core</strong>.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-[11px] sm:text-xs self-stretch sm:self-auto">
+          <Badge icon={<FiClock />} label={formatTime(elapsed)} />
+          <Badge icon={<FiTarget />} label={`${moves} moves`} />
+          <Badge icon={<FaTrophy />} label={`Best ${best}`} />
+        </div>
+      </div>
+
+      {/* Difficulty */}
+      <div className="mb-3 sm:mb-4 flex flex-wrap gap-2">
+        <span className="text-[11px] sm:text-xs opacity-70 self-center">Difficulty:</span>
+        {[4,5,6,7].map(level => (
+          <button
+            key={level}
+            onClick={() => changeDifficulty(level)}
+            className={`px-2 py-0.5 sm:px-2.5 sm:py-1 text-[11px] sm:text-xs rounded-lg border ${
+              difficulty === level
+                ? "border-cyan-400 bg-cyan-400/10 text-cyan-300"
+                : "border-white/20 bg-white/5 hover:bg-white/10"
+            }`}
+          >
+            {level === 4 ? "Easy" : level === 5 ? "Medium" : level === 6 ? "Hard" : "Expert"}
+          </button>
+        ))}
+        <button
+          onClick={() => setShowInstructions(v => !v)}
+          className="ml-auto px-2 py-0.5 sm:px-2.5 sm:py-1 text-[11px] sm:text-xs rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 flex items-center gap-1"
+        >
+          <FiInfo size={14} /> Help
+        </button>
+      </div>
+
+      {/* Instructions */}
+      <AnimatePresence>
+        {showInstructions && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-3 sm:mb-4 overflow-hidden"
+          >
+            <div className="text-[12px] sm:text-sm rounded-xl border border-white/15 bg-white/10 p-2.5 sm:p-3">
+              <h4 className="font-medium mb-1.5 sm:mb-2">How to Play:</h4>
+              <ul className="list-disc pl-4 space-y-1 text-[11px] sm:text-xs opacity-90">
+                <li>Tap tiles to rotate and form a continuous path</li>
+                <li>Connect <span className="text-emerald-300">source</span> (top-left) to the <span className="text-purple-300">core</span> (bottom-right)</li>
+                <li>Openings must match between neighbors</li>
+              </ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Board Wrapper - Constrained and scrollable if needed */}
+      <div
+        className="overflow-auto max-w-full mx-auto"
+        style={{ maxHeight: 'calc(100vh - 200px)' }} // Prevent full-screen takeover
+      >
+        <div
+          className="grid gap-1 sm:gap-2 mx-auto"
+          style={{ gridTemplateColumns: `repeat(${size}, ${tilePx}px)` }}
+        >
+          {board.map((row, y) =>
+            row.map((cell, x) => {
+              const isSource = x === 0 && y === 0;
+              const isDest = x === size - 1 && y === size - 1;
+              const isPath = flow.pathSet.has(`${x}:${y}`);
+              return (
+                <motion.button
+                  key={`${x}-${y}`}
+                  onClick={() => rotate(x, y)}
+                  whileTap={{ scale: 0.96 }}
+                  className={[
+                    "relative rounded-lg sm:rounded-xl border transition-colors",
+                    "bg-white/5 border-white/10 hover:bg-white/10",
+                    isPath ? "ring-2 ring-cyan-400/70 bg-cyan-400/5" : "ring-0",
+                  ].join(" ")}
+                  style={{ width: tilePx, height: tilePx, minWidth: tilePx, minHeight: tilePx }}
+                >
+                  <TileArt type={cell.type} rot={cell.rot} glow={isPath} size={size} />
+                  {isSource && <CornerMark className="left-1 top-1 from-emerald-300 to-cyan-400" />}
+                  {isDest && <CornerMark className="right-1 bottom-1 from-fuchsia-300 to-violet-500" />}
+                </motion.button>
+              );
+            })
+          )}
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2">
+        <button
+          onClick={reset}
+          className="px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 flex items-center gap-2 text-sm"
+        >
+          <FiRefreshCw size={16} /> New Grid
+        </button>
+        <button
+          onClick={() => setHint(h => !h)}
+          className="px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 flex items-center gap-2 text-sm"
+        >
+          <FiHelpCircle size={16} /> {hint ? "Hide Hint" : "Show Hint"}
+        </button>
+        <div className="ml-auto text-[11px] sm:text-xs opacity-75 hidden sm:block">
+          Connect all the way to light up the core.
+        </div>
+      </div>
+
+      {/* Hint */}
+      <AnimatePresence>
+        {hint && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            className="mt-3 text-[12px] sm:text-sm rounded-xl border border-white/15 bg-white/10 p-3"
+          >
+            Tip: Start at the <strong>source</strong> and walk the openings to the <strong>core</strong>.
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Win state */}
+      <AnimatePresence>
+        {done && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            className="mt-3 sm:mt-4 rounded-xl border border-white/15 bg-gradient-to-r from-emerald-400/15 to-cyan-400/10 p-3 sm:p-4"
+          >
+            <div className="text-emerald-300 font-semibold flex items-center gap-2">
+              <FiZap className="text-cyan-400" /> Core linked! Clean energy flowing. ⚡️
+            </div>
+            <div className="text-sm opacity-80 mt-1">Time: {formatTime(elapsed)} • Moves: {moves}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
