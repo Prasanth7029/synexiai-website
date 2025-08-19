@@ -69,14 +69,14 @@ export default function HomePage() {
 
       <BuildWithSynexiAI />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 np, gap-6 mb-12">
+      <div className="max-w-6xl mx-auto  grid grid-cols-1 lg:grid-cols-2 np gap-6 mb-12">
         {/* Puzzle */}
-        <section className="bg-white/5 rounded-xl border border-white/10 p-4">
+        <section className="bg-white/5 rounded-xl  border-white/10 p-4">
           <h2 className="text-xl font-bold mb-2">Power the Core</h2>
           <p className="text-sm opacity-80 mb-3">
             Rotate the neon grid to route clean energy.
           </p>
-          <div className="scale-90 origin-left">
+          <div className=" origin-left">
             <NeonEnergyLink />
           </div>
         </section>
@@ -87,7 +87,7 @@ export default function HomePage() {
           <p className="text-sm opacity-80 mb-3">
             Solve this interactive puzzle game.
           </p>
-          <div className="scale-90 origin-left">
+          <div className=" origin-left">
             <PuzzleGame />
           </div>
         </section>

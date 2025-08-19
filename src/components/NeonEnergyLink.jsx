@@ -343,15 +343,7 @@ export default function NeonEnergyLink({
 
   return (
     <div
-      className={[
-        "w-full mx-auto max-w-[420px]", // Enforce max width to prevent overflow
-        "rounded-2xl border border-white/15",
-        "bg-[rgba(255,255,255,0.06)] backdrop-blur-xl",
-        "shadow-[0_20px_60px_-10px_rgba(56,189,248,0.35)]",
-        "p-3 sm:p-4",
-        "overflow-hidden", // Prevent any internal overflow
-        "pb-[max(env(safe-area-inset-bottom),1rem)]", // Increased safe area padding
-      ].join(" ")}
+
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3 sm:mb-4">
@@ -419,40 +411,40 @@ export default function NeonEnergyLink({
       </AnimatePresence>
 
       {/* Board Wrapper - Constrained and scrollable if needed */}
-      <div
-        className="overflow-auto max-w-full mx-auto"
-        style={{ maxHeight: 'calc(100vh - 200px)' }} // Prevent full-screen takeover
-      >
         <div
-          className="grid gap-1 sm:gap-2 mx-auto"
-          style={{ gridTemplateColumns: `repeat(${size}, ${tilePx}px)` }}
+          className="overflow-auto max-w-full mx-auto"
+          style={{ maxHeight: 'calc(100vh - 200px)' }} // Prevent full-screen takeover
         >
-          {board.map((row, y) =>
-            row.map((cell, x) => {
-              const isSource = x === 0 && y === 0;
-              const isDest = x === size - 1 && y === size - 1;
-              const isPath = flow.pathSet.has(`${x}:${y}`);
-              return (
-                <motion.button
-                  key={`${x}-${y}`}
-                  onClick={() => rotate(x, y)}
-                  whileTap={{ scale: 0.96 }}
-                  className={[
-                    "relative rounded-lg sm:rounded-xl border transition-colors",
-                    "bg-white/5 border-white/10 hover:bg-white/10",
-                    isPath ? "ring-2 ring-cyan-400/70 bg-cyan-400/5" : "ring-0",
-                  ].join(" ")}
-                  style={{ width: tilePx, height: tilePx, minWidth: tilePx, minHeight: tilePx }}
-                >
-                  <TileArt type={cell.type} rot={cell.rot} glow={isPath} size={size} />
-                  {isSource && <CornerMark className="left-1 top-1 from-emerald-300 to-cyan-400" />}
-                  {isDest && <CornerMark className="right-1 bottom-1 from-fuchsia-300 to-violet-500" />}
-                </motion.button>
-              );
-            })
-          )}
+          <div
+            className="grid gap-1 sm:gap-2 mx-auto"
+            style={{ gridTemplateColumns: `repeat(${size}, ${tilePx}px)` }}
+          >
+            {board.map((row, y) =>
+              row.map((cell, x) => {
+                const isSource = x === 0 && y === 0;
+                const isDest = x === size - 1 && y === size - 1;
+                const isPath = flow.pathSet.has(`${x}:${y}`);
+                return (
+                  <motion.button
+                    key={`${x}-${y}`}
+                    onClick={() => rotate(x, y)}
+                    whileTap={{ scale: 0.96 }}
+                    className={[
+                      "relative rounded-lg sm:rounded-xl border transition-colors",
+                      "bg-white/5 border-white/10 hover:bg-white/10",
+                      isPath ? "ring-2 ring-cyan-400/70 bg-cyan-400/5" : "ring-0",
+                    ].join(" ")}
+                    style={{ width: tilePx, height: tilePx, minWidth: tilePx, minHeight: tilePx }}
+                  >
+                    <TileArt type={cell.type} rot={cell.rot} glow={isPath} size={size} />
+                    {isSource && <CornerMark className="left-1 top-1 from-emerald-300 to-cyan-400" />}
+                    {isDest && <CornerMark className="right-1 bottom-1 from-fuchsia-300 to-violet-500" />}
+                  </motion.button>
+                );
+              })
+            )}
+          </div>
         </div>
-      </div>
 
       {/* Controls */}
       <div className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2">
