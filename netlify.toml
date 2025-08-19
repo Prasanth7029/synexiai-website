@@ -60,3 +60,8 @@ to   = "https://synexiai.online/:splat"
 status = 301
 force = true
 
+[[headers]]
+for = "/.netlify/functions/ai-fact"
+[headers.values]
+Cache-Control = "no-store"
+

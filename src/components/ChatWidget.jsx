@@ -528,6 +528,29 @@ export default function ChatWidget({
     [input, messages, loading, guestName],
   );
 
+  useEffect(() => {
+    function onOpen(e) {
+      // open the panel
+      setOpen(true);
+
+      const detail = e?.detail || {};
+      const prompt = detail.prompt || "";
+      const autoSend = Boolean(detail.autoSend);
+
+      if (prompt) {
+        setInput(prompt); // prefill the composer
+        // optionally auto-send if requested by caller
+        if (autoSend) {
+          // queue send on next tick so the UI has opened
+          setTimeout(() => sendMessage(prompt), 0);
+        }
+      }
+    }
+
+    window.addEventListener("chatwidget:open", onOpen);
+    return () => window.removeEventListener("chatwidget:open", onOpen);
+  }, [sendMessage]); // Add sendMessage to dependencies
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();

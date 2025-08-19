@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiRefreshCw, FiZap, FiHelpCircle, FiClock, FiTarget } from "react-icons/fi";
+import { FiRefreshCw, FiZap, FiHelpCircle, FiClock, FiTarget, FiInfo } from "react-icons/fi";
 import { FaTrophy } from "react-icons/fa";
 
 /**
@@ -18,7 +18,7 @@ import { FaTrophy } from "react-icons/fa";
  * 10: cross ┼ (all four)
  */
 const ALL_TYPES = [0,1,2,3,4,5,6,7,8,9,10];
-const SIZE = 6; // 6x6 board (great on mobile too)
+const DEFAULT_SIZE = 6; // 6x6 board
 
 /** For each type+rotation, what directions are open? */
 function openings(type, rot) {
@@ -50,37 +50,37 @@ function neighbor(x,y, dir) {
   if (dir==="R") return [x+1, y, "L"];
   return [x,y,""];
 }
-function inBounds(x,y) { return x>=0 && y>=0 && x<SIZE && y<SIZE; }
+function inBounds(x,y, size) { return x>=0 && y>=0 && x<size && y<size; }
 
 /** Build a randomized board with a guaranteed solvable backbone path */
-function makeBoard() {
+function makeBoard(size) {
   // Create empty
-  const cells = Array.from({length: SIZE}, () =>
-    Array.from({length: SIZE}, () => ({ type: 0, rot: 0 }))
+  const cells = Array.from({length: size}, () =>
+    Array.from({length: size}, () => ({ type: 0, rot: 0 }))
   );
-  // Lay a random snake-like path from (0,0) to (SIZE-1,SIZE-1)
+  // Lay a random snake-like path from (0,0) to (size-1,size-1)
   const path = [[0,0]];
   let cx = 0, cy = 0;
-  while (cx !== SIZE-1 || cy !== SIZE-1) {
+  while (cx !== size-1 || cy !== size-1) {
     const moves = [];
-    if (cx < SIZE-1) moves.push([cx+1, cy]); // right
-    if (cy < SIZE-1) moves.push([cx, cy+1]); // down
+    if (cx < size-1) moves.push([cx+1, cy]); // right
+    if (cy < size-1) moves.push([cx, cy+1]); // down
     if (Math.random() < 0.25 && cx > 0) moves.push([cx-1, cy]); // occasional left
     if (Math.random() < 0.25 && cy > 0) moves.push([cx, cy-1]); // occasional up
     // pick next that doesn't go out of bounds too often and avoids repeats
     moves.sort(() => Math.random()-0.5);
     let moved = false;
     for (const [nx,ny] of moves) {
-      if (!inBounds(nx,ny)) continue;
+      if (!inBounds(nx,ny, size)) continue;
       const key = `${nx}:${ny}`;
       const seen = new Set(path.map(p => `${p[0]}:${p[1]}`));
-      if (seen.has(key) && (nx!==SIZE-1 || ny!==SIZE-1)) continue;
+      if (seen.has(key) && (nx!==size-1 || ny!==size-1)) continue;
       cx=nx; cy=ny; path.push([cx,cy]); moved=true; break;
     }
     if (!moved) {
       // fallback: step right or down
-      if (cx < SIZE-1) cx++;
-      else if (cy < SIZE-1) cy++;
+      if (cx < size-1) cx++;
+      else if (cy < size-1) cy++;
       path.push([cx,cy]);
     }
   }
@@ -100,7 +100,7 @@ function makeBoard() {
     if (i<path.length-1) need.add(dirsOf(path[i], path[i+1]));
     // choose tile with exactly those openings (2 for elbow/straight, 3 for tee on turns)
     const combos = [
-      { type:10, rots:[0,1,2,3] }, // cross (always works; we’ll rotate later)
+      { type:10, rots:[0,1,2,3] }, // cross (always works; we'll rotate later)
       { type:0, rots:[0,1,2,3] },  // straights
       { type:1, rots:[0,1,2,3] },
       { type:2, rots:[0,1,2,3] },{ type:3, rots:[0,1,2,3] },
@@ -122,8 +122,8 @@ function makeBoard() {
     board[y][x] = picked;
   }
   // Randomize rotations to create the actual puzzle, plus sprinkle decorative pieces
-  for (let y=0;y<SIZE;y++){
-    for (let x=0;x<SIZE;x++){
+  for (let y=0;y<size;y++){
+    for (let x=0;x<size;x++){
       const base = board[y][x];
       const addNoise = Math.random()<0.35;
       const t = addNoise ? ALL_TYPES[Math.floor(Math.random()*ALL_TYPES.length)] : base.type;
@@ -136,14 +136,16 @@ function makeBoard() {
 function opposite(d){ return d==="U"?"D":d==="D"?"U":d==="L"?"R":"L"; }
 
 export default function NeonEnergyLink({
-  size = SIZE,
+  size = DEFAULT_SIZE,
   onWin = () => {},
 }) {
-  const [board, setBoard] = useState(() => makeBoard());
+  const [board, setBoard] = useState(() => makeBoard(size));
   const [moves, setMoves] = useState(0);
   const [startAt] = useState(() => Date.now());
   const [done, setDone] = useState(false);
   const [hint, setHint] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [difficulty, setDifficulty] = useState(size);
   const [best, setBest] = useState(() => {
     try { return Number(localStorage.getItem("sx_energy_best")||0); } catch { return 0; }
   });
@@ -155,7 +157,7 @@ export default function NeonEnergyLink({
   const elapsed = Math.max(0, Math.floor((Date.now() - startAt)/1000));
   useTick(500, () => { /* just to refresh timer */ });
 
-  const flow = useMemo(() => computeFlow(board, src, dst), [board]);
+  const flow = useMemo(() => computeFlow(board, src, dst, size), [board, size]);
 
   useEffect(() => {
     if (flow.connected && !done) {
@@ -179,36 +181,93 @@ export default function NeonEnergyLink({
   };
 
   const reset = () => {
-    setBoard(makeBoard());
+    setBoard(makeBoard(size));
+    setMoves(0);
+    setDone(false);
+    setHint(false);
+  };
+
+  const changeDifficulty = (newSize) => {
+    setDifficulty(newSize);
+    setBoard(makeBoard(newSize));
     setMoves(0);
     setDone(false);
     setHint(false);
   };
 
   return (
-    <div className="rounded-2xl border border-white/15 bg-[rgba(255,255,255,0.06)] backdrop-blur-xl p-2 sm:p-3 shadow-[0_20px_60px_-10px_rgba(56,189,248,0.35)]">
+    <div className="rounded-2xl border border-white/15 bg-[rgba(255,255,255,0.06)] backdrop-blur-xl p-3 sm:p-4 shadow-[0_20px_60px_-10px_rgba(56,189,248,0.35)] max-w-2xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 grid place-items-center rounded-xl bg-gradient-to-br from-emerald-300/80 to-cyan-500/80 text-black shadow">
-            <FiZap />
+            <FiZap className="text-lg" />
           </div>
           <div>
             <h3 className="text-lg sm:text-xl font-semibold">Neon Grid — Energy Link</h3>
-            <p className="text-xs opacity-70">Rotate tiles to link the **source** (top‑left) to the **core** (bottom‑right).</p>
+            <p className="text-xs opacity-70">Rotate tiles to link the <strong>source</strong> to the <strong>core</strong>.</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs">
+        <div className="flex items-center gap-2 text-xs self-stretch sm:self-auto">
           <Badge icon={<FiClock />} label={`${formatTime(elapsed)}`} />
           <Badge icon={<FiTarget />} label={`${moves} moves`} />
           <Badge icon={<FaTrophy />} label={`Best ${best}`} />
         </div>
       </div>
 
+      {/* Difficulty Selector */}
+      <div className="mb-4 flex flex-wrap gap-2">
+        <span className="text-xs opacity-70 self-center">Difficulty:</span>
+        {[4, 5, 6, 7].map((level) => (
+          <button
+            key={level}
+            onClick={() => changeDifficulty(level)}
+            className={`px-2.5 py-1 text-xs rounded-lg border ${
+              difficulty === level
+                ? 'border-cyan-400 bg-cyan-400/10 text-cyan-300'
+                : 'border-white/20 bg-white/5 hover:bg-white/10'
+            }`}
+          >
+            {level === 4 ? 'Easy' : level === 5 ? 'Medium' : level === 6 ? 'Hard' : 'Expert'}
+          </button>
+        ))}
+        <button
+          onClick={() => setShowInstructions(!showInstructions)}
+          className="ml-auto px-2.5 py-1 text-xs rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 flex items-center gap-1"
+        >
+          <FiInfo size={14} /> Help
+        </button>
+      </div>
+
+      {/* Instructions */}
+      <AnimatePresence>
+        {showInstructions && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-4 overflow-hidden"
+          >
+            <div className="text-sm rounded-xl border border-white/15 bg-white/10 p-3">
+              <h4 className="font-medium mb-2">How to Play:</h4>
+              <ul className="list-disc pl-5 space-y-1 text-xs opacity-90">
+                <li>Rotate tiles by clicking on them to create a continuous path</li>
+                <li>Connect the <span className="text-emerald-300">source</span> (top-left) to the <span className="text-purple-300">core</span> (bottom-right)</li>
+                <li>Pipes must have matching connections to allow energy flow</li>
+                <li>Complete the puzzle with the fewest moves for a higher score</li>
+              </ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Board */}
       <div
-        className="mt-4 grid gap-1 sm:gap-1.5"
-        style={{ gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}
+        className="grid gap-1 sm:gap-1.5 mx-auto"
+        style={{
+          gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
+          maxWidth: size > 6 ? '100%' : '20rem'
+        }}
       >
         {board.map((row, y) =>
           row.map((cell, x) => {
@@ -221,13 +280,14 @@ export default function NeonEnergyLink({
                 onClick={() => rotate(x,y)}
                 whileTap={{ scale: 0.96 }}
                 className={[
-                  "aspect-square rounded-xl relative border",
+                  "aspect-square rounded-xl relative border transition-colors",
                   "bg-white/5 border-white/10 hover:bg-white/10",
-                  isPath ? "ring-2 ring-cyan-400/70" : "ring-0",
+                  isPath ? "ring-2 ring-cyan-400/70 bg-cyan-400/5" : "ring-0",
+                  size > 6 ? "rounded-lg" : "rounded-xl"
                 ].join(" ")}
               >
                 {/* tile art */}
-                <TileArt type={cell.type} rot={cell.rot} glow={isPath} />
+                <TileArt type={cell.type} rot={cell.rot} glow={isPath} size={size} />
                 {/* markers */}
                 {isSource && <CornerMark className="left-1 top-1 from-emerald-300 to-cyan-400" />}
                 {isDest && <CornerMark className="right-1 bottom-1 from-fuchsia-300 to-violet-500" />}
@@ -241,18 +301,18 @@ export default function NeonEnergyLink({
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <button
           onClick={reset}
-          className="px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 flex items-center gap-2"
+          className="px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 flex items-center gap-2 text-sm"
         >
-          <FiRefreshCw /> New Grid
+          <FiRefreshCw size={16} /> New Grid
         </button>
         <button
           onClick={() => setHint(h => !h)}
-          className="px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 flex items-center gap-2"
+          className="px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 flex items-center gap-2 text-sm"
         >
-          <FiHelpCircle /> {hint ? "Hide Hint" : "Show Hint"}
+          <FiHelpCircle size={16} /> {hint ? "Hide Hint" : "Show Hint"}
         </button>
 
-        <div className="ml-auto text-xs opacity-75">
+        <div className="ml-auto text-xs opacity-75 hidden sm:block">
           Connect all the way to light up the core.
         </div>
       </div>
@@ -266,7 +326,7 @@ export default function NeonEnergyLink({
             exit={{ opacity: 0, y: -6 }}
             className="mt-3 text-sm rounded-xl border border-white/15 bg-white/10 p-3"
           >
-            Tip: focus on ensuring openings match between neighbors. Start from the **source** tile.
+            <p className="text-xs">Tip: Focus on ensuring openings match between neighbors. Start from the <strong>source</strong> tile and work your way toward the <strong>core</strong>.</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -280,8 +340,10 @@ export default function NeonEnergyLink({
             exit={{ opacity: 0, scale: 0.98 }}
             className="mt-4 rounded-xl border border-white/15 bg-gradient-to-r from-emerald-400/15 to-cyan-400/10 p-4"
           >
-            <div className="text-emerald-300 font-semibold">Core linked! Clean energy flowing. ⚡️</div>
-            <div className="text-sm opacity-80 mt-1">Time {formatTime(elapsed)} • Moves {moves}</div>
+            <div className="text-emerald-300 font-semibold flex items-center gap-2">
+              <FiZap className="text-cyan-400" /> Core linked! Clean energy flowing. ⚡️
+            </div>
+            <div className="text-sm opacity-80 mt-1">Time: {formatTime(elapsed)} • Moves: {moves}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -293,23 +355,26 @@ export default function NeonEnergyLink({
 
 function Badge({ icon, label }) {
   return (
-    <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg border border-white/15 bg-white/10">
+    <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg border border-white/15 bg-white/10 text-xs">
       <span className="opacity-80">{icon}</span>
       <span className="tracking-wide">{label}</span>
     </span>
   );
 }
 
-function CornerMark({ className="" }) {
+function CornerMark({ className = "" }) {
   return (
     <span className={`absolute w-3 h-3 rounded-md bg-gradient-to-br ${className} shadow`} />
   );
 }
 
-function TileArt({ type, rot, glow }) {
+function TileArt({ type, rot, glow, size }) {
   // simple SVG-based pipe + neon glow
   const dirs = openings(type, rot);
   const on = (d) => dirs.includes(d);
+  const strokeWidth = size > 6 ? 12 : 14;
+  const circleRadius = size > 6 ? 8 : 10;
+
   return (
     <svg viewBox="0 0 100 100" className="absolute inset-0">
       <defs>
@@ -320,46 +385,42 @@ function TileArt({ type, rot, glow }) {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-      </defs>
-      {/* base grid light */}
-      <rect x="0" y="0" width="100" height="100" fill="transparent" />
-      {/* pipes */}
-      {on("U") && <PipeSeg x1={50} y1={0} x2={50} y2={50} glow={glow} />}
-      {on("D") && <PipeSeg x1={50} y1={50} x2={50} y2={100} glow={glow} />}
-      {on("L") && <PipeSeg x1={0} y1={50} x2={50} y2={50} glow={glow} />}
-      {on("R") && <PipeSeg x1={50} y1={50} x2={100} y2={50} glow={glow} />}
-      {/* joint */}
-      <circle
-        cx="50" cy="50" r="10"
-        stroke="rgba(255,255,255,0.7)" strokeWidth="2"
-        fill={glow ? "url(#g1)" : "rgba(255,255,255,0.18)"}
-        style={{ filter: glow ? "url(#glow)" : "none" }}
-      />
-      <defs>
-        <radialGradient id="g1">
+        <linearGradient id="pipeGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="rgb(34,211,238)" />
+          <stop offset="100%" stopColor="rgb(139,92,246)" />
+        </linearGradient>
+        <radialGradient id="jointGrad">
           <stop offset="0%" stopColor="rgba(34,211,238,0.9)" />
           <stop offset="100%" stopColor="rgba(139,92,246,0.6)" />
         </radialGradient>
       </defs>
+      {/* base grid light */}
+      <rect x="0" y="0" width="100" height="100" fill="transparent" />
+      {/* pipes */}
+      {on("U") && <PipeSeg x1={50} y1={0} x2={50} y2={50} glow={glow} strokeWidth={strokeWidth} />}
+      {on("D") && <PipeSeg x1={50} y1={50} x2={50} y2={100} glow={glow} strokeWidth={strokeWidth} />}
+      {on("L") && <PipeSeg x1={0} y1={50} x2={50} y2={50} glow={glow} strokeWidth={strokeWidth} />}
+      {on("R") && <PipeSeg x1={50} y1={50} x2={100} y2={50} glow={glow} strokeWidth={strokeWidth} />}
+      {/* joint */}
+      <circle
+        cx="50" cy="50" r={circleRadius}
+        stroke="rgba(255,255,255,0.7)" strokeWidth="2"
+        fill={glow ? "url(#jointGrad)" : "rgba(255,255,255,0.18)"}
+        style={{ filter: glow ? "url(#glow)" : "none" }}
+      />
     </svg>
   );
 }
 
-function PipeSeg({ x1,y1,x2,y2, glow }) {
+function PipeSeg({ x1,y1,x2,y2, glow, strokeWidth }) {
   return (
     <line
       x1={x1} y1={y1} x2={x2} y2={y2}
-      stroke={glow ? "url(#grad)" : "rgba(255,255,255,0.55)"}
-      strokeWidth="14" strokeLinecap="round"
+      stroke={glow ? "url(#pipeGrad)" : "rgba(255,255,255,0.55)"}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
       style={{ filter: glow ? "url(#glow)" : "none" }}
-    >
-      <defs>
-        <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="rgb(34,211,238)" />
-          <stop offset="100%" stopColor="rgb(139,92,246)" />
-        </linearGradient>
-      </defs>
-    </line>
+    />
   );
 }
 
@@ -371,29 +432,45 @@ function useTick(ms, fn) {
     return () => clearInterval(t);
   }, [ms, fn]);
 }
-function computeFlow(board, src, dst) {
+
+function computeFlow(board, src, dst, size) {
   // BFS along matching openings
   const q = [[src.x, src.y]];
   const seen = new Set([`${src.x}:${src.y}`]);
   const pathSet = new Set();
+
   while (q.length) {
     const [x,y] = q.shift();
     pathSet.add(`${x}:${y}`);
+
+    // Check if cell exists
+    if (!board[y] || !board[y][x]) continue;
+
     const cell = board[y][x];
     const outs = openings(cell.type, cell.rot);
+
     for (const d of outs) {
       const [nx,ny,need] = neighbor(x,y,d);
-      if (!inBounds(nx,ny)) continue;
+
+      // Check if neighbor is in bounds and exists
+      if (!inBounds(nx,ny, size) || !board[ny] || !board[ny][nx]) continue;
+
       const next = board[ny][nx];
       const opensBack = openings(next.type, next.rot).includes(need);
+
       if (opensBack) {
         const key = `${nx}:${ny}`;
-        if (!seen.has(key)) { seen.add(key); q.push([nx,ny]); }
+        if (!seen.has(key)) {
+          seen.add(key);
+          q.push([nx,ny]);
+        }
       }
     }
   }
+
   return { connected: seen.has(`${dst.x}:${dst.y}`), pathSet };
 }
+
 function formatTime(s) {
   const mm = Math.floor(s/60), ss = s%60;
   return `${mm}:${String(ss).padStart(2,"0")}`;

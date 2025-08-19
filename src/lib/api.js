@@ -1,3 +1,4 @@
-export function fnUrl(fnName) {
- return `/.netlify/functions/${fnName}`;
-}
+export const fnUrl = (name) =>
+  (import.meta.env.DEV)
+    ? `/.netlify/functions/${name}`
+    : `/.netlify/functions/${name}`;
