@@ -52,3 +52,11 @@ thresholds = { performance = 0.90, accessibility = 0.90, "best-practices" = 0.90
 # Function-specific includes
 [functions."chat-assistant"]
 included_files = ["netlify/functions/chat-assistant/knowledge/**"]
+
+
+[[redirects]]
+from = "https://www.synexiai.online/*"
+to   = "https://synexiai.online/:splat"
+status = 301
+force = true
+

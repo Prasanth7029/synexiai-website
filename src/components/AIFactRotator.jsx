@@ -5,12 +5,12 @@ import { FaLightbulb } from "react-icons/fa";
 import { FiRefreshCw, FiCopy, FiCheck, FiAlertCircle } from "react-icons/fi";
 import { fnUrl } from "../lib/api.js";
 
-const FETCH_MS = 0.5 * 60 * 1000;     // 30 sec rotation
+const FETCH_MS = 0.25 * 60 * 1000;     // 15 sec rotation
 const TICK_MS  = 1000;              // countdown tick
 
 export default function AIFactRotator({
   className = "",
-  title = "AI Fact (every 30 sec)",
+  title = "AI Fact (every 15 sec)",
 }) {
   const [fact, setFact] = useState(null);
   const [loading, setLoading] = useState(true);
