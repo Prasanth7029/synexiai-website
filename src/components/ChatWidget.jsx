@@ -8,6 +8,7 @@ import { IoMdSend } from "react-icons/io";
 import { chatAxios } from "../lib/chatAxios";
 import { fnUrl } from "../lib/api.js";
 import { companyInfo } from "../lib/companyInfo.js";
+import { findKbSnippets } from "../lib/brandKb.js";
 
 /* --------------------------------------------------------------------------
  * Small utils
@@ -34,12 +35,22 @@ function stripMarkdown(text = "") {
     .replace(/^#+\s*(.*)$/gm, "$1")
     .replace(/\[(.*?)\]\((.*?)\)/g, "$1 ($2)");
 }
+function normalize(text = "") {
+  return (text || "")
+    .toLowerCase()
+    .replace(/\binvent\b/g, "invest") // map common typo
+    .replace(/\bboss\b/g, "founder")  // align to KB
+    .trim();
+}
 
 /* --------------------------------------------------------------------------
  * Brand-aware + General answering
  * -------------------------------------------------------------------------- */
 function isBrandQuestion(text = "") {
-  return /\b(synexi(ai)?|company|about\s+you|team|projects?|collaborat(e|ion)|contact)\b/i.test(text);
+  const t = normalize(text);
+  return /\b(synexi(ai)?|company|about\s+you|team|projects?|collaborat(e|ion)|contact|vision|mission|founder|ceo|lead(er|ership)|invest(or|ment)?)\b/i.test(
+    t,
+  );
 }
 function looksLikeBrandBlurb(t = "") {
   return /For direct inquiries:|Contact us:\s*Email:/i.test(t) || /SynexiAI is focused/i.test(t);
@@ -48,16 +59,23 @@ function buildSystemPrompt(userText = "", forceGeneral = false) {
   if (forceGeneral || !isBrandQuestion(userText)) {
     return `You are a helpful, general-purpose AI assistant. Answer the user's question directly and do NOT insert company marketing, mission, or contact info unless the user explicitly asks about the company/team/projects/collaboration/contact. Keep answers accurate, concise, and conversational.`;
   }
+  const kb = findKbSnippets(userText, 2).join("\n\n");
   return `You are SynexiAI's site assistant.
-If the user asks about the company/team/projects/collaboration/contact, use ONLY these official details:
+Use ONLY official details. If information is not in facts/KB, say you don't know.
+
+KB:
+${kb}
+
+Facts:
 - Name: ${companyInfo.name}
-- Mission: "${companyInfo.mission}"
-- Vision: "${companyInfo.vision}"
+- Mission: ${companyInfo.mission}
+- Vision: ${companyInfo.vision}
 - Founder: ${companyInfo.team.founder}
 - Team: ${companyInfo.team.members.join(", ")}
 - Projects: ${companyInfo.projects.join(", ")}
 - Contact: ${companyInfo.contact.email} | ${companyInfo.contact.phone}
-For unrelated questions, answer generally and do NOT add company marketing or contact info.`;
+
+When the user asks non-brand questions, answer generally without adding brand info.`;
 }
 async function fetchAssistantReply(history, signal, forceGeneral = false) {
   const lastUser = [...history].reverse().find((m) => m.role === "user");
@@ -150,6 +168,23 @@ export default function ChatWidget({
   const contextRef = useRef(null);
   const lastBridgeRef = useRef({ key: "", ts: 0 });
 
+  // tiny memory: name + last brand topic
+  const [guestName, setGuestName] = useState(() => {
+    try { return localStorage.getItem("sx_guest_name") || ""; } catch { return ""; }
+  });
+  const lastBrandRef = useRef({ topic: "", entity: "" });
+
+  useEffect(() => { try { if (guestName) localStorage.setItem("sx_guest_name", guestName); } catch {} }, [guestName]);
+
+  useEffect(() => {
+    if (!guestName) {
+      const t = setTimeout(() => {
+        setMessages((prev) => [...prev, { role: "assistant", content: "I can personalize our chat—what should I call you?", timestamp: now() }]);
+      }, 600);
+      return () => clearTimeout(t);
+    }
+  }, []); // eslint-disable-line
+
   /* ---------- responsiveness ---------- */
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= 768);
@@ -170,7 +205,7 @@ export default function ChatWidget({
           if (r.top <= 2 && r.bottom > 0) h = Math.max(h, r.height);
         }
       }
-      setSafeTop(Math.min(160, Math.round(h)) || 0);  // Fixed this line - added missing parenthesis
+      setSafeTop(Math.min(160, Math.round(h)) || 0);
     };
     scan();
     window.addEventListener("resize", scan);
@@ -205,9 +240,7 @@ export default function ChatWidget({
     if (open) {
       const prev = body.style.overflow;
       body.style.overflow = "hidden";
-      return () => {
-        body.style.overflow = prev;
-      };
+      return () => { body.style.overflow = prev; };
     }
   }, [open, isMobile]);
 
@@ -220,9 +253,7 @@ export default function ChatWidget({
 
   // persist session
   useEffect(() => {
-    try {
-      sessionStorage.setItem(persistKey, JSON.stringify(messages));
-    } catch {}
+    try { sessionStorage.setItem(persistKey, JSON.stringify(messages)); } catch {}
   }, [messages, persistKey]);
 
   // scroll & focus
@@ -263,15 +294,109 @@ export default function ChatWidget({
   }, [messages, loading]);
 
   const stopGeneration = () => {
-    try {
-      controllerRef.current?.abort();
-      setLoading(false);
-    } catch {}
+    try { controllerRef.current?.abort(); setLoading(false); } catch {}
   };
   useEffect(() => () => controllerRef.current?.abort(), []);
 
   const visibleMessages = messages;
   const shouldShowQuick = () => visibleMessages.length <= 2;
+
+  /* --------------------------------------------------------------------------
+   * Agent skills (local, instant)
+   * -------------------------------------------------------------------------- */
+  const SKILLS = {
+    "site map": {
+      match: /(site\s*map|navigation|sections?)/i,
+      run: () => ({
+        text:
+          "Here’s a quick tour of SynexiAI 👇\n" +
+          "• Home — our mission & highlights\n" +
+          "• Projects — Green Data Center, AI Chat Assistant, MindMap, Inventory\n" +
+          "• Technology — Stack & standards\n" +
+          "• Vision — 5/10/20 year goals\n" +
+          "• Contact — email & phone",
+        actions: [
+          { label: "Open Projects", type: "event", event: { name: "synexiai:navigate", detail: { to: "#projects" } } },
+          { label: "Open Technology", type: "event", event: { name: "synexiai:navigate", detail: { to: "/tech" } } },
+        ],
+      }),
+    },
+    projects: {
+      match: /(projects?|what.*working|show.*work)/i,
+      run: () => ({
+        text:
+          "Current projects:\n• AI Chat Assistant\n• MindMap AI Dashboard\n• Inventory Management System\n• Green Data Center Model",
+        actions: [
+          { label: "Explore Projects", type: "event", event: { name: "synexiai:navigate", detail: { to: "#projects" } } },
+          { label: "Explain Green Data Center", type: "ask", payload: { title: "Green Data Center Model", persona: "general", autoSend: true } },
+        ],
+      }),
+    },
+    contact: {
+      match: /(contact|email|phone|collaborat|partner|invest)/i,
+      run: () => ({
+        text: `Contact us anytime:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`,
+        actions: [
+          { label: "Email us", type: "link", href: `mailto:${companyInfo.contact.email}` },
+          { label: "Call now", type: "link", href: `tel:${companyInfo.contact.phone}` },
+        ],
+      }),
+    },
+    investor: {
+      match: /\b(invest(or|ment)?|fund|valuation|cap\s*table|equity|pitch|deck)\b/i,
+      run: () => ({
+        text:
+          "Great—here’s our investor quick pack:\n" +
+          `• Founder: ${companyInfo.team.founder}\n` +
+          `• Mission: ${companyInfo.mission}\n` +
+          "• Focus: AI + Green Datacenter + Database Platform\n" +
+          "• Next step: 15‑min intro call",
+        actions: [
+          { label: "Email Investor Relations", type: "link", href: `mailto:${companyInfo.contact.email}?subject=Investor%20Intro%20—%20SynexiAI` },
+          { label: "See Projects", type: "event", event: { name: "synexiai:navigate", detail: { to: "#projects" } } },
+        ],
+      }),
+    },
+    quiz: {
+      match: /(quiz|puzzle|play|game)/i,
+      run: () => ({
+        text: "Opening a quick SynexiAI quiz. Good luck! 🧠",
+        actions: [
+          {
+            label: "Start Quiz",
+            type: "event",
+            event: { name: "synexiai:quiz", detail: { topic: "green", shuffle: true } },
+          },
+        ],
+      }),
+    },
+    recommend: {
+      match: /(recommend|where.*start|guide me)/i,
+      run: (_, lastUser = "") => {
+        const isInvestor = /invest|fund|roi|valuation/i.test(lastUser);
+        const isDev = /code|api|stack|sdk|docs|react|spring|java|go/i.test(lastUser);
+        const picks = isInvestor
+          ? ["Vision page", "Projects → Green Data Center", "Contact"]
+          : isDev
+          ? ["Technology", "Projects → AI Chat Assistant", "GitHub"]
+          : ["About", "Projects", "Vision"];
+        return {
+          text: `Based on your interest, here’s where to start: ${picks.join(", ")}.`,
+          actions: [
+            { label: "Open Vision", type: "event", event: { name: "synexiai:navigate", detail: { to: "/vision" } } },
+            { label: "Open Technology", type: "event", event: { name: "synexiai:navigate", detail: { to: "/tech" } } },
+          ],
+        };
+      },
+    },
+  };
+
+  function tryHandleSkill(userText) {
+    for (const [, skill] of Object.entries(SKILLS)) {
+      if (skill.match.test(userText)) return skill.run(userText, userText);
+    }
+    return null;
+  }
 
   /* ---------- send ---------- */
   const sendMessage = useCallback(
@@ -280,17 +405,70 @@ export default function ChatWidget({
       if (!content || loading) return;
 
       const userMsg = { role: "user", content, timestamp: now() };
+      const normalized = normalize(content);
+
+      // capture "my name is ..." before skills/LLM
+      const nameMatch = !guestName && content.match(/^my name is\s+(.+)/i);
+      if (nameMatch) {
+        const raw = nameMatch[1].trim();
+        const name = raw.replace(/\b\w/g, (c) => c.toUpperCase());
+        setGuestName(name);
+        setMessages((prev) => [
+          ...prev,
+          userMsg,
+          { role: "assistant", content: `Nice to meet you, **${name}**! 🚀`, timestamp: now() },
+        ]);
+        if (!messageContent) setInput("");
+        setLoading(false);
+        return;
+      }
+
+      // track brand topic for simple coref
+      if (/\b(founder|ceo|lead|leader)\b/.test(normalized)) {
+        lastBrandRef.current = { topic: "leader", entity: companyInfo.team.founder || "our founder" };
+      } else if (/\b(team|members?)\b/.test(normalized)) {
+        lastBrandRef.current = { topic: "team", entity: "team" };
+      } else if (/\b(projects?)\b/.test(normalized)) {
+        lastBrandRef.current = { topic: "projects", entity: "projects" };
+      } else if (/\b(invest|investor|investment)\b/.test(normalized)) {
+        lastBrandRef.current = { topic: "invest", entity: "investor-relations" };
+      }
+
+      // quick coreference for short follow-ups (his/he/who is he/name?)
+      if (/^(what('?| i)s\s+his\s+name|who\s+is\s+he|his\s+name\??)$/i.test(content)) {
+        const leader = companyInfo?.team?.founder || "";
+        const reply = leader
+          ? `Our founder is **${leader}**. You can reach us at ${companyInfo.contact.email} or ${companyInfo.contact.phone}.`
+          : `Our founder information isn’t available yet. You can reach us at ${companyInfo.contact.email}.`;
+        setMessages((prev) => [...prev, userMsg, { role: "assistant", content: reply, timestamp: now() }]);
+        if (!messageContent) setInput("");
+        setLoading(false);
+        return;
+      }
+
+      // skills (instant local actions)
+      const skill = tryHandleSkill(normalized);
+      if (skill) {
+        setMessages((prev) => [
+          ...prev,
+          userMsg,
+          { role: "assistant", content: skill.text, timestamp: now(), actions: skill.actions || [] },
+        ]);
+        if (!messageContent) setInput("");
+        setLoading(false);
+        return;
+      }
+
+      // normal LLM path
       setMessages((prev) => [...prev, userMsg]);
       if (!messageContent) setInput("");
       setLoading(true);
       setError(null);
 
       try {
-        // Abort controller for "Stop" button
         controllerRef.current = new AbortController();
         const signal = controllerRef.current.signal;
 
-        // Build a compact history window (user/assistant only)
         const historyWindow = 20;
         const history = [...messages.slice(-historyWindow), userMsg].filter(
           (m) => m.role === "user" || m.role === "assistant",
@@ -300,44 +478,34 @@ export default function ChatWidget({
         let responseContent;
 
         if (ctx?.project) {
-          // Inject project context into the AI as a system message,
-          // so responses are natural (not hardcoded), but grounded.
           const plain = /what is this|tell me|explain( in simple| to a|)$/i.test(content);
           const projectContext = formatProjectAnswer(ctx, plain);
-
-          // Ask the AI, providing the project block as additional context
-          const contextualHistory = [
-            { role: "system", content: `Context for the assistant:\n${projectContext}` },
-            ...history,
-          ];
-
+          const contextualHistory = [{ role: "system", content: `Context for the assistant:\n${projectContext}` }, ...history];
           responseContent = await fetchAssistantReply(contextualHistory, signal);
         } else {
-          // Normal flow: general brand-aware assistant
           responseContent = await fetchAssistantReply(history, signal);
         }
 
-        // If user didn't ask brand stuff but model added a company blurb, re-ask forcing general
+        // If user didn't ask brand stuff but reply added brand blurb, re-ask forcing general
         if (!isBrandQuestion(content) && looksLikeBrandBlurb(responseContent)) {
           const forceGeneralHistory = ctx?.project
-            ? [
-                { role: "system", content: "Context:\n" + formatProjectAnswer(ctx, false) },
-                ...history,
-              ]
+            ? [{ role: "system", content: "Context:\n" + formatProjectAnswer(ctx, false) }, ...history]
             : history;
-
           responseContent = await fetchAssistantReply(forceGeneralHistory, signal, true);
         }
 
-        // If user DID ask brand stuff, ensure contact is present
-        if (isBrandQuestion(content) && !responseContent.includes(companyInfo.contact.email)) {
-          responseContent += `\n\nFor direct inquiries:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`;
+        // If brand question, enforce founder + contact presence
+        if (isBrandQuestion(content)) {
+          const founder = companyInfo.team.founder;
+          if (founder && !new RegExp(founder.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(responseContent || "")) {
+            responseContent = `Founder: ${founder}\n\n` + responseContent;
+          }
+          if (!responseContent.includes(companyInfo.contact.email)) {
+            responseContent += `\n\nFor direct inquiries:\nEmail: ${companyInfo.contact.email}\nPhone: ${companyInfo.contact.phone}`;
+          }
         }
 
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: responseContent, timestamp: now(), links: [] },
-        ]);
+        setMessages((prev) => [...prev, { role: "assistant", content: responseContent, timestamp: now() }]);
       } catch (err) {
         if (err.name === "CanceledError" || err.message === "canceled") return;
         console.error("Chat API error:", err);
@@ -357,7 +525,7 @@ export default function ChatWidget({
         controllerRef.current = null;
       }
     },
-    [input, messages, loading],
+    [input, messages, loading, guestName],
   );
 
   const handleKeyDown = (e) => {
@@ -366,6 +534,31 @@ export default function ChatWidget({
       sendMessage();
     }
   };
+
+  // action buttons handler
+  const handleAssistantAction = useCallback((a) => {
+    if (!a) return;
+    if (a.type === "link" && a.href) window.open(a.href, "_blank", "noopener");
+    if (a.type === "event" && a.event?.name) {
+      window.dispatchEvent(new CustomEvent(a.event.name, { detail: a.event.detail || {} }));
+    }
+    if (a.type === "ask" && a.payload) {
+      window.__synexiaiChat?.openWith?.({ ...a.payload, autoSend: true });
+    }
+    if (a.type === "quiz") {
+      const correct = a.value === "correct";
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: correct
+            ? "✅ Correct! Our model blends **AI + ARM + Solar** to schedule workloads by carbon intensity."
+            : "❌ Not quite. Try again! Hint: it mixes renewable energy with efficient compute.",
+          timestamp: now(),
+        },
+      ]);
+    }
+  }, []);
 
   /* --------------------------------------------------------------------------
    * Layout + sizing (smaller desktop, safe areas, keyboard)
@@ -442,7 +635,7 @@ export default function ChatWidget({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             style={panelStyle}
-            className="z-50 flex flex-col overflow-hidden rounded-2xl shadow-[0_20px_60px_-10px_rgba(14,165,233,0.35)] ring-1 ring-white/10 bg-white/5 dark:bg-white/5 backdrop-blur-xl backdrop-saturate-[1.8]"
+            className="z-50 flex flex-col overflow-hidden rounded-2xl shadow-[0_20px_60px_-10px_rgba(14,165,233,0.35)] ring-1 ring-white/10 bg-white/5 dark:bg-white/5 backdrop-blur-xl backdrop-saturate-[1.8] mx-2 sm:mx-0"
             aria-live="polite"
             role="dialog"
             aria-modal="true"
@@ -495,6 +688,20 @@ export default function ChatWidget({
                         __html: linkify(stripMarkdown(message.content || "")).replace(/\n/g, "<br>"),
                       }}
                     />
+                    {/* actions under the bubble */}
+                    {message.actions?.length ? (
+                      <div className={`mt-2 flex flex-wrap gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                        {message.actions.map((a, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleAssistantAction(a)}
+                            className="text-xs px-2.5 py-1.5 rounded-lg border border-white/20 bg-white/10 hover:bg-white/15 backdrop-blur-md"
+                          >
+                            {a.label}
+                          </button>
+                        ))}
+                      </div>
+                    ) : null}
                     <div className={`text-xs mt-1 ${message.role === "user" ? "text-right" : "text-left"} text-gray-500`}>
                       {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </div>
@@ -557,7 +764,7 @@ export default function ChatWidget({
                     if (error) setError(null);
                   }}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type your message..."
+                  placeholder={guestName ? `Talk to us, ${guestName}…` : "Type your message..."}
                   disabled={loading}
                   className={`flex-1 ${isCompact ? "px-3 py-1.5 text-[13px]" : "px-4 py-2"} rounded-xl bg-white/10 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 border border-white/15 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 disabled:opacity-50 backdrop-blur-md`}
                   aria-label="Type your message"

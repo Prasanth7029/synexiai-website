@@ -8,6 +8,10 @@ import HeroBanner from "../components/HeroBanner";
 import BuildWithSynexiAI from "../components/sections/BuildWithSynexiAI.jsx";
 import { projects as portfolio } from "../content/projects.js";
 import AIFactRotator from "../components/AIFactRotator.jsx";
+import NeonEnergyLink from "../components/NeonEnergyLink.jsx";
+import PuzzleGame from "../components/PuzzleGame.jsx";
+
+
 
 const MotionDiv = motion.div;
 
@@ -65,7 +69,29 @@ export default function HomePage() {
 
       <BuildWithSynexiAI />
 
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 np, gap-6 mb-12">
+        {/* Puzzle */}
+        <section className="bg-white/5 rounded-xl border border-white/10 p-4">
+          <h2 className="text-xl font-bold mb-2">Power the Core</h2>
+          <p className="text-sm opacity-80 mb-3">
+            Rotate the neon grid to route clean energy.
+          </p>
+          <div className="scale-90 origin-left">
+            <NeonEnergyLink />
+          </div>
+        </section>
 
+        {/* Puzzle Game */}
+        <section className="bg-white/5 rounded-xl border border-white/10 p-4">
+          <h2 className="text-xl font-bold mb-2">Brain Teaser</h2>
+          <p className="text-sm opacity-80 mb-3">
+            Solve this interactive puzzle game.
+          </p>
+          <div className="scale-90 origin-left">
+            <PuzzleGame />
+          </div>
+        </section>
+      </div>
 
       {/* Main content container */}
       <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">

@@ -8,6 +8,7 @@ import CookiePolicy from "./pages/legal/CookiePolicy.jsx";
 import LoaderScreen from "./components/LoaderScreen";
 
 
+
 // Lazy pages (single source of truth)
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
 const AboutPage = lazy(() => import("./pages/AboutPage.jsx"));
