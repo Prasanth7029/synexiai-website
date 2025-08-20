@@ -1,3 +1,7 @@
+# Always prefer www and HTTPS
+http://synexiai.online/*   https://www.synexiai.online/:splat   301!
+http://www.synexiai.online/*  https://www.synexiai.online/:splat  301!
+https://synexiai.online/*  https://www.synexiai.online/:splat   301!
 
 
 /*    /index.html   200
