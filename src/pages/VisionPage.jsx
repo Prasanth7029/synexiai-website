@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet-async";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { FaDownload, FaHandshake, FaRocket, FaChartLine } from "react-icons/fa";
 import { motion } from "framer-motion";
-import RoadmapTimeline from "../components/sections/RoadmapTimeline.jsx";
+
 
 /* --------------------------------- Data ---------------------------------- */
 
@@ -313,10 +313,7 @@ export default function VisionPage() {
  </MotionDiv>
  </section>
 
- <section className="mt-12">
-         <h2 className="text-2xl font-bold mb-4">Roadmap</h2>
-         <RoadmapTimeline />
- </section>
+
 
  {/* CTA panels */}
  <section
