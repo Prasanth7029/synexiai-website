@@ -187,61 +187,61 @@
 <span class="cstat-no" title="statement not covered" >import { PROJECT_CATEGORIES } from "../../content/projects.js";</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function ProjectFilters({ state, setState, allTags = [] }) {</span>
-<span class="cstat-no" title="statement not covered" >  const { category, q, tag } = state;</span>
-<span class="cstat-no" title="statement not covered" >  const tags = useMemo(() =&gt; allTags.slice(0, 16), [allTags]);</span>
+<span class="cstat-no" title="statement not covered" > const { category, q, tag } = state;</span>
+<span class="cstat-no" title="statement not covered" > const tags = useMemo(() =&gt; allTags.slice(0, 16), [allTags]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 mb-6"&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between"&gt;</span>
-        {/* categories */}
-<span class="cstat-no" title="statement not covered" >        &lt;div className="flex flex-wrap gap-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {["All", ...PROJECT_CATEGORIES].map((c) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            const active = (c === "All" &amp;&amp; !category) || c === category;</span>
-<span class="cstat-no" title="statement not covered" >            return (</span>
-<span class="cstat-no" title="statement not covered" >              &lt;button</span>
-<span class="cstat-no" title="statement not covered" >                key={c}</span>
-<span class="cstat-no" title="statement not covered" >                onClick={() =&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  setState((s) =&gt; ({ ...s, category: c === "All" ? "" : c }))</span>
-                }
-<span class="cstat-no" title="statement not covered" >                className={`px-3 py-1.5 rounded-full text-sm border ${active ? "bg-cyan-500/20 border-cyan-400/30" : "bg-white/5 border-white/10"}`}</span>
-              &gt;
-<span class="cstat-no" title="statement not covered" >                {c}</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/button&gt;</span>
-            );
-<span class="cstat-no" title="statement not covered" >          })}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="rounded-2xl border border-white/10 bg-white/5 p-4 mb-6"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between"&gt;</span>
+ {/* categories */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex flex-wrap gap-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {["All", ...PROJECT_CATEGORIES].map((c) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const active = (c === "All" &amp;&amp; !category) || c === category;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > key={c}</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt;</span>
+<span class="cstat-no" title="statement not covered" > setState((s) =&gt; ({ ...s, category: c === "All" ? "" : c }))</span>
+ }
+<span class="cstat-no" title="statement not covered" > className={`px-3 py-1.5 rounded-full text-sm border ${active ? "bg-cyan-500/20 border-cyan-400/30" : "bg-white/5 border-white/10"}`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {c}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+ );
+<span class="cstat-no" title="statement not covered" > })}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-        {/* search */}
-<span class="cstat-no" title="statement not covered" >        &lt;input</span>
-<span class="cstat-no" title="statement not covered" >          value={q}</span>
-<span class="cstat-no" title="statement not covered" >          onChange={(e) =&gt; setState((s) =&gt; ({ ...s, q: e.target.value }))}</span>
-<span class="cstat-no" title="statement not covered" >          placeholder="Search projects…"</span>
-<span class="cstat-no" title="statement not covered" >          className="mt-2 md:mt-0 w-full md:w-64 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-cyan-400"</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+ {/* search */}
+<span class="cstat-no" title="statement not covered" > &lt;input</span>
+<span class="cstat-no" title="statement not covered" > value={q}</span>
+<span class="cstat-no" title="statement not covered" > onChange={(e) =&gt; setState((s) =&gt; ({ ...s, q: e.target.value }))}</span>
+<span class="cstat-no" title="statement not covered" > placeholder="Search projects…"</span>
+<span class="cstat-no" title="statement not covered" > className="mt-2 md:mt-0 w-full md:w-64 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-cyan-400"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-      {/* tags */}
-<span class="cstat-no" title="statement not covered" >      &lt;div className="mt-3 flex flex-wrap gap-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;button</span>
-<span class="cstat-no" title="statement not covered" >          onClick={() =&gt; setState((s) =&gt; ({ ...s, tag: "" }))}</span>
-<span class="cstat-no" title="statement not covered" >          className={`px-3 py-1 rounded-full text-xs border ${!tag ? "bg-cyan-500/20 border-cyan-400/30" : "bg-white/5 border-white/10"}`}</span>
-<span class="cstat-no" title="statement not covered" >        &gt;</span>
-          All tags
-<span class="cstat-no" title="statement not covered" >        &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {tags.map((t) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;button</span>
-<span class="cstat-no" title="statement not covered" >            key={t}</span>
-<span class="cstat-no" title="statement not covered" >            onClick={() =&gt;</span>
-<span class="cstat-no" title="statement not covered" >              setState((s) =&gt; ({ ...s, tag: s.tag === t ? "" : t }))</span>
-            }
-<span class="cstat-no" title="statement not covered" >            className={`px-3 py-1 rounded-full text-xs border ${tag === t ? "bg-cyan-500/20 border-cyan-400/30" : "bg-white/5 border-white/10"}`}</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            {t}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >        ))}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+ {/* tags */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3 flex flex-wrap gap-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt; setState((s) =&gt; ({ ...s, tag: "" }))}</span>
+<span class="cstat-no" title="statement not covered" > className={`px-3 py-1 rounded-full text-xs border ${!tag ? "bg-cyan-500/20 border-cyan-400/30" : "bg-white/5 border-white/10"}`}</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ All tags
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > {tags.map((t) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > key={t}</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt;</span>
+<span class="cstat-no" title="statement not covered" > setState((s) =&gt; ({ ...s, tag: s.tag === t ? "" : t }))</span>
+ }
+<span class="cstat-no" title="statement not covered" > className={`px-3 py-1 rounded-full text-xs border ${tag === t ? "bg-cyan-500/20 border-cyan-400/30" : "bg-white/5 border-white/10"}`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {t}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -250,7 +250,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

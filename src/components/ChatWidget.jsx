@@ -15,6 +15,8 @@ import { findKbSnippets } from "../lib/brandKb.js";
  * -------------------------------------------------------------------------- */
 const AVATAR_URL = "/assets/logoSynexiai.png";
 const now = () => new Date().toISOString();
+const MotionDiv = motion.div;
+const MotionButton = motion.button;
 
 function escapeHtml(s = "") {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -101,7 +103,7 @@ function roadmapFromStatus(status) {
   }
 }
 function formatProjectAnswer(ctx, plain = false) {
-  const p = ctx?.project || {};
+  const p = ctx?.project || { /* no op */};
   const title = p.title || "Untitled";
   const value = p.blurb || "a practical initiative to deliver measurable gains in speed, reliability, and cost.";
   const stack = p.tech && p.tech.length ? p.tech.join(", ") : "TBD";
@@ -109,7 +111,7 @@ function formatProjectAnswer(ctx, plain = false) {
   if (plain) return `${title} is ${value} It uses ${stack === "TBD" ? "modern tools" : stack} to achieve this. The next steps are ${roadmap.join(", ")}.`;
   return `Project: ${title}\n\nValue — ${value}\n\nStack — ${stack}\n\nRoadmap\n${roadmap.map((s) => "- " + s).join("\n")}`;
 }
-function buildUserPromptFromPayload(payload = {}) {
+function buildUserPromptFromPayload(payload = { /* no op */}) {
   const persona = payload.persona || "general";
   const title = payload.project?.title || payload.title || "this project";
   return `Explain "${title}" to a ${persona} in plain English. Include value, stack, and roadmap.`;
@@ -174,7 +176,7 @@ export default function ChatWidget({
   });
   const lastBrandRef = useRef({ topic: "", entity: "" });
 
-  useEffect(() => { try { if (guestName) localStorage.setItem("sx_guest_name", guestName); } catch {} }, [guestName]);
+  useEffect(() => { try { if (guestName) localStorage.setItem("sx_guest_name", guestName); } catch {/* no op */} }, [guestName]);
 
   useEffect(() => {
     if (!guestName) {
@@ -253,7 +255,7 @@ export default function ChatWidget({
 
   // persist session
   useEffect(() => {
-    try { sessionStorage.setItem(persistKey, JSON.stringify(messages)); } catch {}
+    try { sessionStorage.setItem(persistKey, JSON.stringify(messages)); } catch {/* no op */}
   }, [messages, persistKey]);
 
   // scroll & focus
@@ -294,7 +296,7 @@ export default function ChatWidget({
   }, [messages, loading]);
 
   const stopGeneration = () => {
-    try { controllerRef.current?.abort(); setLoading(false); } catch {}
+    try { controllerRef.current?.abort(); setLoading(false); } catch {/* no op */}
   };
   useEffect(() => () => controllerRef.current?.abort(), []);
 
@@ -391,12 +393,13 @@ export default function ChatWidget({
     },
   };
 
-  function tryHandleSkill(userText) {
+
+  const tryHandleSkill = useCallback((userText) => {
     for (const [, skill] of Object.entries(SKILLS)) {
       if (skill.match.test(userText)) return skill.run(userText, userText);
     }
     return null;
-  }
+  }, []);
 
   /* ---------- send ---------- */
   const sendMessage = useCallback(
@@ -525,7 +528,7 @@ export default function ChatWidget({
         controllerRef.current = null;
       }
     },
-    [input, messages, loading, guestName],
+    [input, messages, loading, guestName, tryHandleSkill],
   );
 
   useEffect(() => {
@@ -563,7 +566,7 @@ export default function ChatWidget({
     if (!a) return;
     if (a.type === "link" && a.href) window.open(a.href, "_blank", "noopener");
     if (a.type === "event" && a.event?.name) {
-      window.dispatchEvent(new CustomEvent(a.event.name, { detail: a.event.detail || {} }));
+      window.dispatchEvent(new CustomEvent(a.event.name, { detail: a.event.detail || { /* no op */} }));
     }
     if (a.type === "ask" && a.payload) {
       window.__synexiaiChat?.openWith?.({ ...a.payload, autoSend: true });
@@ -631,7 +634,7 @@ export default function ChatWidget({
       {/* FAB — hide while open to avoid overlap */}
       <AnimatePresence>
         {!open && (
-          <motion.button
+          <MotionButton
             key="sx-fab"
             type="button"
             initial={{ scale: 0, opacity: 0 }}
@@ -645,14 +648,14 @@ export default function ChatWidget({
             aria-label="Open chat"
           >
             <FaRobot size={isMobile ? 18 : 20} />
-          </motion.button>
+          </MotionButton>
         )}
       </AnimatePresence>
 
       {/* Panel */}
       <AnimatePresence>
         {open && (
-          <motion.div
+          <MotionDiv
             key="sx-chat"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -693,7 +696,7 @@ export default function ChatWidget({
             {/* Messages */}
             <div className={`${isCompact ? "p-3" : "p-4"} flex-1 overflow-y-auto space-y-3 bg-gradient-to-b from-transparent to-black/5`}>
               {visibleMessages.map((message, i) => (
-                <motion.div
+                <MotionDiv
                   key={`${message.timestamp || i}-${i}`}
                   initial={{ opacity: 0, y: message.role === "user" ? 10 : -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -729,12 +732,12 @@ export default function ChatWidget({
                       {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
-                </motion.div>
+                </MotionDiv>
               ))}
 
               {/* Quick actions */}
               {shouldShowQuick() && (
-                <motion.div
+                <MotionDiv
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.15 }}
@@ -751,12 +754,12 @@ export default function ChatWidget({
                       <span className="text-left">{q.text}</span>
                     </button>
                   ))}
-                </motion.div>
+                </MotionDiv>
               )}
 
               {/* Typing bubble */}
               {loading && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex mr-auto justify-start">
+                <MotionDiv initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex mr-auto justify-start">
                   <div className="px-3 py-2 rounded-2xl rounded-bl-sm bg-white/10 border border-white/15 backdrop-blur-md shadow-lg text-gray-900 dark:text-gray-100">
                     <div className="flex space-x-2">
                       <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" />
@@ -764,7 +767,7 @@ export default function ChatWidget({
                       <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: "0.4s" }} />
                     </div>
                   </div>
-                </motion.div>
+                </MotionDiv>
               )}
               <div ref={endRef} />
             </div>
@@ -807,7 +810,7 @@ export default function ChatWidget({
                 Free chat by {companyInfo.name} • <a href="/privacy" className="underline hover:opacity-80">Privacy Policy</a>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
         )}
       </AnimatePresence>
     </>

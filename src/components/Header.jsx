@@ -166,6 +166,7 @@ export default function Header() {
  { label: "Vision", path: "/vision" },
  { label: "Contact", path: "/contact" },
  { label: "Tech", path: "/tech" },
+ { label: "Games", path: "/games" },
  { label: "AI News", path: "/ai-news" },
  ],
  [],

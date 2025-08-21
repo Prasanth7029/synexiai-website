@@ -204,68 +204,68 @@
 <span class="cstat-no" title="statement not covered" >const STORAGE_KEY = "synexiai-cookie-consent"; // 'accepted' | 'rejected' | null</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function CookieConsent() {</span>
-<span class="cstat-no" title="statement not covered" >  const [choice, setChoice] = useState(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      return localStorage.getItem(STORAGE_KEY);</span>
-<span class="cstat-no" title="statement not covered" >    } catch {</span>
-<span class="cstat-no" title="statement not covered" >      return null;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
+<span class="cstat-no" title="statement not covered" > const [choice, setChoice] = useState(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > try {</span>
+<span class="cstat-no" title="statement not covered" > return localStorage.getItem(STORAGE_KEY);</span>
+<span class="cstat-no" title="statement not covered" > } catch {</span>
+<span class="cstat-no" title="statement not covered" > return null;</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (choice === "accepted" &amp;&amp; typeof window !== "undefined") {</span>
-      // If you use Google Analytics or any tracker, load it here AFTER consent.
-<span class="cstat-no" title="statement not covered" >      if (typeof window.__loadAnalytics === "function")</span>
-<span class="cstat-no" title="statement not covered" >        window.__loadAnalytics();</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }, [choice]);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (choice === "accepted" &amp;&amp; typeof window !== "undefined") {</span>
+ // If you use Google Analytics or any tracker, load it here AFTER consent.
+<span class="cstat-no" title="statement not covered" > if (typeof window.__loadAnalytics === "function")</span>
+<span class="cstat-no" title="statement not covered" > window.__loadAnalytics();</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > }, [choice]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (choice) return null;</span>
+<span class="cstat-no" title="statement not covered" > if (choice) return null;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div className="fixed inset-x-0 bottom-0 z-50"&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div</span>
-<span class="cstat-no" title="statement not covered" >        className="mx-auto max-w-4xl m-4 rounded-2xl p-4 shadow-lg</span>
-                      bg-white/90 dark:bg-neutral-900/90 backdrop-blur
-                      border border-white/20"
-      &gt;
-<span class="cstat-no" title="statement not covered" >        &lt;p className="text-sm mb-3"&gt;</span>
-          We use cookies to help our site work properly and to understand usage.
-<span class="cstat-no" title="statement not covered" >          See our{" "}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;a className="underline" href="/cookie-policy"&gt;</span>
-            Cookie Policy
-<span class="cstat-no" title="statement not covered" >          &lt;/a&gt;</span>
-          .
-<span class="cstat-no" title="statement not covered" >        &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="flex gap-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;button</span>
-<span class="cstat-no" title="statement not covered" >            onClick={() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >              localStorage.setItem(STORAGE_KEY, "accepted");</span>
-<span class="cstat-no" title="statement not covered" >              setChoice("accepted");</span>
-<span class="cstat-no" title="statement not covered" >            }}</span>
-<span class="cstat-no" title="statement not covered" >            className="px-4 py-2 rounded-xl bg-cyan-500 text-black font-medium"</span>
-<span class="cstat-no" title="statement not covered" >          &gt;</span>
-            Accept all
-<span class="cstat-no" title="statement not covered" >          &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;button</span>
-<span class="cstat-no" title="statement not covered" >            onClick={() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >              localStorage.setItem(STORAGE_KEY, "rejected");</span>
-<span class="cstat-no" title="statement not covered" >              setChoice("rejected");</span>
-<span class="cstat-no" title="statement not covered" >            }}</span>
-<span class="cstat-no" title="statement not covered" >            className="px-4 py-2 rounded-xl border border-white/20"</span>
-<span class="cstat-no" title="statement not covered" >          &gt;</span>
-            Reject non-essential
-<span class="cstat-no" title="statement not covered" >          &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;a</span>
-<span class="cstat-no" title="statement not covered" >            href="/cookie-policy"</span>
-<span class="cstat-no" title="statement not covered" >            className="px-4 py-2 text-sm underline self-center"</span>
-<span class="cstat-no" title="statement not covered" >          &gt;</span>
-            Learn more
-<span class="cstat-no" title="statement not covered" >          &lt;/a&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="fixed inset-x-0 bottom-0 z-50"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className="mx-auto max-w-4xl m-4 rounded-2xl p-4 shadow-lg</span>
+ bg-white/90 dark:bg-neutral-900/90 
+ border border-white/20"
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-sm mb-3"&gt;</span>
+ We use cookies to help our site work properly and to understand usage.
+<span class="cstat-no" title="statement not covered" > See our{" "}</span>
+<span class="cstat-no" title="statement not covered" > &lt;a className="underline" href="/cookie-policy"&gt;</span>
+ Cookie Policy
+<span class="cstat-no" title="statement not covered" > &lt;/a&gt;</span>
+ .
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex gap-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > localStorage.setItem(STORAGE_KEY, "accepted");</span>
+<span class="cstat-no" title="statement not covered" > setChoice("accepted");</span>
+<span class="cstat-no" title="statement not covered" > }}</span>
+<span class="cstat-no" title="statement not covered" > className="px-4 py-2 rounded-xl bg-cyan-500 text-black font-medium"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ Accept all
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > localStorage.setItem(STORAGE_KEY, "rejected");</span>
+<span class="cstat-no" title="statement not covered" > setChoice("rejected");</span>
+<span class="cstat-no" title="statement not covered" > }}</span>
+<span class="cstat-no" title="statement not covered" > className="px-4 py-2 rounded-xl border border-white/20"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ Reject non-essential
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;a</span>
+<span class="cstat-no" title="statement not covered" > href="/cookie-policy"</span>
+<span class="cstat-no" title="statement not covered" > className="px-4 py-2 text-sm underline self-center"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ Learn more
+<span class="cstat-no" title="statement not covered" > &lt;/a&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -274,7 +274,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

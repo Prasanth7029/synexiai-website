@@ -222,80 +222,80 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { useEffect, useState, useCallback } from "react";<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function ThemeToggle({ className = "" }) {</span>
-<span class="cstat-no" title="statement not covered" >  const storageKey = "theme"; // 'light' | 'dark'</span>
+<span class="cstat-no" title="statement not covered" > const storageKey = "theme"; // 'light' | 'dark'</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const [theme, setTheme] = useState(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (typeof window === "undefined") return "light";</span>
-<span class="cstat-no" title="statement not covered" >    const saved = localStorage.getItem(storageKey);</span>
-<span class="cstat-no" title="statement not covered" >    if (saved === "light" || saved === "dark") return saved;</span>
-<span class="cstat-no" title="statement not covered" >    const prefersDark = window.matchMedia?.(</span>
-<span class="cstat-no" title="statement not covered" >      "(prefers-color-scheme: dark)",</span>
-<span class="cstat-no" title="statement not covered" >    ).matches;</span>
-<span class="cstat-no" title="statement not covered" >    return prefersDark ? "dark" : "light";</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
+<span class="cstat-no" title="statement not covered" > const [theme, setTheme] = useState(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (typeof window === "undefined") return "light";</span>
+<span class="cstat-no" title="statement not covered" > const saved = localStorage.getItem(storageKey);</span>
+<span class="cstat-no" title="statement not covered" > if (saved === "light" || saved === "dark") return saved;</span>
+<span class="cstat-no" title="statement not covered" > const prefersDark = window.matchMedia?.(</span>
+<span class="cstat-no" title="statement not covered" > "(prefers-color-scheme: dark)",</span>
+<span class="cstat-no" title="statement not covered" > ).matches;</span>
+<span class="cstat-no" title="statement not covered" > return prefersDark ? "dark" : "light";</span>
+<span class="cstat-no" title="statement not covered" > });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const applyTheme = useCallback((next, persist = true) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const root = document.documentElement;</span>
-<span class="cstat-no" title="statement not covered" >    root.classList.add("[&amp;_*]:!transition-none");</span>
-<span class="cstat-no" title="statement not covered" >    if (next === "dark") root.classList.add("dark");</span>
-<span class="cstat-no" title="statement not covered" >    else root.classList.remove("dark");</span>
-<span class="cstat-no" title="statement not covered" >    root.setAttribute("data-theme", next);</span>
-<span class="cstat-no" title="statement not covered" >    if (persist) localStorage.setItem(storageKey, next);</span>
-<span class="cstat-no" title="statement not covered" >    window.setTimeout(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      root.classList.remove("[&amp;_*]:!transition-none");</span>
-<span class="cstat-no" title="statement not covered" >    }, 0);</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+<span class="cstat-no" title="statement not covered" > const applyTheme = useCallback((next, persist = true) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const root = document.documentElement;</span>
+<span class="cstat-no" title="statement not covered" > root.classList.add("[&amp;_*]:!transition-none");</span>
+<span class="cstat-no" title="statement not covered" > if (next === "dark") root.classList.add("dark");</span>
+<span class="cstat-no" title="statement not covered" > else root.classList.remove("dark");</span>
+<span class="cstat-no" title="statement not covered" > root.setAttribute("data-theme", next);</span>
+<span class="cstat-no" title="statement not covered" > if (persist) localStorage.setItem(storageKey, next);</span>
+<span class="cstat-no" title="statement not covered" > window.setTimeout(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > root.classList.remove("[&amp;_*]:!transition-none");</span>
+<span class="cstat-no" title="statement not covered" > }, 0);</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    applyTheme(theme, false);</span>
-<span class="cstat-no" title="statement not covered" >  }, []); // eslint-disable-line react-hooks/exhaustive-deps</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > applyTheme(theme, false);</span>
+<span class="cstat-no" title="statement not covered" > }, []); // eslint-disable-line react-hooks/exhaustive-deps</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    applyTheme(theme, true);</span>
-<span class="cstat-no" title="statement not covered" >  }, [theme, applyTheme]);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > applyTheme(theme, true);</span>
+<span class="cstat-no" title="statement not covered" > }, [theme, applyTheme]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const onStorage = (e) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      if (</span>
-<span class="cstat-no" title="statement not covered" >        e.key === storageKey &amp;&amp;</span>
-<span class="cstat-no" title="statement not covered" >        (e.newValue === "light" || e.newValue === "dark")</span>
-<span class="cstat-no" title="statement not covered" >      ) {</span>
-<span class="cstat-no" title="statement not covered" >        setTheme(e.newValue);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >    window.addEventListener("storage", onStorage);</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; window.removeEventListener("storage", onStorage);</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const onStorage = (e) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (</span>
+<span class="cstat-no" title="statement not covered" > e.key === storageKey &amp;&amp;</span>
+<span class="cstat-no" title="statement not covered" > (e.newValue === "light" || e.newValue === "dark")</span>
+<span class="cstat-no" title="statement not covered" > ) {</span>
+<span class="cstat-no" title="statement not covered" > setTheme(e.newValue);</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > };</span>
+<span class="cstat-no" title="statement not covered" > window.addEventListener("storage", onStorage);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; window.removeEventListener("storage", onStorage);</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const saved = localStorage.getItem(storageKey);</span>
-<span class="cstat-no" title="statement not covered" >    if (saved === "light" || saved === "dark") return;</span>
-<span class="cstat-no" title="statement not covered" >    const mq = window.matchMedia("(prefers-color-scheme: dark)");</span>
-<span class="cstat-no" title="statement not covered" >    const listener = (e) =&gt; setTheme(e.matches ? "dark" : "light");</span>
-<span class="cstat-no" title="statement not covered" >    mq.addEventListener?.("change", listener);</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; mq.removeEventListener?.("change", listener);</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const saved = localStorage.getItem(storageKey);</span>
+<span class="cstat-no" title="statement not covered" > if (saved === "light" || saved === "dark") return;</span>
+<span class="cstat-no" title="statement not covered" > const mq = window.matchMedia("(prefers-color-scheme: dark)");</span>
+<span class="cstat-no" title="statement not covered" > const listener = (e) =&gt; setTheme(e.matches ? "dark" : "light");</span>
+<span class="cstat-no" title="statement not covered" > mq.addEventListener?.("change", listener);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; mq.removeEventListener?.("change", listener);</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const isDark = theme === "dark";</span>
-<span class="cstat-no" title="statement not covered" >  const toggle = () =&gt; setTheme(isDark ? "light" : "dark");</span>
+<span class="cstat-no" title="statement not covered" > const isDark = theme === "dark";</span>
+<span class="cstat-no" title="statement not covered" > const toggle = () =&gt; setTheme(isDark ? "light" : "dark");</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;button</span>
-<span class="cstat-no" title="statement not covered" >      type="button"</span>
-<span class="cstat-no" title="statement not covered" >      onClick={toggle}</span>
-<span class="cstat-no" title="statement not covered" >      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}</span>
-<span class="cstat-no" title="statement not covered" >      aria-pressed={isDark}</span>
-<span class="cstat-no" title="statement not covered" >      className={`relative z-50 pointer-events-auto select-none</span>
-         inline-flex items-center gap-2 px-3 py-2 rounded-md
-         border border-gray-300 dark:border-gray-700
-         bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100
-         shadow-sm hover:bg-gray-200 dark:hover:bg-gray-700
-<span class="cstat-no" title="statement not covered" >         transition focus:outline-none focus:ring-2 focus:ring-cyan-500 ${className}`}</span>
-    &gt;
-<span class="cstat-no" title="statement not covered" >      &lt;span className="text-base"&gt;{isDark ? "☀️" : "🌙"}&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;span className="text-sm font-medium"&gt;{isDark ? "Light" : "Dark"}&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/button&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > type="button"</span>
+<span class="cstat-no" title="statement not covered" > onClick={toggle}</span>
+<span class="cstat-no" title="statement not covered" > aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}</span>
+<span class="cstat-no" title="statement not covered" > aria-pressed={isDark}</span>
+<span class="cstat-no" title="statement not covered" > className={`relative z-50 pointer-events-auto select-none</span>
+ inline-flex items-center gap-2 px-3 py-2 rounded-md
+ border border-gray-300 dark:border-gray-700
+ bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100
+ shadow-sm hover:bg-gray-200 dark:hover:bg-gray-700
+<span class="cstat-no" title="statement not covered" > transition focus:outline-none focus:ring-2 focus:ring-cyan-500 ${className}`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;span className="text-base"&gt;{isDark ? "☀️" : "🌙"}&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="text-sm font-medium"&gt;{isDark ? "Light" : "Dark"}&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -304,7 +304,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

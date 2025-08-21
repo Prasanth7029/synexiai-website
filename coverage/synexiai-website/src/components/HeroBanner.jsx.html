@@ -655,10 +655,10 @@
 <span class="cstat-no" title="statement not covered" >const MotionLink = motion(Link);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >const ROTATING_TEXTS = [</span>
-<span class="cstat-no" title="statement not covered" >  "Welcome to SynexiAI",</span>
-<span class="cstat-no" title="statement not covered" >  "We Build the Future",</span>
-<span class="cstat-no" title="statement not covered" >  "AI • Vision • Innovation",</span>
-<span class="cstat-no" title="statement not covered" >  "Zero to Forever",</span>
+<span class="cstat-no" title="statement not covered" > "Welcome to SynexiAI",</span>
+<span class="cstat-no" title="statement not covered" > "We Build the Future",</span>
+<span class="cstat-no" title="statement not covered" > "AI • Vision • Innovation",</span>
+<span class="cstat-no" title="statement not covered" > "Zero to Forever",</span>
 <span class="cstat-no" title="statement not covered" >];</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >const SCROLL_PROMPT_THRESHOLD = 50;</span>
@@ -666,272 +666,272 @@
 <span class="cstat-no" title="statement not covered" >const LOAD_TIMEOUT = 3000;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function HeroBanner() {</span>
-<span class="cstat-no" title="statement not covered" >  const [isLoaded, setIsLoaded] = useState(false);</span>
-<span class="cstat-no" title="statement not covered" >  const [showScrollPrompt, setShowScrollPrompt] = useState(true);</span>
-<span class="cstat-no" title="statement not covered" >  const [currentTextIndex, setCurrentTextIndex] = useState(0);</span>
-<span class="cstat-no" title="statement not covered" >  const [mountParticles, setMountParticles] = useState(false);</span>
-<span class="cstat-no" title="statement not covered" >  const [allowMobileGlobe, setAllowMobileGlobe] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const [isLoaded, setIsLoaded] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const [showScrollPrompt, setShowScrollPrompt] = useState(true);</span>
+<span class="cstat-no" title="statement not covered" > const [currentTextIndex, setCurrentTextIndex] = useState(0);</span>
+<span class="cstat-no" title="statement not covered" > const [mountParticles, setMountParticles] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const [allowMobileGlobe, setAllowMobileGlobe] = useState(false);</span>
 &nbsp;
-  /* ----------------------------- Headline rotate ---------------------------- */
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const id = setInterval(</span>
-<span class="cstat-no" title="statement not covered" >      () =&gt; setCurrentTextIndex((p) =&gt; (p + 1) % ROTATING_TEXTS.length),</span>
-<span class="cstat-no" title="statement not covered" >      TEXT_ROTATION_INTERVAL,</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; clearInterval(id);</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+ /* ----------------------------- Headline rotate ---------------------------- */
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const id = setInterval(</span>
+<span class="cstat-no" title="statement not covered" > () =&gt; setCurrentTextIndex((p) =&gt; (p + 1) % ROTATING_TEXTS.length),</span>
+<span class="cstat-no" title="statement not covered" > TEXT_ROTATION_INTERVAL,</span>
+<span class="cstat-no" title="statement not covered" > );</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; clearInterval(id);</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-  /* ------------------------------- Video fade ------------------------------- */
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const video = document.querySelector(".hero-video");</span>
-<span class="cstat-no" title="statement not covered" >    const onLoaded = () =&gt; setIsLoaded(true);</span>
-<span class="cstat-no" title="statement not covered" >    if (!video) return;</span>
-<span class="cstat-no" title="statement not covered" >    video.addEventListener("loadeddata", onLoaded);</span>
-<span class="cstat-no" title="statement not covered" >    const t = setTimeout(onLoaded, LOAD_TIMEOUT);</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      video.removeEventListener("loadeddata", onLoaded);</span>
-<span class="cstat-no" title="statement not covered" >      clearTimeout(t);</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+ /* ------------------------------- Video fade ------------------------------- */
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const video = document.querySelector(".hero-video");</span>
+<span class="cstat-no" title="statement not covered" > const onLoaded = () =&gt; setIsLoaded(true);</span>
+<span class="cstat-no" title="statement not covered" > if (!video) return;</span>
+<span class="cstat-no" title="statement not covered" > video.addEventListener("loadeddata", onLoaded);</span>
+<span class="cstat-no" title="statement not covered" > const t = setTimeout(onLoaded, LOAD_TIMEOUT);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > video.removeEventListener("loadeddata", onLoaded);</span>
+<span class="cstat-no" title="statement not covered" > clearTimeout(t);</span>
+<span class="cstat-no" title="statement not covered" > };</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-  /* ---------------------------- Scroll prompt hide -------------------------- */
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const onScroll = () =&gt; setShowScrollPrompt(window.scrollY &lt; SCROLL_PROMPT_THRESHOLD);</span>
-<span class="cstat-no" title="statement not covered" >    window.addEventListener("scroll", onScroll, { passive: true });</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; window.removeEventListener("scroll", onScroll);</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+ /* ---------------------------- Scroll prompt hide -------------------------- */
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const onScroll = () =&gt; setShowScrollPrompt(window.scrollY &lt; SCROLL_PROMPT_THRESHOLD);</span>
+<span class="cstat-no" title="statement not covered" > window.addEventListener("scroll", onScroll, { passive: true });</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; window.removeEventListener("scroll", onScroll);</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-  /* --------------------- Desktop-only particles (no AOS) -------------------- */
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;</span>
-<span class="cstat-no" title="statement not covered" >    const isDesktop = window.matchMedia?.("(min-width: 768px)")?.matches;</span>
-<span class="cstat-no" title="statement not covered" >    if (!reduced &amp;&amp; isDesktop) {</span>
-<span class="cstat-no" title="statement not covered" >      const t = setTimeout(() =&gt; setMountParticles(true), 800);</span>
-<span class="cstat-no" title="statement not covered" >      return () =&gt; clearTimeout(t);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+ /* --------------------- Desktop-only particles (no AOS) -------------------- */
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;</span>
+<span class="cstat-no" title="statement not covered" > const isDesktop = window.matchMedia?.("(min-width: 768px)")?.matches;</span>
+<span class="cstat-no" title="statement not covered" > if (!reduced &amp;&amp; isDesktop) {</span>
+<span class="cstat-no" title="statement not covered" > const t = setTimeout(() =&gt; setMountParticles(true), 800);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; clearTimeout(t);</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-  /* -------------------- Decide if we render the mobile globe ---------------- */
-<span class="cstat-no" title="statement not covered" >  const computeMobileGlobe = useCallback(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;</span>
-<span class="cstat-no" title="statement not covered" >    const isPhone = !window.matchMedia?.("(min-width: 768px)")?.matches;</span>
-<span class="cstat-no" title="statement not covered" >    const wideEnough = (typeof window !== "undefined" ? window.innerWidth : 0) &gt;= 320;</span>
-<span class="cstat-no" title="statement not covered" >    setAllowMobileGlobe(isPhone &amp;&amp; wideEnough &amp;&amp; !reduced &amp;&amp; canUseWebGL());</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+ /* -------------------- Decide if we render the mobile globe ---------------- */
+<span class="cstat-no" title="statement not covered" > const computeMobileGlobe = useCallback(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;</span>
+<span class="cstat-no" title="statement not covered" > const isPhone = !window.matchMedia?.("(min-width: 768px)")?.matches;</span>
+<span class="cstat-no" title="statement not covered" > const wideEnough = (typeof window !== "undefined" ? window.innerWidth : 0) &gt;= 320;</span>
+<span class="cstat-no" title="statement not covered" > setAllowMobileGlobe(isPhone &amp;&amp; wideEnough &amp;&amp; !reduced &amp;&amp; canUseWebGL());</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    computeMobileGlobe();</span>
-<span class="cstat-no" title="statement not covered" >    window.addEventListener("resize", computeMobileGlobe);</span>
-<span class="cstat-no" title="statement not covered" >    window.addEventListener("orientationchange", computeMobileGlobe);</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      window.removeEventListener("resize", computeMobileGlobe);</span>
-<span class="cstat-no" title="statement not covered" >      window.removeEventListener("orientationchange", computeMobileGlobe);</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >  }, [computeMobileGlobe]);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > computeMobileGlobe();</span>
+<span class="cstat-no" title="statement not covered" > window.addEventListener("resize", computeMobileGlobe);</span>
+<span class="cstat-no" title="statement not covered" > window.addEventListener("orientationchange", computeMobileGlobe);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > window.removeEventListener("resize", computeMobileGlobe);</span>
+<span class="cstat-no" title="statement not covered" > window.removeEventListener("orientationchange", computeMobileGlobe);</span>
+<span class="cstat-no" title="statement not covered" > };</span>
+<span class="cstat-no" title="statement not covered" > }, [computeMobileGlobe]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const particlesInit = useCallback(async () =&gt; {}, []);</span>
-<span class="cstat-no" title="statement not covered" >  const particlesLoaded = useCallback(async () =&gt; {}, []);</span>
+<span class="cstat-no" title="statement not covered" > const particlesInit = useCallback(async () =&gt; {}, []);</span>
+<span class="cstat-no" title="statement not covered" > const particlesLoaded = useCallback(async () =&gt; {}, []);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;section</span>
-<span class="cstat-no" title="statement not covered" >      className="</span>
-        relative z-10 w-full
-        min-h-[100svh]
-        flex items-stretch justify-center overflow-hidden
-        pb-0 pt-0
-      "
-    &gt;
-      {/* Background (desktop only) */}
-<span class="cstat-no" title="statement not covered" >      &lt;div</span>
-<span class="cstat-no" title="statement not covered" >        aria-hidden="true"</span>
-<span class="cstat-no" title="statement not covered" >        className="absolute inset-0 z-0 pointer-events-none opacity-70 hidden md:block</span>
-                   bg-[conic-gradient(from_180deg_at_50%_50%,rgba(0,255,255,0.30),rgba(0,122,255,0.30),rgba(0,255,255,0.30))]
-                   bg-[length:200%_200%] animate-[gradient-rotate_15s_linear_infinite]"
-<span class="cstat-no" title="statement not covered" >      /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div</span>
-<span class="cstat-no" title="statement not covered" >        aria-hidden="true"</span>
-<span class="cstat-no" title="statement not covered" >        className="absolute inset-0 z-10 pointer-events-none overflow-hidden hidden md:block"</span>
-      &gt;
-<span class="cstat-no" title="statement not covered" >        &lt;div className="absolute z-10 w-[450px] h-[450px] bg-cyan-500/20 blur-[90px] rounded-full left-[5%] top-[15%] animate-float-slow" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="absolute z-10 w-[550px] h-[550px] bg-blue-500/10 blur-[110px] rounded-full right-[5%] bottom-[5%] animate-float" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;section</span>
+<span class="cstat-no" title="statement not covered" > className="</span>
+ relative z-10 w-full
+ min-h-[100svh]
+ flex items-stretch justify-center overflow-hidden
+ pb-0 pt-0
+ "
+ &gt;
+ {/* Background (desktop only) */}
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > aria-hidden="true"</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 z-0 pointer-events-none opacity-70 hidden md:block</span>
+ bg-[conic-gradient(from_180deg_at_50%_50%,rgba(0,255,255,0.30),rgba(0,122,255,0.30),rgba(0,255,255,0.30))]
+ bg-[length:200%_200%] animate-[gradient-rotate_15s_linear_infinite]"
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > aria-hidden="true"</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 z-10 pointer-events-none overflow-hidden hidden md:block"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;div className="absolute z-10 w-[450px] h-[450px] bg-cyan-500/20 blur-[90px] rounded-full left-[5%] top-[15%] animate-float-slow" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="absolute z-10 w-[550px] h-[550px] bg-blue-500/10 blur-[110px] rounded-full right-[5%] bottom-[5%] animate-float" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-      {/* Video overlay */}
-<span class="cstat-no" title="statement not covered" >      &lt;div aria-hidden="true" className="absolute inset-0 z-[12] pointer-events-none"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;video</span>
-<span class="cstat-no" title="statement not covered" >          autoPlay</span>
-<span class="cstat-no" title="statement not covered" >          loop</span>
-<span class="cstat-no" title="statement not covered" >          muted</span>
-<span class="cstat-no" title="statement not covered" >          playsInline</span>
-<span class="cstat-no" title="statement not covered" >          preload="metadata"</span>
-<span class="cstat-no" title="statement not covered" >          className={`hero-video w-full h-full object-cover transition-opacity duration-1000 ${</span>
-<span class="cstat-no" title="statement not covered" >            isLoaded ? "opacity-50" : "opacity-0"</span>
-<span class="cstat-no" title="statement not covered" >          }`}</span>
-<span class="cstat-no" title="statement not covered" >          poster="/hero-poster.jpg"</span>
-<span class="cstat-no" title="statement not covered" >          tabIndex={-1}</span>
-        &gt;
-<span class="cstat-no" title="statement not covered" >          &lt;source src="/hero-bg.mp4" type="video/mp4" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/video&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="absolute inset-0 bg-black/35 dark:bg-black/45" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+ {/* Video overlay */}
+<span class="cstat-no" title="statement not covered" > &lt;div aria-hidden="true" className="absolute inset-0 z-[12] pointer-events-none"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;video</span>
+<span class="cstat-no" title="statement not covered" > autoPlay</span>
+<span class="cstat-no" title="statement not covered" > loop</span>
+<span class="cstat-no" title="statement not covered" > muted</span>
+<span class="cstat-no" title="statement not covered" > playsInline</span>
+<span class="cstat-no" title="statement not covered" > preload="metadata"</span>
+<span class="cstat-no" title="statement not covered" > className={`hero-video w-full h-full object-cover transition-opacity duration-1000 ${</span>
+<span class="cstat-no" title="statement not covered" > isLoaded ? "opacity-50" : "opacity-0"</span>
+<span class="cstat-no" title="statement not covered" > }`}</span>
+<span class="cstat-no" title="statement not covered" > poster="/hero-poster.jpg"</span>
+<span class="cstat-no" title="statement not covered" > tabIndex={-1}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;source src="/hero-bg.mp4" type="video/mp4" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/video&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="absolute inset-0 bg-black/35 dark:bg-black/45" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-      {/* Desktop particles */}
-<span class="cstat-no" title="statement not covered" >      {mountParticles &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;Suspense fallback={null}&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;Particles</span>
-<span class="cstat-no" title="statement not covered" >            id="tsparticles"</span>
-<span class="cstat-no" title="statement not covered" >            init={particlesInit}</span>
-<span class="cstat-no" title="statement not covered" >            loaded={particlesLoaded}</span>
-<span class="cstat-no" title="statement not covered" >            options={{</span>
-<span class="cstat-no" title="statement not covered" >              fullScreen: { enable: false },</span>
-<span class="cstat-no" title="statement not covered" >              background: { color: "transparent" },</span>
-<span class="cstat-no" title="statement not covered" >              particles: {</span>
-<span class="cstat-no" title="statement not covered" >                number: { value: 24 },</span>
-<span class="cstat-no" title="statement not covered" >                color: { value: "#22d3ee" },</span>
-<span class="cstat-no" title="statement not covered" >                opacity: { value: 0.2 },</span>
-<span class="cstat-no" title="statement not covered" >                size: { value: 3 },</span>
-<span class="cstat-no" title="statement not covered" >                move: { enable: true, speed: 0.4, direction: "none", outModes: "bounce" },</span>
-<span class="cstat-no" title="statement not covered" >              },</span>
-<span class="cstat-no" title="statement not covered" >              detectRetina: true,</span>
-<span class="cstat-no" title="statement not covered" >            }}</span>
-<span class="cstat-no" title="statement not covered" >            className="absolute inset-0 z-[18] pointer-events-none hidden md:block"</span>
-<span class="cstat-no" title="statement not covered" >          /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/Suspense&gt;</span>
-      )}
+ {/* Desktop particles */}
+<span class="cstat-no" title="statement not covered" > {mountParticles &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;Suspense fallback={null}&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Particles</span>
+<span class="cstat-no" title="statement not covered" > id="tsparticles"</span>
+<span class="cstat-no" title="statement not covered" > init={particlesInit}</span>
+<span class="cstat-no" title="statement not covered" > loaded={particlesLoaded}</span>
+<span class="cstat-no" title="statement not covered" > options={{</span>
+<span class="cstat-no" title="statement not covered" > fullScreen: { enable: false },</span>
+<span class="cstat-no" title="statement not covered" > background: { color: "transparent" },</span>
+<span class="cstat-no" title="statement not covered" > particles: {</span>
+<span class="cstat-no" title="statement not covered" > number: { value: 24 },</span>
+<span class="cstat-no" title="statement not covered" > color: { value: "#22d3ee" },</span>
+<span class="cstat-no" title="statement not covered" > opacity: { value: 0.2 },</span>
+<span class="cstat-no" title="statement not covered" > size: { value: 3 },</span>
+<span class="cstat-no" title="statement not covered" > move: { enable: true, speed: 0.4, direction: "none", outModes: "bounce" },</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > detectRetina: true,</span>
+<span class="cstat-no" title="statement not covered" > }}</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 z-[18] pointer-events-none hidden md:block"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/Suspense&gt;</span>
+ )}
 &nbsp;
-      {/* Foreground */}
-<span class="cstat-no" title="statement not covered" >      &lt;div className="relative z-30 flex items-center w-full min-h-[100svh] px-4 sm:px-6"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="w-full max-w-6xl mx-auto grid md:grid-cols-12 items-center gap-8"&gt;</span>
-          {/* Text column */}
-<span class="cstat-no" title="statement not covered" >          &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >            initial={{ opacity: 0, y: 16 }}</span>
-<span class="cstat-no" title="statement not covered" >            animate={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >            transition={{ duration: 0.7, ease: "easeOut" }}</span>
-<span class="cstat-no" title="statement not covered" >            className="order-2 md:order-1 w-full md:col-span-7 max-w-none mx-auto md:mx-0 text-center md:text-left px-1 sm:px-4"</span>
-          &gt;
-            {/* Mobile globe (now allowed on small screens) */}
-<span class="cstat-no" title="statement not covered" >            {allowMobileGlobe &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >              &lt;div className="md:hidden flex justify-center pt-2 mb-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="relative w-[148px] h-[148px] opacity-90"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;GlobeSection</span>
-<span class="cstat-no" title="statement not covered" >                    showHeader={false}</span>
-<span class="cstat-no" title="statement not covered" >                    controls={false}</span>
-<span class="cstat-no" title="statement not covered" >                    sizePx={192}</span>
-<span class="cstat-no" title="statement not covered" >                    allow3DOnSmall={true}   // ✅ critical for iOS/phones</span>
-<span class="cstat-no" title="statement not covered" >                  /&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/div&gt;</span>
-            )}
+ {/* Foreground */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="relative z-30 flex items-center w-full min-h-[100svh] px-4 sm:px-6"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="w-full max-w-6xl mx-auto grid md:grid-cols-12 items-center gap-8"&gt;</span>
+ {/* Text column */}
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 16 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ duration: 0.7, ease: "easeOut" }}</span>
+<span class="cstat-no" title="statement not covered" > className="order-2 md:order-1 w-full md:col-span-7 max-w-none mx-auto md:mx-0 text-center md:text-left px-1 sm:px-4"</span>
+ &gt;
+ {/* Mobile globe (now allowed on small screens) */}
+<span class="cstat-no" title="statement not covered" > {allowMobileGlobe &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="md:hidden flex justify-center pt-2 mb-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="relative w-[148px] h-[148px] opacity-90"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;GlobeSection</span>
+<span class="cstat-no" title="statement not covered" > showHeader={false}</span>
+<span class="cstat-no" title="statement not covered" > controls={false}</span>
+<span class="cstat-no" title="statement not covered" > sizePx={192}</span>
+<span class="cstat-no" title="statement not covered" > allow3DOnSmall={true} // ✅ critical for iOS/phones</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ )}
 &nbsp;
-            {/* Rotating headline */}
-<span class="cstat-no" title="statement not covered" >            &lt;div className="h-16 xs:h-20 sm:h-28 md:h-40 flex items-center justify-center md:justify-start mb-2 sm:mb-4"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;AnimatePresence mode="wait"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;motion.h1</span>
-<span class="cstat-no" title="statement not covered" >                  key={currentTextIndex}</span>
-<span class="cstat-no" title="statement not covered" >                  initial={{ opacity: 0, y: 18 }}</span>
-<span class="cstat-no" title="statement not covered" >                  animate={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >                  exit={{ opacity: 0, y: -18 }}</span>
-<span class="cstat-no" title="statement not covered" >                  transition={{ duration: 0.45, ease: "easeOut" }}</span>
-<span class="cstat-no" title="statement not covered" >                  className="font-extrabold leading-[0.98] tracking-tight subpixel-antialiased</span>
-                             text-[clamp(1.6rem,6.2vw,3.2rem)] md:text-[clamp(2.75rem,4vw,4.75rem)]
-                             bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500
-                             whitespace-normal"
-                &gt;
-<span class="cstat-no" title="statement not covered" >                  {ROTATING_TEXTS[currentTextIndex]}</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/motion.h1&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/AnimatePresence&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
+ {/* Rotating headline */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="h-16 xs:h-20 sm:h-28 md:h-40 flex items-center justify-center md:justify-start mb-2 sm:mb-4"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;AnimatePresence mode="wait"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.h1</span>
+<span class="cstat-no" title="statement not covered" > key={currentTextIndex}</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 18 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > exit={{ opacity: 0, y: -18 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ duration: 0.45, ease: "easeOut" }}</span>
+<span class="cstat-no" title="statement not covered" > className="font-extrabold leading-[0.98] tracking-tight subpixel-antialiased</span>
+ text-[clamp(1.4rem,6.2vw,3rem)] md:text-[clamp(2.25rem,4vw,4.25rem)]
+ bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500
+ whitespace-normal"
+ &gt;
+<span class="cstat-no" title="statement not covered" > {ROTATING_TEXTS[currentTextIndex]}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.h1&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/AnimatePresence&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-            {/* Subtitle */}
-<span class="cstat-no" title="statement not covered" >            &lt;motion.p</span>
-<span class="cstat-no" title="statement not covered" >              className="text-base sm:text-lg md:text-2xl text-gray-800 dark:text-gray-300 mb-2 max-w-2xl md:max-w-none mx-auto md:mx-0"</span>
-<span class="cstat-no" title="statement not covered" >              initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >              animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >              transition={{ delay: 0.25, duration: 0.6 }}</span>
-<span class="cstat-no" title="statement not covered" >            &gt;</span>
-<span class="cstat-no" title="statement not covered" >              SynexiAI is the next-generation innovation hub where{" "}</span>
-<span class="cstat-no" title="statement not covered" >              &lt;span className="text-cyan-700 dark:text-cyan-400 font-medium"&gt;</span>
-                Artificial Intelligence
-<span class="cstat-no" title="statement not covered" >              &lt;/span&gt;</span>
-              , futuristic IT, and bold ideas converge.
-<span class="cstat-no" title="statement not covered" >            &lt;/motion.p&gt;</span>
+ {/* Subtitle */}
+<span class="cstat-no" title="statement not covered" > &lt;motion.p</span>
+<span class="cstat-no" title="statement not covered" > className="text-base sm:text-lg md:text-2xl text-gray-800 dark:text-gray-300 mb-2 max-w-2xl md:max-w-none mx-auto md:mx-0"</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 0.25, duration: 0.6 }}</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+<span class="cstat-no" title="statement not covered" > SynexiAI is the next-generation innovation hub where{" "}</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="text-cyan-700 dark:text-cyan-400 font-medium"&gt;</span>
+ Artificial Intelligence
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+ , futuristic IT, and bold ideas converge.
+<span class="cstat-no" title="statement not covered" > &lt;/motion.p&gt;</span>
 &nbsp;
-            {/* CTAs */}
-<span class="cstat-no" title="statement not covered" >            &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >              className="flex flex-col sm:flex-row md:justify-start justify-center gap-3 sm:gap-4 mt-4"</span>
-<span class="cstat-no" title="statement not covered" >              initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >              animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >              transition={{ delay: 0.4, duration: 0.6 }}</span>
-            &gt;
-<span class="cstat-no" title="statement not covered" >              &lt;MotionLink</span>
-<span class="cstat-no" title="statement not covered" >                to="/about"</span>
-<span class="cstat-no" title="statement not covered" >                whileHover={{ scale: 1.04 }}</span>
-<span class="cstat-no" title="statement not covered" >                whileTap={{ scale: 0.97 }}</span>
-<span class="cstat-no" title="statement not covered" >                className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500</span>
-                           text-white rounded-xl text-base sm:text-lg font-medium shadow-lg shadow-cyan-500/30
-                           transition-[transform,background-color,box-shadow] duration-300 will-change-transform md:active:scale-95"
-<span class="cstat-no" title="statement not covered" >              &gt;</span>
-                Explore Our Vision →
-<span class="cstat-no" title="statement not covered" >              &lt;/MotionLink&gt;</span>
+ {/* CTAs */}
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > className="flex flex-col sm:flex-row md:justify-start justify-center gap-3 sm:gap-4 mt-4"</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 0.4, duration: 0.6 }}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;MotionLink</span>
+<span class="cstat-no" title="statement not covered" > to="/about"</span>
+<span class="cstat-no" title="statement not covered" > whileHover={{ scale: 1.04 }}</span>
+<span class="cstat-no" title="statement not covered" > whileTap={{ scale: 0.97 }}</span>
+<span class="cstat-no" title="statement not covered" > className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500</span>
+ text-white rounded-xl text-base sm:text-lg font-medium shadow-lg shadow-cyan-500/30
+ transition-[transform,background-color,box-shadow] duration-300 will-change-transform md:active:scale-95"
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ Explore Our Vision →
+<span class="cstat-no" title="statement not covered" > &lt;/MotionLink&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;MotionLink</span>
-<span class="cstat-no" title="statement not covered" >                to="/projects"</span>
-<span class="cstat-no" title="statement not covered" >                whileHover={{ scale: 1.04 }}</span>
-<span class="cstat-no" title="statement not covered" >                whileTap={{ scale: 0.97 }}</span>
-<span class="cstat-no" title="statement not covered" >                className="px-6 py-3 sm:px-8 sm:py-4 border-2 border-cyan-600 dark:border-cyan-400 text-cyan-700 dark:text-cyan-400</span>
-                           hover:bg-cyan-600/10 dark:hover:bg-cyan-400/10 rounded-xl text-base sm:text-lg font-medium transition-colors duration-300 md:active:scale-95"
-<span class="cstat-no" title="statement not covered" >              &gt;</span>
-                View Projects
-<span class="cstat-no" title="statement not covered" >              &lt;/MotionLink&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/motion.div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;MotionLink</span>
+<span class="cstat-no" title="statement not covered" > to="/projects"</span>
+<span class="cstat-no" title="statement not covered" > whileHover={{ scale: 1.04 }}</span>
+<span class="cstat-no" title="statement not covered" > whileTap={{ scale: 0.97 }}</span>
+<span class="cstat-no" title="statement not covered" > className="px-6 py-3 sm:px-8 sm:py-4 border-2 border-cyan-600 dark:border-cyan-400 text-cyan-700 dark:text-cyan-400</span>
+ hover:bg-cyan-600/10 dark:hover:bg-cyan-400/10 rounded-xl text-base sm:text-lg font-medium transition-colors duration-300 md:active:scale-95"
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ View Projects
+<span class="cstat-no" title="statement not covered" > &lt;/MotionLink&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
 &nbsp;
-            {/* Mobile scroll prompt */}
-<span class="cstat-no" title="statement not covered" >            {showScrollPrompt &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >              &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >                className="md:hidden mt-8 select-none"</span>
-<span class="cstat-no" title="statement not covered" >                initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >                animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >                transition={{ delay: 1.0, duration: 0.5 }}</span>
-              &gt;
-<span class="cstat-no" title="statement not covered" >                &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >                  className="flex flex-col items-center"</span>
-<span class="cstat-no" title="statement not covered" >                  animate={{ y: [0, 10, 0] }}</span>
-<span class="cstat-no" title="statement not covered" >                  transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}</span>
-                &gt;
-<span class="cstat-no" title="statement not covered" >                  &lt;p className="text-xs text-gray-800 dark:text-gray-300 mb-1"&gt;Scroll down&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;FaArrowDown className="text-gray-900 dark:text-white text-lg opacity-80" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/motion.div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/motion.div&gt;</span>
-            )}
-<span class="cstat-no" title="statement not covered" >          &lt;/motion.div&gt;</span>
+ {/* Mobile scroll prompt */}
+<span class="cstat-no" title="statement not covered" > {showScrollPrompt &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > className="md:hidden mt-8 select-none"</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 1.0, duration: 0.5 }}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > className="flex flex-col items-center"</span>
+<span class="cstat-no" title="statement not covered" > animate={{ y: [0, 10, 0] }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-xs text-gray-800 dark:text-gray-300 mb-1"&gt;Scroll down&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;FaArrowDown className="text-gray-900 dark:text-white text-lg opacity-80" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
 &nbsp;
-          {/* Desktop globe */}
-<span class="cstat-no" title="statement not covered" >          &lt;div className="order-1 md:order-2 hidden md:flex justify-center md:col-span-5"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;GlobeSection showHeader={false} controls={false} size="lg" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+ {/* Desktop globe */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="order-1 md:order-2 hidden md:flex justify-center md:col-span-5"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;GlobeSection showHeader={false} controls={false} size="lg" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-        {/* Desktop scroll prompt */}
-<span class="cstat-no" title="statement not covered" >        {showScrollPrompt &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >            className="hidden md:block absolute left-1/2 -translate-x-1/2 z-20 select-none bottom-16 pointer-events-none"</span>
-<span class="cstat-no" title="statement not covered" >            initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >            animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >            transition={{ delay: 1.1, duration: 0.5 }}</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >              className="flex flex-col items-center"</span>
-<span class="cstat-no" title="statement not covered" >              animate={{ y: [0, 10, 0] }}</span>
-<span class="cstat-no" title="statement not covered" >              transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}</span>
-            &gt;
-<span class="cstat-no" title="statement not covered" >              &lt;p className="text-sm text-gray-800 dark:text-gray-300 mb-1"&gt;Scroll down&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;FaArrowDown className="text-gray-900 dark:text-white text-xl opacity-80" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/motion.div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/motion.div&gt;</span>
-        )}
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/section&gt;</span>
-  );
+ {/* Desktop scroll prompt */}
+<span class="cstat-no" title="statement not covered" > {showScrollPrompt &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > className="hidden md:block absolute left-1/2 -translate-x-1/2 z-20 select-none bottom-16 pointer-events-none"</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 1.1, duration: 0.5 }}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > className="flex flex-col items-center"</span>
+<span class="cstat-no" title="statement not covered" > animate={{ y: [0, 10, 0] }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-sm text-gray-800 dark:text-gray-300 mb-1"&gt;Scroll down&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;FaArrowDown className="text-gray-900 dark:text-white text-xl opacity-80" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/section&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -940,7 +940,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

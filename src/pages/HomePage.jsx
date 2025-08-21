@@ -3,15 +3,11 @@ import React, { useEffect, lazy, Suspense, useMemo } from "react";
 import { Link } from "react-router-dom";
 import FeatureCard from "../components/FeatureCard";
 import { motion } from "framer-motion";
-import { FaReact, FaServer, FaBell, FaChartLine, FaBrain } from "react-icons/fa";
+import { FaReact, FaServer, FaBell, FaChartLine, FaBrain, FaGamepad } from "react-icons/fa";
 import HeroBanner from "../components/HeroBanner";
 import BuildWithSynexiAI from "../components/sections/BuildWithSynexiAI.jsx";
 import { projects as portfolio } from "../content/projects.js";
 import AIFactRotator from "../components/AIFactRotator.jsx";
-import NeonEnergyLink from "../components/NeonEnergyLink.jsx";
-import PuzzleGame from "../components/PuzzleGame.jsx";
-
-
 
 const MotionDiv = motion.div;
 
@@ -63,35 +59,35 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <HeroBanner title={p.heroTitle} subtitle={p.heroSubtitle} />
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 my-10">
-          <AIFactRotator />
+        <AIFactRotator />
       </div>
 
       <BuildWithSynexiAI />
 
-      <div className="max-w-6xl mx-auto  grid grid-cols-1 lg:grid-cols-2 np gap-6 mb-12">
-        {/* Puzzle */}
-        <section className="bg-white/5 rounded-xl  border-white/10 p-4">
-          <h2 className="text-xl font-bold mb-2">Power the Core</h2>
-          <p className="text-sm opacity-80 mb-3">
-            Rotate the neon grid to route clean energy.
-          </p>
-          <div className=" origin-left">
-            <NeonEnergyLink />
+      {/* 🔗 Games CTA (replaces inline game sections) */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <FaGamepad className="text-2xl text-cyan-400" />
+            <h2 className="text-xl sm:text-2xl font-bold">Play Our Games & Puzzles</h2>
           </div>
-        </section>
-
-        {/* Puzzle Game */}
-        <section className="bg-white/5 rounded-xl border border-white/10 p-4">
-          <h2 className="text-xl font-bold mb-2">Brain Teaser</h2>
-          <p className="text-sm opacity-80 mb-3">
-            Solve this interactive puzzle game.
+          <p className="opacity-80 max-w-2xl mx-auto">
+            Try our interactive mini-games — logic, energy routing, pipeline building, and more — all curated in one place.
           </p>
-          <div className=" origin-left">
-            <PuzzleGame />
+          <div className="mt-4">
+            <Link
+              to="/games"
+              className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-5 py-3 text-sm sm:text-base hover:bg-cyan-500/20 transition-colors"
+              aria-label="Open the Games page"
+            >
+              Open Games
+              <span aria-hidden>→</span>
+            </Link>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
       {/* Main content container */}
       <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">
@@ -105,7 +101,7 @@ export default function HomePage() {
             </div>
             <div className="lg:col-span-1 min-w-0">
               <Suspense fallback={<SectionSkeleton className="h-64" />}>
-                <MetricCard />
+                <MetricCard autoUpdate />
               </Suspense>
             </div>
           </div>

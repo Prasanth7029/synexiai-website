@@ -1990,967 +1990,967 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import React, {<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
+ useState,
+ useEffect,
+ useMemo,
+ useCallback,
+ useRef,
 } from "react";
 <span class="cstat-no" title="statement not covered" >import axios from "axios";</span>
 <span class="cstat-no" title="statement not covered" >import { fnUrl } from "../lib/api";</span>
 // eslint-disable-next-line no-unused-vars
 <span class="cstat-no" title="statement not covered" >import { motion, AnimatePresence } from "framer-motion";</span>
 <span class="cstat-no" title="statement not covered" >import {</span>
-  FaRobot,
-  FaDatabase,
-  FaLeaf,
-  FaSearch,
-  FaChartLine,
-  FaRegNewspaper,
-  FaRegClock,
-  FaVideo,
-  FaNewspaper,
-  FaExclamationTriangle,
-  FaArrowRight,
-  FaChevronLeft,
-  FaChevronRight,
-  FaArrowUp,
-  FaTimes,
-  FaSpinner,
+ FaRobot,
+ FaDatabase,
+ FaLeaf,
+ FaSearch,
+ FaChartLine,
+ FaRegNewspaper,
+ FaRegClock,
+ FaVideo,
+ FaNewspaper,
+ FaExclamationTriangle,
+ FaArrowRight,
+ FaChevronLeft,
+ FaChevronRight,
+ FaArrowUp,
+ FaTimes,
+ FaSpinner,
 } from "react-icons/fa";
 <span class="cstat-no" title="statement not covered" >import { useMediaQuery } from "react-responsive";</span>
 &nbsp;
 // --------------------------- Constants ---------------------------
 <span class="cstat-no" title="statement not covered" >const CATEGORIES = [</span>
-<span class="cstat-no" title="statement not covered" >  { id: "all", name: "All News", icon: &lt;FaRegNewspaper /&gt; },</span>
-<span class="cstat-no" title="statement not covered" >  { id: "ai", name: "AI", icon: &lt;FaRobot /&gt; },</span>
-<span class="cstat-no" title="statement not covered" >  { id: "database", name: "Database", icon: &lt;FaDatabase /&gt; },</span>
-<span class="cstat-no" title="statement not covered" >  { id: "renewable", name: "Renewable", icon: &lt;FaLeaf /&gt; },</span>
-<span class="cstat-no" title="statement not covered" >  { id: "innovation", name: "Innovation", icon: &lt;FaChartLine /&gt; },</span>
+<span class="cstat-no" title="statement not covered" > { id: "all", name: "All News", icon: &lt;FaRegNewspaper /&gt; },</span>
+<span class="cstat-no" title="statement not covered" > { id: "ai", name: "AI", icon: &lt;FaRobot /&gt; },</span>
+<span class="cstat-no" title="statement not covered" > { id: "database", name: "Database", icon: &lt;FaDatabase /&gt; },</span>
+<span class="cstat-no" title="statement not covered" > { id: "renewable", name: "Renewable", icon: &lt;FaLeaf /&gt; },</span>
+<span class="cstat-no" title="statement not covered" > { id: "innovation", name: "Innovation", icon: &lt;FaChartLine /&gt; },</span>
 <span class="cstat-no" title="statement not covered" >];</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >const CONTENT_TYPES = [</span>
-<span class="cstat-no" title="statement not covered" >  { id: "all", name: "All" },</span>
-<span class="cstat-no" title="statement not covered" >  { id: "video", name: "Videos" },</span>
-<span class="cstat-no" title="statement not covered" >  { id: "blog", name: "Articles" },</span>
+<span class="cstat-no" title="statement not covered" > { id: "all", name: "All" },</span>
+<span class="cstat-no" title="statement not covered" > { id: "video", name: "Videos" },</span>
+<span class="cstat-no" title="statement not covered" > { id: "blog", name: "Articles" },</span>
 <span class="cstat-no" title="statement not covered" >];</span>
 &nbsp;
 // --------------------------- Hooks &amp; Helpers ---------------------------
 <span class="cstat-no" title="statement not covered" >const useDebounce = (value, delay) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const [debouncedValue, setDebouncedValue] = useState(value);</span>
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const t = setTimeout(() =&gt; setDebouncedValue(value), delay);</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; clearTimeout(t);</span>
-<span class="cstat-no" title="statement not covered" >  }, [value, delay]);</span>
-<span class="cstat-no" title="statement not covered" >  return debouncedValue;</span>
+<span class="cstat-no" title="statement not covered" > const [debouncedValue, setDebouncedValue] = useState(value);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const t = setTimeout(() =&gt; setDebouncedValue(value), delay);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; clearTimeout(t);</span>
+<span class="cstat-no" title="statement not covered" > }, [value, delay]);</span>
+<span class="cstat-no" title="statement not covered" > return debouncedValue;</span>
 <span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >const formatDate = (dateString) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  if (!dateString) return "N/A";</span>
-<span class="cstat-no" title="statement not covered" >  const t = Date.parse(dateString);</span>
-<span class="cstat-no" title="statement not covered" >  if (!Number.isFinite(t)) return "N/A";</span>
-<span class="cstat-no" title="statement not covered" >  const d = new Date(t);</span>
-<span class="cstat-no" title="statement not covered" >  return d.toLocaleDateString("en-US", {</span>
-<span class="cstat-no" title="statement not covered" >    month: "short",</span>
-<span class="cstat-no" title="statement not covered" >    day: "numeric",</span>
-<span class="cstat-no" title="statement not covered" >    year: "numeric",</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
+<span class="cstat-no" title="statement not covered" > if (!dateString) return "N/A";</span>
+<span class="cstat-no" title="statement not covered" > const t = Date.parse(dateString);</span>
+<span class="cstat-no" title="statement not covered" > if (!Number.isFinite(t)) return "N/A";</span>
+<span class="cstat-no" title="statement not covered" > const d = new Date(t);</span>
+<span class="cstat-no" title="statement not covered" > return d.toLocaleDateString("en-US", {</span>
+<span class="cstat-no" title="statement not covered" > month: "short",</span>
+<span class="cstat-no" title="statement not covered" > day: "numeric",</span>
+<span class="cstat-no" title="statement not covered" > year: "numeric",</span>
+<span class="cstat-no" title="statement not covered" > });</span>
 <span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >const getCategoryColor = (category) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const colors = {</span>
-<span class="cstat-no" title="statement not covered" >    ai: "from-purple-500 to-indigo-500",</span>
-<span class="cstat-no" title="statement not covered" >    database: "from-cyan-500 to-blue-500",</span>
-<span class="cstat-no" title="statement not covered" >    renewable: "from-green-500 to-emerald-500",</span>
-<span class="cstat-no" title="statement not covered" >    innovation: "from-orange-500 to-amber-500",</span>
-<span class="cstat-no" title="statement not covered" >    default: "from-gray-500 to-slate-500",</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
-<span class="cstat-no" title="statement not covered" >  return colors[category] || colors.default;</span>
+<span class="cstat-no" title="statement not covered" > const colors = {</span>
+<span class="cstat-no" title="statement not covered" > ai: "from-purple-500 to-indigo-500",</span>
+<span class="cstat-no" title="statement not covered" > database: "from-cyan-500 to-blue-500",</span>
+<span class="cstat-no" title="statement not covered" > renewable: "from-green-500 to-emerald-500",</span>
+<span class="cstat-no" title="statement not covered" > innovation: "from-orange-500 to-amber-500",</span>
+<span class="cstat-no" title="statement not covered" > default: "from-gray-500 to-slate-500",</span>
+<span class="cstat-no" title="statement not covered" > };</span>
+<span class="cstat-no" title="statement not covered" > return colors[category] || colors.default;</span>
 <span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >const getCategoryIcon = (categoryId) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const icons = {</span>
-<span class="cstat-no" title="statement not covered" >    ai: &lt;FaRobot className="text-purple-400" /&gt;,</span>
-<span class="cstat-no" title="statement not covered" >    database: &lt;FaDatabase className="text-cyan-400" /&gt;,</span>
-<span class="cstat-no" title="statement not covered" >    renewable: &lt;FaLeaf className="text-green-400" /&gt;,</span>
-<span class="cstat-no" title="statement not covered" >    innovation: &lt;FaChartLine className="text-orange-400" /&gt;,</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
-<span class="cstat-no" title="statement not covered" >  return icons[categoryId] || null;</span>
+<span class="cstat-no" title="statement not covered" > const icons = {</span>
+<span class="cstat-no" title="statement not covered" > ai: &lt;FaRobot className="text-purple-400" /&gt;,</span>
+<span class="cstat-no" title="statement not covered" > database: &lt;FaDatabase className="text-cyan-400" /&gt;,</span>
+<span class="cstat-no" title="statement not covered" > renewable: &lt;FaLeaf className="text-green-400" /&gt;,</span>
+<span class="cstat-no" title="statement not covered" > innovation: &lt;FaChartLine className="text-orange-400" /&gt;,</span>
+<span class="cstat-no" title="statement not covered" > };</span>
+<span class="cstat-no" title="statement not covered" > return icons[categoryId] || null;</span>
 <span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
 // --------------------------- Inline Video Embed (lazy) ---------------------------
 <span class="cstat-no" title="statement not covered" >function VideoEmbed({ src, title }) {</span>
-<span class="cstat-no" title="statement not covered" >  const [active, setActive] = useState(false);</span>
-<span class="cstat-no" title="statement not covered" >  const [visible, setVisible] = useState(false);</span>
-<span class="cstat-no" title="statement not covered" >  const boxRef = useRef(null);</span>
+<span class="cstat-no" title="statement not covered" > const [active, setActive] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const [visible, setVisible] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const boxRef = useRef(null);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (!boxRef.current || active) return;</span>
-<span class="cstat-no" title="statement not covered" >    const io = new IntersectionObserver(</span>
-<span class="cstat-no" title="statement not covered" >      ([entry]) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        if (entry.isIntersecting) {</span>
-<span class="cstat-no" title="statement not covered" >          setVisible(true);</span>
-<span class="cstat-no" title="statement not covered" >          io.disconnect();</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      },</span>
-<span class="cstat-no" title="statement not covered" >      { rootMargin: "200px" },</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >    io.observe(boxRef.current);</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; io.disconnect();</span>
-<span class="cstat-no" title="statement not covered" >  }, [active]);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (!boxRef.current || active) return;</span>
+<span class="cstat-no" title="statement not covered" > const io = new IntersectionObserver(</span>
+<span class="cstat-no" title="statement not covered" > ([entry]) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (entry.isIntersecting) {</span>
+<span class="cstat-no" title="statement not covered" > setVisible(true);</span>
+<span class="cstat-no" title="statement not covered" > io.disconnect();</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > { rootMargin: "200px" },</span>
+<span class="cstat-no" title="statement not covered" > );</span>
+<span class="cstat-no" title="statement not covered" > io.observe(boxRef.current);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; io.disconnect();</span>
+<span class="cstat-no" title="statement not covered" > }, [active]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const start = () =&gt; setActive(true);</span>
+<span class="cstat-no" title="statement not covered" > const start = () =&gt; setActive(true);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div</span>
-<span class="cstat-no" title="statement not covered" >      ref={boxRef}</span>
-<span class="cstat-no" title="statement not covered" >      className="relative pt-[56.25%] bg-black overflow-hidden rounded-t-xl"</span>
-    &gt;
-<span class="cstat-no" title="statement not covered" >      {(active || visible) &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;iframe</span>
-<span class="cstat-no" title="statement not covered" >          title={title}</span>
-<span class="cstat-no" title="statement not covered" >          src={active ? src : undefined}</span>
-<span class="cstat-no" title="statement not covered" >          loading="lazy"</span>
-<span class="cstat-no" title="statement not covered" >          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"</span>
-<span class="cstat-no" title="statement not covered" >          allowFullScreen</span>
-<span class="cstat-no" title="statement not covered" >          className="absolute inset-0 w-full h-full"</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
-      )}
-<span class="cstat-no" title="statement not covered" >      {!active &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;button</span>
-<span class="cstat-no" title="statement not covered" >          onClick={start}</span>
-<span class="cstat-no" title="statement not covered" >          className="absolute inset-0 w-full h-full flex items-center justify-center text-white/90</span>
-                     bg-gradient-to-b from-black/40 to-black/50"
-<span class="cstat-no" title="statement not covered" >          aria-label={`Play video: ${title}`}</span>
-        &gt;
-<span class="cstat-no" title="statement not covered" >          &lt;div className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 backdrop-blur"&gt;</span>
-            ▶ Play
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/button&gt;</span>
-      )}
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > ref={boxRef}</span>
+<span class="cstat-no" title="statement not covered" > className="relative pt-[56.25%] bg-black overflow-hidden rounded-t-xl"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {(active || visible) &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;iframe</span>
+<span class="cstat-no" title="statement not covered" > title={title}</span>
+<span class="cstat-no" title="statement not covered" > src={active ? src : undefined}</span>
+<span class="cstat-no" title="statement not covered" > loading="lazy"</span>
+<span class="cstat-no" title="statement not covered" > allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"</span>
+<span class="cstat-no" title="statement not covered" > allowFullScreen</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 w-full h-full"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > {!active &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={start}</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 w-full h-full flex items-center justify-center text-white/90</span>
+ bg-gradient-to-b from-black/40 to-black/50"
+<span class="cstat-no" title="statement not covered" > aria-label={`Play video: ${title}`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;div className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 "&gt;</span>
+ ▶ Play
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 // --------------------------- Content Card ---------------------------
 <span class="cstat-no" title="statement not covered" >const ContentCard = React.memo(function ContentCard({</span>
-<span class="cstat-no" title="statement not covered" >  article,</span>
-<span class="cstat-no" title="statement not covered" >  categories = [],</span>
-<span class="cstat-no" title="statement not covered" >  layout = "grid",</span>
+<span class="cstat-no" title="statement not covered" > article,</span>
+<span class="cstat-no" title="statement not covered" > categories = [],</span>
+<span class="cstat-no" title="statement not covered" > layout = "grid",</span>
 <span class="cstat-no" title="statement not covered" >}) {</span>
-<span class="cstat-no" title="statement not covered" >  const [imageError, setImageError] = useState(false);</span>
-<span class="cstat-no" title="statement not covered" >  const [imageLoaded, setImageLoaded] = useState(false);</span>
-<span class="cstat-no" title="statement not covered" >  const isMobile = useMediaQuery({ maxWidth: 767 });</span>
+<span class="cstat-no" title="statement not covered" > const [imageError, setImageError] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const [imageLoaded, setImageLoaded] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const isMobile = useMediaQuery({ maxWidth: 767 });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const categoryMap = useMemo(</span>
-<span class="cstat-no" title="statement not covered" >    () =&gt; Object.fromEntries(categories.map((c) =&gt; [c.id, c.name])),</span>
-<span class="cstat-no" title="statement not covered" >    [categories],</span>
-<span class="cstat-no" title="statement not covered" >  );</span>
+<span class="cstat-no" title="statement not covered" > const categoryMap = useMemo(</span>
+<span class="cstat-no" title="statement not covered" > () =&gt; Object.fromEntries(categories.map((c) =&gt; [c.id, c.name])),</span>
+<span class="cstat-no" title="statement not covered" > [categories],</span>
+<span class="cstat-no" title="statement not covered" > );</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >      whileHover={{ y: layout === "carousel" ? 0 : -5 }}</span>
-<span class="cstat-no" title="statement not covered" >      whileTap={{ scale: 0.98 }}</span>
-<span class="cstat-no" title="statement not covered" >      transition={{ type: "spring", stiffness: 300 }}</span>
-<span class="cstat-no" title="statement not covered" >      className={`relative bg-white/5 dark:bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${</span>
-<span class="cstat-no" title="statement not covered" >        layout === "carousel" ? (isMobile ? "w-[85vw]" : "w-[360px]") : "w-full"</span>
-<span class="cstat-no" title="statement not covered" >      } h-[480px]`}</span>
-    &gt;
-      {/* Video */}
-<span class="cstat-no" title="statement not covered" >      {article.type === "video" &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;VideoEmbed src={article.url} title={`Video: ${article.title}`} /&gt;</span>
-      )}
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > whileHover={{ y: layout === "carousel" ? 0 : -5 }}</span>
+<span class="cstat-no" title="statement not covered" > whileTap={{ scale: 0.98 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ type: "spring", stiffness: 300 }}</span>
+<span class="cstat-no" title="statement not covered" > className={`relative dark:bg-white/10 border rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${</span>
+<span class="cstat-no" title="statement not covered" > layout === "carousel" ? (isMobile ? "w-[85vw]" : "w-[360px]") : "w-full"</span>
+<span class="cstat-no" title="statement not covered" > } ${isMobile ? "h-[420px]" : "h-[480px]"}`}</span>
+ &gt;
+ {/* Video */}
+<span class="cstat-no" title="statement not covered" > {article.type === "video" &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;VideoEmbed src={article.url} title={`Video: ${article.title}`} /&gt;</span>
+ )}
 &nbsp;
-      {/* Image for article/blog */}
-<span class="cstat-no" title="statement not covered" >      {(article.type === "article" || article.type === "blog") &amp;&amp;</span>
-<span class="cstat-no" title="statement not covered" >        article.imageUrl &amp;&amp;</span>
-<span class="cstat-no" title="statement not covered" >        !imageError &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="h-48 overflow-hidden bg-black/40 relative"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            {!imageLoaded &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >              &lt;div className="absolute inset-0 flex items-center justify-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;FaSpinner className="animate-spin text-cyan-400 text-xl" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/div&gt;</span>
-            )}
-<span class="cstat-no" title="statement not covered" >            &lt;img</span>
-<span class="cstat-no" title="statement not covered" >              loading="lazy"</span>
-<span class="cstat-no" title="statement not covered" >              decoding="async"</span>
-<span class="cstat-no" title="statement not covered" >              width={640}</span>
-<span class="cstat-no" title="statement not covered" >              height={192}</span>
-<span class="cstat-no" title="statement not covered" >              src={article.imageUrl}</span>
-<span class="cstat-no" title="statement not covered" >              srcSet={`${article.imageUrl} 640w`}</span>
-<span class="cstat-no" title="statement not covered" >              sizes="(max-width: 640px) 90vw, 360px"</span>
-<span class="cstat-no" title="statement not covered" >              alt={article.title || "Article image"}</span>
-<span class="cstat-no" title="statement not covered" >              className={`w-full h-full object-cover transition-transform duration-300 hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}</span>
-<span class="cstat-no" title="statement not covered" >              onError={() =&gt; setImageError(true)}</span>
-<span class="cstat-no" title="statement not covered" >              onLoad={() =&gt; setImageLoaded(true)}</span>
-<span class="cstat-no" title="statement not covered" >            /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-        )}
+ {/* Image for article/blog */}
+<span class="cstat-no" title="statement not covered" > {(article.type === "article" || article.type === "blog") &amp;&amp;</span>
+<span class="cstat-no" title="statement not covered" > article.imageUrl &amp;&amp;</span>
+<span class="cstat-no" title="statement not covered" > !imageError &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="h-48 overflow-hidden bg-black/40 relative"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {!imageLoaded &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="absolute inset-0 flex items-center justify-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;FaSpinner className="animate-spin text-cyan-400 text-xl" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;img</span>
+<span class="cstat-no" title="statement not covered" > loading="lazy"</span>
+<span class="cstat-no" title="statement not covered" > decoding="async"</span>
+<span class="cstat-no" title="statement not covered" > width={640}</span>
+<span class="cstat-no" title="statement not covered" > height={192}</span>
+<span class="cstat-no" title="statement not covered" > src={article.imageUrl}</span>
+<span class="cstat-no" title="statement not covered" > srcSet={`${article.imageUrl} 640w`}</span>
+<span class="cstat-no" title="statement not covered" > sizes="(max-width: 640px) 90vw, 360px"</span>
+<span class="cstat-no" title="statement not covered" > alt={article.title || "Article image"}</span>
+<span class="cstat-no" title="statement not covered" > className={`w-full h-full object-cover transition-transform duration-300 hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}</span>
+<span class="cstat-no" title="statement not covered" > onError={() =&gt; setImageError(true)}</span>
+<span class="cstat-no" title="statement not covered" > onLoad={() =&gt; setImageLoaded(true)}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ )}
 &nbsp;
-      {/* Fallback box */}
-<span class="cstat-no" title="statement not covered" >      {(article.type === "article" || article.type === "blog") &amp;&amp;</span>
-<span class="cstat-no" title="statement not covered" >        (!article.imageUrl || imageError) &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="h-48 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 flex items-center justify-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;div className="text-4xl text-cyan-500 opacity-30"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              {article.type === "blog" ? &lt;FaNewspaper /&gt; : &lt;FaRegNewspaper /&gt;}</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-        )}
+ {/* Fallback box */}
+<span class="cstat-no" title="statement not covered" > {(article.type === "article" || article.type === "blog") &amp;&amp;</span>
+<span class="cstat-no" title="statement not covered" > (!article.imageUrl || imageError) &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="h-48 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 flex items-center justify-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="text-4xl text-cyan-500 opacity-30"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {article.type === "blog" ? &lt;FaNewspaper /&gt; : &lt;FaRegNewspaper /&gt;}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ )}
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;div className="p-5 flex-grow flex flex-col"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="flex justify-between items-start mb-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="flex items-center space-x-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;span</span>
-<span class="cstat-no" title="statement not covered" >              className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ring-1 ring-white/10 ${getCategoryColor(article.category)}`}</span>
-            &gt;
-<span class="cstat-no" title="statement not covered" >              {categoryMap[article.category] || article.category}</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;span className="text-xs text-gray-600 dark:text-gray-400 flex items-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              {article.type === "video" ? (</span>
-<span class="cstat-no" title="statement not covered" >                &lt;FaVideo className="mr-1" /&gt;</span>
-              ) : (
-<span class="cstat-no" title="statement not covered" >                &lt;FaNewspaper className="mr-1" /&gt;</span>
-              )}
-<span class="cstat-no" title="statement not covered" >              {article.type}</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;span className="text-xs text-gray-600 dark:text-gray-400 flex items-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;FaRegClock className="mr-1" /&gt; {formatDate(article.date)}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="p-5 flex-grow flex flex-col"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex justify-between items-start mb-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex items-center space-x-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span</span>
+<span class="cstat-no" title="statement not covered" > className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ring-1 ring-white/10 ${getCategoryColor(article.category)}`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {categoryMap[article.category] || article.category}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="text-xs text-gray-600 dark:text-gray-400 flex items-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {article.type === "video" ? (</span>
+<span class="cstat-no" title="statement not covered" > &lt;FaVideo className="mr-1" /&gt;</span>
+ ) : (
+<span class="cstat-no" title="statement not covered" > &lt;FaNewspaper className="mr-1" /&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > {article.type}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="text-xs text-gray-600 dark:text-gray-400 flex items-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;FaRegClock className="mr-1" /&gt; {formatDate(article.date)}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        &lt;h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-gray-900 dark:text-white line-clamp-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {article.title}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/h3&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-gray-900 dark:text-white line-clamp-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {article.title}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/h3&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        {article.description &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;p className="text-gray-700 dark:text-gray-300 mb-3 line-clamp-2 text-sm"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            {article.description}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/p&gt;</span>
-        )}
+<span class="cstat-no" title="statement not covered" > {article.description &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-gray-700 dark:text-gray-300 mb-3 line-clamp-2 text-sm"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {article.description}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+ )}
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        &lt;div className="flex justify-between items-center mt-auto"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;span className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-white/5 border border-white/10 px-2 py-1 rounded"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            {article.source || "Unknown source"}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;a</span>
-<span class="cstat-no" title="statement not covered" >            href={article.url}</span>
-<span class="cstat-no" title="statement not covered" >            target="_blank"</span>
-<span class="cstat-no" title="statement not covered" >            rel="noopener noreferrer"</span>
-<span class="cstat-no" title="statement not covered" >            className="text-cyan-500 hover:text-cyan-400 text-sm font-medium flex items-center group"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            {article.type === "video" ? "Watch" : "Read"}</span>
-<span class="cstat-no" title="statement not covered" >            &lt;FaArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/a&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/motion.div&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex justify-between items-center mt-auto"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-white/5 border border-white/10 px-2 py-1 rounded"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {article.source || "Unknown source"}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;a</span>
+<span class="cstat-no" title="statement not covered" > href={article.url}</span>
+<span class="cstat-no" title="statement not covered" > target="_blank"</span>
+<span class="cstat-no" title="statement not covered" > rel="noopener noreferrer"</span>
+<span class="cstat-no" title="statement not covered" > className="text-cyan-500 hover:text-cyan-400 text-sm font-medium flex items-center group"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {article.type === "video" ? "Watch" : "Read"}</span>
+<span class="cstat-no" title="statement not covered" > &lt;FaArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/a&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >});</span>
 &nbsp;
 // --------------------------- Carousel ---------------------------
 <span class="cstat-no" title="statement not covered" >const ContentCarousel = React.memo(function ContentCarousel({</span>
-<span class="cstat-no" title="statement not covered" >  items,</span>
-<span class="cstat-no" title="statement not covered" >  title,</span>
-<span class="cstat-no" title="statement not covered" >  onViewAll,</span>
-<span class="cstat-no" title="statement not covered" >  type,</span>
-<span class="cstat-no" title="statement not covered" >  categories,</span>
+<span class="cstat-no" title="statement not covered" > items,</span>
+<span class="cstat-no" title="statement not covered" > title,</span>
+<span class="cstat-no" title="statement not covered" > onViewAll,</span>
+<span class="cstat-no" title="statement not covered" > type,</span>
+<span class="cstat-no" title="statement not covered" > categories,</span>
 <span class="cstat-no" title="statement not covered" >}) {</span>
-<span class="cstat-no" title="statement not covered" >  const isMobile = useMediaQuery({ maxWidth: 767 });</span>
-<span class="cstat-no" title="statement not covered" >  const carouselRef = useRef(null);</span>
+<span class="cstat-no" title="statement not covered" > const isMobile = useMediaQuery({ maxWidth: 767 });</span>
+<span class="cstat-no" title="statement not covered" > const carouselRef = useRef(null);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const scrollLeft = useCallback(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (carouselRef.current) {</span>
-<span class="cstat-no" title="statement not covered" >      const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;</span>
-<span class="cstat-no" title="statement not covered" >      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }, [isMobile]);</span>
+<span class="cstat-no" title="statement not covered" > const scrollLeft = useCallback(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (carouselRef.current) {</span>
+<span class="cstat-no" title="statement not covered" > const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;</span>
+<span class="cstat-no" title="statement not covered" > carouselRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > }, [isMobile]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const scrollRight = useCallback(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (carouselRef.current) {</span>
-<span class="cstat-no" title="statement not covered" >      const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;</span>
-<span class="cstat-no" title="statement not covered" >      carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }, [isMobile]);</span>
+<span class="cstat-no" title="statement not covered" > const scrollRight = useCallback(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (carouselRef.current) {</span>
+<span class="cstat-no" title="statement not covered" > const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;</span>
+<span class="cstat-no" title="statement not covered" > carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > }, [isMobile]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div className="mb-12 relative group"&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="flex justify-between items-center mb-5"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {title}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/h2&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {onViewAll &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;button</span>
-<span class="cstat-no" title="statement not covered" >            onClick={onViewAll}</span>
-<span class="cstat-no" title="statement not covered" >            className="text-cyan-500 hover:text-cyan-400 flex items-center text-sm font-medium active:scale-95 transition-transform"</span>
-<span class="cstat-no" title="statement not covered" >          &gt;</span>
-<span class="cstat-no" title="statement not covered" >            View all &lt;FaArrowRight className="ml-1 h-3 w-3" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/button&gt;</span>
-        )}
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mb-12 relative group"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex justify-between items-center mb-5"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {title}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/h2&gt;</span>
+<span class="cstat-no" title="statement not covered" > {onViewAll &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={onViewAll}</span>
+<span class="cstat-no" title="statement not covered" > className="text-cyan-500 hover:text-cyan-400 flex items-center text-sm font-medium active:scale-95 transition-transform"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+<span class="cstat-no" title="statement not covered" > View all &lt;FaArrowRight className="ml-1 h-3 w-3" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;div className="relative"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div</span>
-<span class="cstat-no" title="statement not covered" >          ref={carouselRef}</span>
-<span class="cstat-no" title="statement not covered" >          className="flex space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory</span>
-                     [scroll-snap-type:x_proximity] [scroll-behavior:smooth] [-webkit-overflow-scrolling:touch]"
-        &gt;
-<span class="cstat-no" title="statement not covered" >          {items.map((item, index) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;div</span>
-<span class="cstat-no" title="statement not covered" >              key={`${type}-${item.url || item.id || index}-${index}`}</span>
-<span class="cstat-no" title="statement not covered" >              className="flex-shrink-0 snap-start w-[85vw] sm:w-[360px] h-[480px]"</span>
-            &gt;
-<span class="cstat-no" title="statement not covered" >              &lt;ContentCard</span>
-<span class="cstat-no" title="statement not covered" >                article={item}</span>
-<span class="cstat-no" title="statement not covered" >                layout="carousel"</span>
-<span class="cstat-no" title="statement not covered" >                categories={categories}</span>
-<span class="cstat-no" title="statement not covered" >              /&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          ))}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="relative"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > ref={carouselRef}</span>
+<span class="cstat-no" title="statement not covered" > className="flex space-x-4 sm:space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory</span>
+ [scroll-snap-type:x_proximity] [scroll-behavior:smooth] [-webkit-overflow-scrolling:touch]"
+ &gt;
+<span class="cstat-no" title="statement not covered" > {items.map((item, index) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > key={`${type}-${item.url || item.id || index}-${index}`}</span>
+<span class="cstat-no" title="statement not covered" > className="flex-shrink-0 snap-start w-[85vw] sm:w-[360px] h-[480px]"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;ContentCard</span>
+<span class="cstat-no" title="statement not covered" > article={item}</span>
+<span class="cstat-no" title="statement not covered" > layout="carousel"</span>
+<span class="cstat-no" title="statement not covered" > categories={categories}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        {items.length &gt; (isMobile ? 1 : 3) &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;button</span>
-<span class="cstat-no" title="statement not covered" >              onClick={scrollLeft}</span>
-<span class="cstat-no" title="statement not covered" >              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${</span>
-<span class="cstat-no" title="statement not covered" >                isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"</span>
-<span class="cstat-no" title="statement not covered" >              } transition-opacity active:scale-90 backdrop-blur-sm`}</span>
-<span class="cstat-no" title="statement not covered" >              aria-label="Scroll left"</span>
-            &gt;
-<span class="cstat-no" title="statement not covered" >              &lt;FaChevronLeft className="text-white text-lg" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;button</span>
-<span class="cstat-no" title="statement not covered" >              onClick={scrollRight}</span>
-<span class="cstat-no" title="statement not covered" >              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${</span>
-<span class="cstat-no" title="statement not covered" >                isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"</span>
-<span class="cstat-no" title="statement not covered" >              } transition-opacity active:scale-90 backdrop-blur-sm`}</span>
-<span class="cstat-no" title="statement not covered" >              aria-label="Scroll right"</span>
-            &gt;
-<span class="cstat-no" title="statement not covered" >              &lt;FaChevronRight className="text-white text-lg" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/&gt;</span>
-        )}
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > {items.length &gt; (isMobile ? 1 : 3) &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={scrollLeft}</span>
+<span class="cstat-no" title="statement not covered" > className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${</span>
+<span class="cstat-no" title="statement not covered" > isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"</span>
+<span class="cstat-no" title="statement not covered" > } transition-opacity active:scale-90 `}</span>
+<span class="cstat-no" title="statement not covered" > aria-label="Scroll left"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;FaChevronLeft className="text-white text-lg" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={scrollRight}</span>
+<span class="cstat-no" title="statement not covered" > className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${</span>
+<span class="cstat-no" title="statement not covered" > isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"</span>
+<span class="cstat-no" title="statement not covered" > } transition-opacity active:scale-90 `}</span>
+<span class="cstat-no" title="statement not covered" > aria-label="Scroll right"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;FaChevronRight className="text-white text-lg" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >});</span>
 &nbsp;
 // --------------------------- Category Section ---------------------------
 <span class="cstat-no" title="statement not covered" >const CategorySection = React.memo(function CategorySection({</span>
-<span class="cstat-no" title="statement not covered" >  category,</span>
-<span class="cstat-no" title="statement not covered" >  articles,</span>
-<span class="cstat-no" title="statement not covered" >  categories,</span>
-<span class="cstat-no" title="statement not covered" >  onViewAll,</span>
-<span class="cstat-no" title="statement not covered" >  activeContentType,</span>
-<span class="cstat-no" title="statement not covered" >  setActiveContentType,</span>
+<span class="cstat-no" title="statement not covered" > category,</span>
+<span class="cstat-no" title="statement not covered" > articles,</span>
+<span class="cstat-no" title="statement not covered" > categories,</span>
+<span class="cstat-no" title="statement not covered" > onViewAll,</span>
+<span class="cstat-no" title="statement not covered" > activeContentType,</span>
+<span class="cstat-no" title="statement not covered" > setActiveContentType,</span>
 <span class="cstat-no" title="statement not covered" >}) {</span>
-<span class="cstat-no" title="statement not covered" >  const [filteredArticles, videos, blogs] = useMemo(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const filtered = articles.filter((a) =&gt; a.category === category.id);</span>
-<span class="cstat-no" title="statement not covered" >    return [</span>
-<span class="cstat-no" title="statement not covered" >      filtered,</span>
-<span class="cstat-no" title="statement not covered" >      filtered.filter((a) =&gt; a.type === "video"),</span>
-<span class="cstat-no" title="statement not covered" >      filtered.filter((a) =&gt; a.type === "blog" || a.type === "article"),</span>
-<span class="cstat-no" title="statement not covered" >    ];</span>
-<span class="cstat-no" title="statement not covered" >  }, [articles, category.id]);</span>
+<span class="cstat-no" title="statement not covered" > const [filteredArticles, videos, blogs] = useMemo(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const filtered = articles.filter((a) =&gt; a.category === category.id);</span>
+<span class="cstat-no" title="statement not covered" > return [</span>
+<span class="cstat-no" title="statement not covered" > filtered,</span>
+<span class="cstat-no" title="statement not covered" > filtered.filter((a) =&gt; a.type === "video"),</span>
+<span class="cstat-no" title="statement not covered" > filtered.filter((a) =&gt; a.type === "blog" || a.type === "article"),</span>
+<span class="cstat-no" title="statement not covered" > ];</span>
+<span class="cstat-no" title="statement not covered" > }, [articles, category.id]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const VISIBLE_MAX = 21; // defensive cap for slower devices</span>
+<span class="cstat-no" title="statement not covered" > const VISIBLE_MAX = 21; // defensive cap for slower devices</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;section id={category.id} className="mb-16 scroll-mt-16"&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="flex justify-between items-center mb-5"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {getCategoryIcon(category.id) &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;span className="mr-3"&gt;{getCategoryIcon(category.id)}&lt;/span&gt;</span>
-          )}
-<span class="cstat-no" title="statement not covered" >          &lt;span</span>
-<span class="cstat-no" title="statement not covered" >            className={`bg-gradient-to-r bg-clip-text text-transparent ${getCategoryColor(category.id)}`}</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            {category.name}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/h2&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {onViewAll &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;button</span>
-<span class="cstat-no" title="statement not covered" >            onClick={() =&gt; onViewAll(category.id)}</span>
-<span class="cstat-no" title="statement not covered" >            className="text-cyan-500 hover:text-cyan-400 flex items-center text-sm font-medium active:scale-95 transition-transform"</span>
-<span class="cstat-no" title="statement not covered" >          &gt;</span>
-<span class="cstat-no" title="statement not covered" >            View all &lt;FaArrowRight className="ml-1 h-3 w-3" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/button&gt;</span>
-        )}
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;section id={category.id} className="mb-16 scroll-mt-16"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex justify-between items-center mb-5"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {getCategoryIcon(category.id) &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="mr-3"&gt;{getCategoryIcon(category.id)}&lt;/span&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;span</span>
+<span class="cstat-no" title="statement not covered" > className={`bg-gradient-to-r bg-clip-text text-transparent ${getCategoryColor(category.id)}`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {category.name}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/h2&gt;</span>
+<span class="cstat-no" title="statement not covered" > {onViewAll &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt; onViewAll(category.id)}</span>
+<span class="cstat-no" title="statement not covered" > className="text-cyan-500 hover:text-cyan-400 flex items-center text-sm font-medium active:scale-95 transition-transform"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+<span class="cstat-no" title="statement not covered" > View all &lt;FaArrowRight className="ml-1 h-3 w-3" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;div className="mb-6 flex space-x-1 bg-white/5 rounded-lg p-1 border border-white/10"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {CONTENT_TYPES.map((type) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;button</span>
-<span class="cstat-no" title="statement not covered" >            key={type.id}</span>
-<span class="cstat-no" title="statement not covered" >            onClick={() =&gt; setActiveContentType(type.id)}</span>
-<span class="cstat-no" title="statement not covered" >            aria-pressed={activeContentType === type.id}</span>
-<span class="cstat-no" title="statement not covered" >            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center active:scale-95 ${</span>
-<span class="cstat-no" title="statement not covered" >              activeContentType === type.id</span>
-<span class="cstat-no" title="statement not covered" >                ? "bg-white/10 text-gray-900 dark:text-white shadow"</span>
-<span class="cstat-no" title="statement not covered" >                : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5"</span>
-<span class="cstat-no" title="statement not covered" >            }`}</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            {type.name}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >        ))}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mb-6 flex space-x-1 bg-white/5 rounded-lg p-1 border border-white/10"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {CONTENT_TYPES.map((type) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > key={type.id}</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt; setActiveContentType(type.id)}</span>
+<span class="cstat-no" title="statement not covered" > aria-pressed={activeContentType === type.id}</span>
+<span class="cstat-no" title="statement not covered" > className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center active:scale-95 ${</span>
+<span class="cstat-no" title="statement not covered" > activeContentType === type.id</span>
+<span class="cstat-no" title="statement not covered" > ? "bg-white/10 text-gray-900 dark:text-white shadow"</span>
+<span class="cstat-no" title="statement not covered" > : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5"</span>
+<span class="cstat-no" title="statement not covered" > }`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {type.name}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      {activeContentType === "all" &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {videos.length &gt; 0 &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;ContentCarousel</span>
-<span class="cstat-no" title="statement not covered" >              items={videos}</span>
-<span class="cstat-no" title="statement not covered" >              title="Featured Videos"</span>
-<span class="cstat-no" title="statement not covered" >              type="video"</span>
-<span class="cstat-no" title="statement not covered" >              categories={categories}</span>
-<span class="cstat-no" title="statement not covered" >            /&gt;</span>
-          )}
-<span class="cstat-no" title="statement not covered" >          {blogs.length &gt; 0 &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;ContentCarousel</span>
-<span class="cstat-no" title="statement not covered" >              items={blogs}</span>
-<span class="cstat-no" title="statement not covered" >              title="Latest Articles"</span>
-<span class="cstat-no" title="statement not covered" >              type="blog"</span>
-<span class="cstat-no" title="statement not covered" >              categories={categories}</span>
-<span class="cstat-no" title="statement not covered" >            /&gt;</span>
-          )}
-<span class="cstat-no" title="statement not covered" >          {filteredArticles.length === 0 &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;div className="text-center py-12 text-gray-600 dark:text-gray-400"&gt;</span>
-              No content found in this category
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-          )}
-<span class="cstat-no" title="statement not covered" >        &lt;/&gt;</span>
-      )}
+<span class="cstat-no" title="statement not covered" > {activeContentType === "all" &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;&gt;</span>
+<span class="cstat-no" title="statement not covered" > {videos.length &gt; 0 &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;ContentCarousel</span>
+<span class="cstat-no" title="statement not covered" > items={videos}</span>
+<span class="cstat-no" title="statement not covered" > title="Featured Videos"</span>
+<span class="cstat-no" title="statement not covered" > type="video"</span>
+<span class="cstat-no" title="statement not covered" > categories={categories}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > {blogs.length &gt; 0 &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;ContentCarousel</span>
+<span class="cstat-no" title="statement not covered" > items={blogs}</span>
+<span class="cstat-no" title="statement not covered" > title="Latest Articles"</span>
+<span class="cstat-no" title="statement not covered" > type="blog"</span>
+<span class="cstat-no" title="statement not covered" > categories={categories}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > {filteredArticles.length === 0 &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="text-center py-12 text-gray-600 dark:text-gray-400"&gt;</span>
+ No content found in this category
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/&gt;</span>
+ )}
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      {activeContentType === "video" &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {videos.length &gt; 0 ? (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >              initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >              animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >              transition={{ staggerChildren: 0.06 }}</span>
-<span class="cstat-no" title="statement not covered" >              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"</span>
-            &gt;
-<span class="cstat-no" title="statement not covered" >              {videos.slice(0, VISIBLE_MAX).map((article) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div</span>
-<span class="cstat-no" title="statement not covered" >                  key={`video-${article.url || article.id}`}</span>
-<span class="cstat-no" title="statement not covered" >                  className="h-full flex"</span>
-                &gt;
-<span class="cstat-no" title="statement not covered" >                  &lt;ContentCard article={article} categories={categories} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              ))}</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/motion.div&gt;</span>
-          ) : (
-<span class="cstat-no" title="statement not covered" >            &lt;div className="text-center py-12 text-gray-600 dark:text-gray-400"&gt;</span>
-              No videos found in this category
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-          )}
-<span class="cstat-no" title="statement not covered" >        &lt;/&gt;</span>
-      )}
+<span class="cstat-no" title="statement not covered" > {activeContentType === "video" &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;&gt;</span>
+<span class="cstat-no" title="statement not covered" > {videos.length &gt; 0 ? (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ staggerChildren: 0.06 }}</span>
+<span class="cstat-no" title="statement not covered" > className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {videos.slice(0, VISIBLE_MAX).map((article) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > key={`video-${article.url || article.id}`}</span>
+<span class="cstat-no" title="statement not covered" > className="h-full flex"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;ContentCard article={article} categories={categories} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+ ) : (
+<span class="cstat-no" title="statement not covered" > &lt;div className="text-center py-12 text-gray-600 dark:text-gray-400"&gt;</span>
+ No videos found in this category
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/&gt;</span>
+ )}
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      {activeContentType === "blog" &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {blogs.length &gt; 0 ? (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >              initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >              animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >              transition={{ staggerChildren: 0.06 }}</span>
-<span class="cstat-no" title="statement not covered" >              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"</span>
-            &gt;
-<span class="cstat-no" title="statement not covered" >              {blogs.slice(0, VISIBLE_MAX).map((article) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div</span>
-<span class="cstat-no" title="statement not covered" >                  key={`blog-${article.url || article.id}`}</span>
-<span class="cstat-no" title="statement not covered" >                  className="h-full flex"</span>
-                &gt;
-<span class="cstat-no" title="statement not covered" >                  &lt;ContentCard article={article} categories={categories} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              ))}</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/motion.div&gt;</span>
-          ) : (
-<span class="cstat-no" title="statement not covered" >            &lt;div className="text-center py-12 text-gray-600 dark:text-gray-400"&gt;</span>
-              No articles found in this category
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-          )}
-<span class="cstat-no" title="statement not covered" >        &lt;/&gt;</span>
-      )}
-<span class="cstat-no" title="statement not covered" >    &lt;/section&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > {activeContentType === "blog" &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;&gt;</span>
+<span class="cstat-no" title="statement not covered" > {blogs.length &gt; 0 ? (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ staggerChildren: 0.06 }}</span>
+<span class="cstat-no" title="statement not covered" > className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {blogs.slice(0, VISIBLE_MAX).map((article) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > key={`blog-${article.url || article.id}`}</span>
+<span class="cstat-no" title="statement not covered" > className="h-full flex"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;ContentCard article={article} categories={categories} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+ ) : (
+<span class="cstat-no" title="statement not covered" > &lt;div className="text-center py-12 text-gray-600 dark:text-gray-400"&gt;</span>
+ No articles found in this category
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/section&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >});</span>
 &nbsp;
 // --------------------------- Page ---------------------------
 <span class="cstat-no" title="statement not covered" >export default function NewsPage() {</span>
-<span class="cstat-no" title="statement not covered" >  const [articles, setArticles] = useState([]);</span>
-<span class="cstat-no" title="statement not covered" >  const [loading, setLoading] = useState(true); // kept for logic (e.g., back-to-top visibility)</span>
-<span class="cstat-no" title="statement not covered" >  const [activeCategory, setActiveCategory] = useState("all");</span>
-<span class="cstat-no" title="statement not covered" >  const [activeContentType, setActiveContentType] = useState("all");</span>
-<span class="cstat-no" title="statement not covered" >  const [searchTerm, setSearchTerm] = useState("");</span>
-<span class="cstat-no" title="statement not covered" >  const debouncedSearchTerm = useDebounce(searchTerm, 300);</span>
-<span class="cstat-no" title="statement not covered" >  const [errorCount, setErrorCount] = useState(0);</span>
-<span class="cstat-no" title="statement not covered" >  const [showMobileMenu, setShowMobileMenu] = useState(false);</span>
-<span class="cstat-no" title="statement not covered" >  const isMobile = useMediaQuery({ maxWidth: 767 });</span>
+<span class="cstat-no" title="statement not covered" > const [articles, setArticles] = useState([]);</span>
+<span class="cstat-no" title="statement not covered" > const [loading, setLoading] = useState(true); // kept for logic (e.g., back-to-top visibility)</span>
+<span class="cstat-no" title="statement not covered" > const [activeCategory, setActiveCategory] = useState("all");</span>
+<span class="cstat-no" title="statement not covered" > const [activeContentType, setActiveContentType] = useState("all");</span>
+<span class="cstat-no" title="statement not covered" > const [searchTerm, setSearchTerm] = useState("");</span>
+<span class="cstat-no" title="statement not covered" > const debouncedSearchTerm = useDebounce(searchTerm, 300);</span>
+<span class="cstat-no" title="statement not covered" > const [errorCount, setErrorCount] = useState(0);</span>
+<span class="cstat-no" title="statement not covered" > const [showMobileMenu, setShowMobileMenu] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const isMobile = useMediaQuery({ maxWidth: 767 });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const ac = new AbortController();</span>
-<span class="cstat-no" title="statement not covered" >    const key = "synexiai:news:v1";</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const ac = new AbortController();</span>
+<span class="cstat-no" title="statement not covered" > const key = "synexiai:news:v1";</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    const cached = sessionStorage.getItem(key);</span>
-<span class="cstat-no" title="statement not covered" >    if (cached) {</span>
-<span class="cstat-no" title="statement not covered" >      try {</span>
-<span class="cstat-no" title="statement not covered" >        setArticles(JSON.parse(cached));</span>
-<span class="cstat-no" title="statement not covered" >        setLoading(false);</span>
-<span class="cstat-no" title="statement not covered" >        return () =&gt; ac.abort();</span>
-<span class="cstat-no" title="statement not covered" >      } catch {</span>
-        /*  no-op */
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" > const cached = sessionStorage.getItem(key);</span>
+<span class="cstat-no" title="statement not covered" > if (cached) {</span>
+<span class="cstat-no" title="statement not covered" > try {</span>
+<span class="cstat-no" title="statement not covered" > setArticles(JSON.parse(cached));</span>
+<span class="cstat-no" title="statement not covered" > setLoading(false);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; ac.abort();</span>
+<span class="cstat-no" title="statement not covered" > } catch {</span>
+ /* no-op */
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    const fetchNews = async () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      setLoading(true);</span>
-<span class="cstat-no" title="statement not covered" >      setErrorCount(0);</span>
-<span class="cstat-no" title="statement not covered" >      const categoriesToFetch = CATEGORIES.filter((c) =&gt; c.id !== "all").map(</span>
-<span class="cstat-no" title="statement not covered" >        (c) =&gt; c.id,</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >      const wrap = (p) =&gt; p.catch(() =&gt; ({ data: [] }));</span>
+<span class="cstat-no" title="statement not covered" > const fetchNews = async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > setLoading(true);</span>
+<span class="cstat-no" title="statement not covered" > setErrorCount(0);</span>
+<span class="cstat-no" title="statement not covered" > const categoriesToFetch = CATEGORIES.filter((c) =&gt; c.id !== "all").map(</span>
+<span class="cstat-no" title="statement not covered" > (c) =&gt; c.id,</span>
+<span class="cstat-no" title="statement not covered" > );</span>
+<span class="cstat-no" title="statement not covered" > const wrap = (p) =&gt; p.catch(() =&gt; ({ data: [] }));</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      try {</span>
-<span class="cstat-no" title="statement not covered" >        const [newsResults, videoResults, rssResults] = await Promise.all([</span>
-<span class="cstat-no" title="statement not covered" >          Promise.all(</span>
-<span class="cstat-no" title="statement not covered" >            categoriesToFetch.map((cat) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >              wrap(</span>
-<span class="cstat-no" title="statement not covered" >                axios.get(`${fnUrl("news-proxy")}?category=${cat}`, {</span>
-<span class="cstat-no" title="statement not covered" >                  signal: ac.signal,</span>
-<span class="cstat-no" title="statement not covered" >                }),</span>
-<span class="cstat-no" title="statement not covered" >              ),</span>
-<span class="cstat-no" title="statement not covered" >            ),</span>
-<span class="cstat-no" title="statement not covered" >          ),</span>
-<span class="cstat-no" title="statement not covered" >          Promise.all(</span>
-<span class="cstat-no" title="statement not covered" >            categoriesToFetch.map((cat) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >              wrap(</span>
-<span class="cstat-no" title="statement not covered" >                axios.get(`${fnUrl("video-proxy")}?category=${cat}`, {</span>
-<span class="cstat-no" title="statement not covered" >                  signal: ac.signal,</span>
-<span class="cstat-no" title="statement not covered" >                }),</span>
-<span class="cstat-no" title="statement not covered" >              ),</span>
-<span class="cstat-no" title="statement not covered" >            ),</span>
-<span class="cstat-no" title="statement not covered" >          ),</span>
-<span class="cstat-no" title="statement not covered" >          Promise.all(</span>
-<span class="cstat-no" title="statement not covered" >            categoriesToFetch.map((cat) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >              wrap(</span>
-<span class="cstat-no" title="statement not covered" >                axios.get(`${fnUrl("rss-proxy")}?category=${cat}`, {</span>
-<span class="cstat-no" title="statement not covered" >                  signal: ac.signal,</span>
-<span class="cstat-no" title="statement not covered" >                }),</span>
-<span class="cstat-no" title="statement not covered" >              ),</span>
-<span class="cstat-no" title="statement not covered" >            ),</span>
-<span class="cstat-no" title="statement not covered" >          ),</span>
-<span class="cstat-no" title="statement not covered" >        ]);</span>
+<span class="cstat-no" title="statement not covered" > try {</span>
+<span class="cstat-no" title="statement not covered" > const [newsResults, videoResults, rssResults] = await Promise.all([</span>
+<span class="cstat-no" title="statement not covered" > Promise.all(</span>
+<span class="cstat-no" title="statement not covered" > categoriesToFetch.map((cat) =&gt;</span>
+<span class="cstat-no" title="statement not covered" > wrap(</span>
+<span class="cstat-no" title="statement not covered" > axios.get(`${fnUrl("news-proxy")}?category=${cat}`, {</span>
+<span class="cstat-no" title="statement not covered" > signal: ac.signal,</span>
+<span class="cstat-no" title="statement not covered" > }),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > Promise.all(</span>
+<span class="cstat-no" title="statement not covered" > categoriesToFetch.map((cat) =&gt;</span>
+<span class="cstat-no" title="statement not covered" > wrap(</span>
+<span class="cstat-no" title="statement not covered" > axios.get(`${fnUrl("video-proxy")}?category=${cat}`, {</span>
+<span class="cstat-no" title="statement not covered" > signal: ac.signal,</span>
+<span class="cstat-no" title="statement not covered" > }),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > Promise.all(</span>
+<span class="cstat-no" title="statement not covered" > categoriesToFetch.map((cat) =&gt;</span>
+<span class="cstat-no" title="statement not covered" > wrap(</span>
+<span class="cstat-no" title="statement not covered" > axios.get(`${fnUrl("rss-proxy")}?category=${cat}`, {</span>
+<span class="cstat-no" title="statement not covered" > signal: ac.signal,</span>
+<span class="cstat-no" title="statement not covered" > }),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > ]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        const merged = [</span>
-<span class="cstat-no" title="statement not covered" >          ...newsResults.flatMap((r) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >            (r.data || []).map((item) =&gt; ({ ...item, type: "article" })),</span>
-<span class="cstat-no" title="statement not covered" >          ),</span>
-<span class="cstat-no" title="statement not covered" >          ...videoResults.flatMap((r) =&gt; r.data || []),</span>
-<span class="cstat-no" title="statement not covered" >          ...rssResults.flatMap((r) =&gt; r.data || []),</span>
-<span class="cstat-no" title="statement not covered" >        ].filter(Boolean);</span>
+<span class="cstat-no" title="statement not covered" > const merged = [</span>
+<span class="cstat-no" title="statement not covered" > ...newsResults.flatMap((r) =&gt;</span>
+<span class="cstat-no" title="statement not covered" > (r.data || []).map((item) =&gt; ({ ...item, type: "article" })),</span>
+<span class="cstat-no" title="statement not covered" > ),</span>
+<span class="cstat-no" title="statement not covered" > ...videoResults.flatMap((r) =&gt; r.data || []),</span>
+<span class="cstat-no" title="statement not covered" > ...rssResults.flatMap((r) =&gt; r.data || []),</span>
+<span class="cstat-no" title="statement not covered" > ].filter(Boolean);</span>
 &nbsp;
-        // Dedupe by URL/id
-<span class="cstat-no" title="statement not covered" >        const seen = new Set();</span>
-<span class="cstat-no" title="statement not covered" >        const deduped = [];</span>
-<span class="cstat-no" title="statement not covered" >        for (const it of merged) {</span>
-<span class="cstat-no" title="statement not covered" >          const k = it.url || it.id;</span>
-<span class="cstat-no" title="statement not covered" >          if (!k || seen.has(k)) continue;</span>
-<span class="cstat-no" title="statement not covered" >          seen.add(k);</span>
-<span class="cstat-no" title="statement not covered" >          deduped.push(it);</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
+ // Dedupe by URL/id
+<span class="cstat-no" title="statement not covered" > const seen = new Set();</span>
+<span class="cstat-no" title="statement not covered" > const deduped = [];</span>
+<span class="cstat-no" title="statement not covered" > for (const it of merged) {</span>
+<span class="cstat-no" title="statement not covered" > const k = it.url || it.id;</span>
+<span class="cstat-no" title="statement not covered" > if (!k || seen.has(k)) continue;</span>
+<span class="cstat-no" title="statement not covered" > seen.add(k);</span>
+<span class="cstat-no" title="statement not covered" > deduped.push(it);</span>
+<span class="cstat-no" title="statement not covered" > }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        setArticles(deduped);</span>
-<span class="cstat-no" title="statement not covered" >        sessionStorage.setItem(key, JSON.stringify(deduped));</span>
-<span class="cstat-no" title="statement not covered" >      } catch {</span>
-<span class="cstat-no" title="statement not covered" >        setErrorCount((prev) =&gt; prev + 1);</span>
-<span class="cstat-no" title="statement not covered" >      } finally {</span>
-<span class="cstat-no" title="statement not covered" >        setLoading(false);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
+<span class="cstat-no" title="statement not covered" > setArticles(deduped);</span>
+<span class="cstat-no" title="statement not covered" > sessionStorage.setItem(key, JSON.stringify(deduped));</span>
+<span class="cstat-no" title="statement not covered" > } catch {</span>
+<span class="cstat-no" title="statement not covered" > setErrorCount((prev) =&gt; prev + 1);</span>
+<span class="cstat-no" title="statement not covered" > } finally {</span>
+<span class="cstat-no" title="statement not covered" > setLoading(false);</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    fetchNews();</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; ac.abort();</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+<span class="cstat-no" title="statement not covered" > fetchNews();</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; ac.abort();</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const filteredArticles = useMemo(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    return articles.filter((article) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      if (activeCategory !== "all" &amp;&amp; article.category !== activeCategory)</span>
-<span class="cstat-no" title="statement not covered" >        return false;</span>
-<span class="cstat-no" title="statement not covered" >      if (debouncedSearchTerm) {</span>
-<span class="cstat-no" title="statement not covered" >        const term = debouncedSearchTerm.toLowerCase();</span>
-<span class="cstat-no" title="statement not covered" >        return (</span>
-<span class="cstat-no" title="statement not covered" >          (article.title || "").toLowerCase().includes(term) ||</span>
-<span class="cstat-no" title="statement not covered" >          (article.description || "").toLowerCase().includes(term) ||</span>
-<span class="cstat-no" title="statement not covered" >          (article.source || "").toLowerCase().includes(term)</span>
-        );
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >      return true;</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }, [articles, activeCategory, debouncedSearchTerm]);</span>
+<span class="cstat-no" title="statement not covered" > const filteredArticles = useMemo(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > return articles.filter((article) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (activeCategory !== "all" &amp;&amp; article.category !== activeCategory)</span>
+<span class="cstat-no" title="statement not covered" > return false;</span>
+<span class="cstat-no" title="statement not covered" > if (debouncedSearchTerm) {</span>
+<span class="cstat-no" title="statement not covered" > const term = debouncedSearchTerm.toLowerCase();</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > (article.title || "").toLowerCase().includes(term) ||</span>
+<span class="cstat-no" title="statement not covered" > (article.description || "").toLowerCase().includes(term) ||</span>
+<span class="cstat-no" title="statement not covered" > (article.source || "").toLowerCase().includes(term)</span>
+ );
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > return true;</span>
+<span class="cstat-no" title="statement not covered" > });</span>
+<span class="cstat-no" title="statement not covered" > }, [articles, activeCategory, debouncedSearchTerm]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const trendingArticles = useMemo(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    return [...articles]</span>
-<span class="cstat-no" title="statement not covered" >      .sort((a, b) =&gt; Date.parse(b.date || "") - Date.parse(a.date || ""))</span>
-<span class="cstat-no" title="statement not covered" >      .slice(0, 3);</span>
-<span class="cstat-no" title="statement not covered" >  }, [articles]);</span>
+<span class="cstat-no" title="statement not covered" > const trendingArticles = useMemo(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > return [...articles]</span>
+<span class="cstat-no" title="statement not covered" > .sort((a, b) =&gt; Date.parse(b.date || "") - Date.parse(a.date || ""))</span>
+<span class="cstat-no" title="statement not covered" > .slice(0, 3);</span>
+<span class="cstat-no" title="statement not covered" > }, [articles]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const handleViewAll = useCallback((categoryId) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    setActiveCategory((prev) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      if (prev === categoryId) {</span>
-<span class="cstat-no" title="statement not covered" >        document</span>
-<span class="cstat-no" title="statement not covered" >          .getElementById(categoryId)</span>
-<span class="cstat-no" title="statement not covered" >          ?.scrollIntoView({ behavior: "smooth" });</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >      return categoryId;</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+<span class="cstat-no" title="statement not covered" > const handleViewAll = useCallback((categoryId) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > setActiveCategory((prev) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (prev === categoryId) {</span>
+<span class="cstat-no" title="statement not covered" > document</span>
+<span class="cstat-no" title="statement not covered" > .getElementById(categoryId)</span>
+<span class="cstat-no" title="statement not covered" > ?.scrollIntoView({ behavior: "smooth" });</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > return categoryId;</span>
+<span class="cstat-no" title="statement not covered" > });</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const clearSearch = useCallback(() =&gt; setSearchTerm(""), []);</span>
+<span class="cstat-no" title="statement not covered" > const clearSearch = useCallback(() =&gt; setSearchTerm(""), []);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div className="min-h-screen text-gray-900 dark:text-gray-100"&gt;</span>
-      {/* Sticky Header */}
-<span class="cstat-no" title="statement not covered" >      &lt;header className="sticky top-0 z-50 backdrop-blur-md bg-black/10 dark:bg-black/20 border-b border-white/10"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="flex flex-col"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;div className="flex justify-between items-center py-4"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;motion.h1</span>
-<span class="cstat-no" title="statement not covered" >                initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >                animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >                className="text-2xl font-bold"</span>
-              &gt;
-<span class="cstat-no" title="statement not covered" >                &lt;span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-teal-500"&gt;</span>
-                  Tech Pulse
-<span class="cstat-no" title="statement not covered" >                &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/motion.h1&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="min-h-screen text-gray-900 dark:text-gray-100"&gt;</span>
+ {/* Sticky Header */}
+<span class="cstat-no" title="statement not covered" > &lt;header className="sticky top-0 z-50 bg-black/10 dark:bg-black/20 border-b border-white/10"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex flex-col"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex justify-between items-center py-4"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.h1</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > className="text-2xl font-bold"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-teal-500"&gt;</span>
+ Tech Pulse
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.h1&gt;</span>
 &nbsp;
-              {/* Right side: theme + categories (desktop) */}
-<span class="cstat-no" title="statement not covered" >              &lt;div className="flex items-center gap-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                {!isMobile &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;div className="hidden md:flex space-x-1 bg-white/5 dark:bg-white/5 rounded-lg p-1 border border-white/10"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    {CATEGORIES.map((cat) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;button</span>
-<span class="cstat-no" title="statement not covered" >                        key={cat.id}</span>
-<span class="cstat-no" title="statement not covered" >                        onClick={() =&gt; setActiveCategory(cat.id)}</span>
-<span class="cstat-no" title="statement not covered" >                        aria-current={</span>
-<span class="cstat-no" title="statement not covered" >                          activeCategory === cat.id ? "page" : undefined</span>
-                        }
-<span class="cstat-no" title="statement not covered" >                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors active:scale-95 ${</span>
-<span class="cstat-no" title="statement not covered" >                          activeCategory === cat.id</span>
-<span class="cstat-no" title="statement not covered" >                            ? "bg-white/10 text-gray-900 dark:text-white shadow"</span>
-<span class="cstat-no" title="statement not covered" >                            : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5"</span>
-<span class="cstat-no" title="statement not covered" >                        }`}</span>
-                      &gt;
-<span class="cstat-no" title="statement not covered" >                        {cat.name}</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    ))}</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;/div&gt;</span>
-                )}
-<span class="cstat-no" title="statement not covered" >                {isMobile &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;button</span>
-<span class="cstat-no" title="statement not covered" >                    onClick={() =&gt; setShowMobileMenu(!showMobileMenu)}</span>
-<span class="cstat-no" title="statement not covered" >                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors active:scale-95 backdrop-blur"</span>
-<span class="cstat-no" title="statement not covered" >                    aria-label="Toggle menu"</span>
-                  &gt;
-<span class="cstat-no" title="statement not covered" >                    {showMobileMenu ? (</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;FaTimes className="w-5 h-5 text-white/90" /&gt;</span>
-                    ) : (
-<span class="cstat-no" title="statement not covered" >                      &lt;svg</span>
-<span class="cstat-no" title="statement not covered" >                        className="w-5 h-5 text-white/90"</span>
-<span class="cstat-no" title="statement not covered" >                        fill="none"</span>
-<span class="cstat-no" title="statement not covered" >                        stroke="currentColor"</span>
-<span class="cstat-no" title="statement not covered" >                        viewBox="0 0 24 24"</span>
-                      &gt;
-<span class="cstat-no" title="statement not covered" >                        &lt;path</span>
-<span class="cstat-no" title="statement not covered" >                          strokeLinecap="round"</span>
-<span class="cstat-no" title="statement not covered" >                          strokeLinejoin="round"</span>
-<span class="cstat-no" title="statement not covered" >                          strokeWidth={2}</span>
-<span class="cstat-no" title="statement not covered" >                          d="M4 6h16M4 12h16M4 18h16"</span>
-<span class="cstat-no" title="statement not covered" >                        /&gt;</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;/svg&gt;</span>
-                    )}
-<span class="cstat-no" title="statement not covered" >                  &lt;/button&gt;</span>
-                )}
-<span class="cstat-no" title="statement not covered" >              &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
+ {/* Right side: theme + categories (desktop) */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex items-center gap-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {!isMobile &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="hidden md:flex space-x-1 bg-white/5 dark:bg-white/5 rounded-lg p-1 border border-white/10"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {CATEGORIES.map((cat) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > key={cat.id}</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt; setActiveCategory(cat.id)}</span>
+<span class="cstat-no" title="statement not covered" > aria-current={</span>
+<span class="cstat-no" title="statement not covered" > activeCategory === cat.id ? "page" : undefined</span>
+ }
+<span class="cstat-no" title="statement not covered" > className={`px-4 py-2 rounded-md text-sm font-medium transition-colors active:scale-95 ${</span>
+<span class="cstat-no" title="statement not covered" > activeCategory === cat.id</span>
+<span class="cstat-no" title="statement not covered" > ? "bg-white/10 text-gray-900 dark:text-white shadow"</span>
+<span class="cstat-no" title="statement not covered" > : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5"</span>
+<span class="cstat-no" title="statement not covered" > }`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {cat.name}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > {isMobile &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt; setShowMobileMenu(!showMobileMenu)}</span>
+<span class="cstat-no" title="statement not covered" > className="p-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors active:scale-95 "</span>
+<span class="cstat-no" title="statement not covered" > aria-label="Toggle menu"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {showMobileMenu ? (</span>
+<span class="cstat-no" title="statement not covered" > &lt;FaTimes className="w-5 h-5 text-white/90" /&gt;</span>
+ ) : (
+<span class="cstat-no" title="statement not covered" > &lt;svg</span>
+<span class="cstat-no" title="statement not covered" > className="w-5 h-5 text-white/90"</span>
+<span class="cstat-no" title="statement not covered" > fill="none"</span>
+<span class="cstat-no" title="statement not covered" > stroke="currentColor"</span>
+<span class="cstat-no" title="statement not covered" > viewBox="0 0 24 24"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;path</span>
+<span class="cstat-no" title="statement not covered" > strokeLinecap="round"</span>
+<span class="cstat-no" title="statement not covered" > strokeLinejoin="round"</span>
+<span class="cstat-no" title="statement not covered" > strokeWidth={2}</span>
+<span class="cstat-no" title="statement not covered" > d="M4 6h16M4 12h16M4 18h16"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/svg&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-            {/* Search bar */}
-<span class="cstat-no" title="statement not covered" >            &lt;div className="pb-4"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;div className="relative"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;FaSearch /&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;input</span>
-<span class="cstat-no" title="statement not covered" >                  type="text"</span>
-<span class="cstat-no" title="statement not covered" >                  placeholder="Search AI, database, or renewable energy content..."</span>
-<span class="cstat-no" title="statement not covered" >                  className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-white/5 dark:bg-white/5 text-gray-900 dark:text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"</span>
-<span class="cstat-no" title="statement not covered" >                  value={searchTerm}</span>
-<span class="cstat-no" title="statement not covered" >                  onChange={(e) =&gt; setSearchTerm(e.target.value)}</span>
-<span class="cstat-no" title="statement not covered" >                /&gt;</span>
-<span class="cstat-no" title="statement not covered" >                {searchTerm &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;button</span>
-<span class="cstat-no" title="statement not covered" >                    onClick={clearSearch}</span>
-<span class="cstat-no" title="statement not covered" >                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200 active:scale-95"</span>
-<span class="cstat-no" title="statement not covered" >                    aria-label="Clear search"</span>
-                  &gt;
-<span class="cstat-no" title="statement not covered" >                    &lt;FaTimes className="w-4 h-4" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;/button&gt;</span>
-                )}
-<span class="cstat-no" title="statement not covered" >              &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+ {/* Search bar */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="pb-4"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="relative"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;FaSearch /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;input</span>
+<span class="cstat-no" title="statement not covered" > type="text"</span>
+<span class="cstat-no" title="statement not covered" > placeholder="Search AI, database, or renewable energy content..."</span>
+<span class="cstat-no" title="statement not covered" > className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-white/5 dark:bg-white/5 text-gray-900 dark:text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"</span>
+<span class="cstat-no" title="statement not covered" > value={searchTerm}</span>
+<span class="cstat-no" title="statement not covered" > onChange={(e) =&gt; setSearchTerm(e.target.value)}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > {searchTerm &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={clearSearch}</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200 active:scale-95"</span>
+<span class="cstat-no" title="statement not covered" > aria-label="Clear search"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;FaTimes className="w-4 h-4" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-        {/* Mobile menu */}
-<span class="cstat-no" title="statement not covered" >        &lt;AnimatePresence&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {showMobileMenu &amp;&amp; isMobile &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >              initial={{ opacity: 0, height: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >              animate={{ opacity: 1, height: "auto" }}</span>
-<span class="cstat-no" title="statement not covered" >              exit={{ opacity: 0, height: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >              transition={{ type: "spring", stiffness: 300, damping: 30 }}</span>
-<span class="cstat-no" title="statement not covered" >              className="overflow-hidden bg-black/20 dark:bg-black/30 backdrop-blur-md border-t border-white/10"</span>
-            &gt;
-<span class="cstat-no" title="statement not covered" >              &lt;div className="px-4 pb-4 grid grid-cols-2 gap-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                {CATEGORIES.map((cat) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;button</span>
-<span class="cstat-no" title="statement not covered" >                    key={cat.id}</span>
-<span class="cstat-no" title="statement not covered" >                    onClick={() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                      setActiveCategory(cat.id);</span>
-<span class="cstat-no" title="statement not covered" >                      setShowMobileMenu(false);</span>
-<span class="cstat-no" title="statement not covered" >                    }}</span>
-<span class="cstat-no" title="statement not covered" >                    className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors active:scale-95 ${</span>
-<span class="cstat-no" title="statement not covered" >                      activeCategory === cat.id</span>
-<span class="cstat-no" title="statement not covered" >                        ? "bg-gradient-to-r from-cyan-600 to-teal-500 text-white"</span>
-<span class="cstat-no" title="statement not covered" >                        : "bg-white/10 text-white/90 hover:bg-white/20 border border-white/10"</span>
-<span class="cstat-no" title="statement not covered" >                    }`}</span>
-                  &gt;
-<span class="cstat-no" title="statement not covered" >                    &lt;span className="mr-2"&gt;{cat.icon}&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    {cat.name}</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >                ))}</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/motion.div&gt;</span>
-          )}
-<span class="cstat-no" title="statement not covered" >        &lt;/AnimatePresence&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/header&gt;</span>
+ {/* Mobile menu */}
+<span class="cstat-no" title="statement not covered" > &lt;AnimatePresence&gt;</span>
+<span class="cstat-no" title="statement not covered" > {showMobileMenu &amp;&amp; isMobile &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, height: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1, height: "auto" }}</span>
+<span class="cstat-no" title="statement not covered" > exit={{ opacity: 0, height: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ type: "spring", stiffness: 300, damping: 30 }}</span>
+<span class="cstat-no" title="statement not covered" > className="overflow-hidden bg-black/20 dark:bg-black/30 border-t border-white/10"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;div className="px-4 pb-4 grid grid-cols-2 gap-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {CATEGORIES.map((cat) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > key={cat.id}</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > setActiveCategory(cat.id);</span>
+<span class="cstat-no" title="statement not covered" > setShowMobileMenu(false);</span>
+<span class="cstat-no" title="statement not covered" > }}</span>
+<span class="cstat-no" title="statement not covered" > className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors active:scale-95 ${</span>
+<span class="cstat-no" title="statement not covered" > activeCategory === cat.id</span>
+<span class="cstat-no" title="statement not covered" > ? "bg-gradient-to-r from-cyan-600 to-teal-500 text-white"</span>
+<span class="cstat-no" title="statement not covered" > : "bg-white/10 text-white/90 hover:bg-white/20 border border-white/10"</span>
+<span class="cstat-no" title="statement not covered" > }`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;span className="mr-2"&gt;{cat.icon}&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > {cat.name}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/AnimatePresence&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/header&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"&gt;</span>
-        {/* Error Notice */}
-<span class="cstat-no" title="statement not covered" >        {errorCount &gt; 0 &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >            initial={{ opacity: 0, y: -20 }}</span>
-<span class="cstat-no" title="statement not covered" >            animate={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >            className="bg-yellow-50/70 dark:bg-yellow-900/30 border border-yellow-400/30 rounded-lg p-3 mb-6 flex items-center backdrop-blur"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;FaExclamationTriangle className="text-yellow-600 dark:text-yellow-400 mr-3 flex-shrink-0" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;p className="text-yellow-800 dark:text-yellow-300 text-sm"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              {errorCount} data source{errorCount &gt; 1 ? "s" : ""} failed to</span>
-              load. Some content may be missing.
-<span class="cstat-no" title="statement not covered" >            &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/motion.div&gt;</span>
-        )}
+<span class="cstat-no" title="statement not covered" > &lt;main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"&gt;</span>
+ {/* Error Notice */}
+<span class="cstat-no" title="statement not covered" > {errorCount &gt; 0 &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: -20 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > className="bg-yellow-50/70 dark:bg-yellow-900/30 border border-yellow-400/30 rounded-lg p-3 mb-6 flex items-center "</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;FaExclamationTriangle className="text-yellow-600 dark:text-yellow-400 mr-3 flex-shrink-0" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-yellow-800 dark:text-yellow-300 text-sm"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {errorCount} data source{errorCount &gt; 1 ? "s" : ""} failed to</span>
+ load. Some content may be missing.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+ )}
 &nbsp;
-        {/* Hero Section */}
-<span class="cstat-no" title="statement not covered" >        {activeCategory === "all" &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;motion.section</span>
-<span class="cstat-no" title="statement not covered" >            initial={{ opacity: 0, y: 20 }}</span>
-<span class="cstat-no" title="statement not covered" >            animate={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >            className="mb-16 text-center"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >              initial={{ scale: 0.9 }}</span>
-<span class="cstat-no" title="statement not covered" >              animate={{ scale: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >              transition={{ type: "spring", stiffness: 300 }}</span>
-<span class="cstat-no" title="statement not covered" >              className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-5 py-1.5 rounded-full mb-5 text-xs font-medium tracking-wide"</span>
-<span class="cstat-no" title="statement not covered" >            &gt;</span>
-              Industry Insights
-<span class="cstat-no" title="statement not covered" >            &lt;/motion.div&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400"&gt;</span>
-                Tech &amp; Innovation Pulse
-<span class="cstat-no" title="statement not covered" >              &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/h1&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;p className="text-gray-800 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg"&gt;</span>
-              Stay updated with the latest news, videos, and blogs in AI,
-              database technologies, and renewable energy.
-<span class="cstat-no" title="statement not covered" >            &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/motion.section&gt;</span>
-        )}
+ {/* Hero Section */}
+<span class="cstat-no" title="statement not covered" > {activeCategory === "all" &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.section</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 20 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > className="mb-16 text-center"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > initial={{ scale: 0.9 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ scale: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ type: "spring", stiffness: 300 }}</span>
+<span class="cstat-no" title="statement not covered" > className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-5 py-1.5 rounded-full mb-5 text-xs font-medium tracking-wide"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ Industry Insights
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400"&gt;</span>
+ Tech &amp; Innovation Pulse
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/h1&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-gray-800 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg"&gt;</span>
+ Stay updated with the latest news, videos, and blogs in AI,
+ database technologies, and renewable energy.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.section&gt;</span>
+ )}
 &nbsp;
-        {/* Trending Section */}
-<span class="cstat-no" title="statement not covered" >        {activeCategory === "all" &amp;&amp; trendingArticles.length &gt; 0 &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;motion.section</span>
-<span class="cstat-no" title="statement not covered" >            initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >            animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >            transition={{ delay: 0.2 }}</span>
-<span class="cstat-no" title="statement not covered" >            className="mb-16"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5"&gt;</span>
-              Trending Now
-<span class="cstat-no" title="statement not covered" >            &lt;/h2&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              {trendingArticles.map((article, i) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >                &lt;ContentCard</span>
-<span class="cstat-no" title="statement not covered" >                  key={`trending-${article.url || article.id || i}`}</span>
-<span class="cstat-no" title="statement not covered" >                  article={article}</span>
-<span class="cstat-no" title="statement not covered" >                  categories={CATEGORIES}</span>
-<span class="cstat-no" title="statement not covered" >                /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              ))}</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/motion.section&gt;</span>
-        )}
+ {/* Trending Section */}
+<span class="cstat-no" title="statement not covered" > {activeCategory === "all" &amp;&amp; trendingArticles.length &gt; 0 &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.section</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 0.2 }}</span>
+<span class="cstat-no" title="statement not covered" > className="mb-16"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5"&gt;</span>
+ Trending Now
+<span class="cstat-no" title="statement not covered" > &lt;/h2&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {trendingArticles.map((article, i) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;ContentCard</span>
+<span class="cstat-no" title="statement not covered" > key={`trending-${article.url || article.id || i}`}</span>
+<span class="cstat-no" title="statement not covered" > article={article}</span>
+<span class="cstat-no" title="statement not covered" > categories={CATEGORIES}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.section&gt;</span>
+ )}
 &nbsp;
-        {/* Category Content */}
-<span class="cstat-no" title="statement not covered" >        {activeCategory === "all" ? (</span>
-<span class="cstat-no" title="statement not covered" >          CATEGORIES.filter((cat) =&gt; cat.id !== "all").map((category) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            const catArticles = articles.filter(</span>
-<span class="cstat-no" title="statement not covered" >              (a) =&gt; a.category === category.id,</span>
-<span class="cstat-no" title="statement not covered" >            );</span>
-<span class="cstat-no" title="statement not covered" >            if (catArticles.length === 0) return null;</span>
-<span class="cstat-no" title="statement not covered" >            return (</span>
-<span class="cstat-no" title="statement not covered" >              &lt;CategorySection</span>
-<span class="cstat-no" title="statement not covered" >                key={category.id}</span>
-<span class="cstat-no" title="statement not covered" >                category={category}</span>
-<span class="cstat-no" title="statement not covered" >                articles={articles}</span>
-<span class="cstat-no" title="statement not covered" >                categories={CATEGORIES}</span>
-<span class="cstat-no" title="statement not covered" >                onViewAll={handleViewAll}</span>
-<span class="cstat-no" title="statement not covered" >                activeContentType={activeContentType}</span>
-<span class="cstat-no" title="statement not covered" >                setActiveContentType={setActiveContentType}</span>
-<span class="cstat-no" title="statement not covered" >              /&gt;</span>
-            );
-<span class="cstat-no" title="statement not covered" >          })</span>
-        ) : (
-<span class="cstat-no" title="statement not covered" >          &lt;CategorySection</span>
-<span class="cstat-no" title="statement not covered" >            category={CATEGORIES.find((c) =&gt; c.id === activeCategory)}</span>
-<span class="cstat-no" title="statement not covered" >            articles={filteredArticles}</span>
-<span class="cstat-no" title="statement not covered" >            categories={CATEGORIES}</span>
-<span class="cstat-no" title="statement not covered" >            activeContentType={activeContentType}</span>
-<span class="cstat-no" title="statement not covered" >            setActiveContentType={setActiveContentType}</span>
-<span class="cstat-no" title="statement not covered" >          /&gt;</span>
-        )}
+ {/* Category Content */}
+<span class="cstat-no" title="statement not covered" > {activeCategory === "all" ? (</span>
+<span class="cstat-no" title="statement not covered" > CATEGORIES.filter((cat) =&gt; cat.id !== "all").map((category) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const catArticles = articles.filter(</span>
+<span class="cstat-no" title="statement not covered" > (a) =&gt; a.category === category.id,</span>
+<span class="cstat-no" title="statement not covered" > );</span>
+<span class="cstat-no" title="statement not covered" > if (catArticles.length === 0) return null;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;CategorySection</span>
+<span class="cstat-no" title="statement not covered" > key={category.id}</span>
+<span class="cstat-no" title="statement not covered" > category={category}</span>
+<span class="cstat-no" title="statement not covered" > articles={articles}</span>
+<span class="cstat-no" title="statement not covered" > categories={CATEGORIES}</span>
+<span class="cstat-no" title="statement not covered" > onViewAll={handleViewAll}</span>
+<span class="cstat-no" title="statement not covered" > activeContentType={activeContentType}</span>
+<span class="cstat-no" title="statement not covered" > setActiveContentType={setActiveContentType}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+ );
+<span class="cstat-no" title="statement not covered" > })</span>
+ ) : (
+<span class="cstat-no" title="statement not covered" > &lt;CategorySection</span>
+<span class="cstat-no" title="statement not covered" > category={CATEGORIES.find((c) =&gt; c.id === activeCategory)}</span>
+<span class="cstat-no" title="statement not covered" > articles={filteredArticles}</span>
+<span class="cstat-no" title="statement not covered" > categories={CATEGORIES}</span>
+<span class="cstat-no" title="statement not covered" > activeContentType={activeContentType}</span>
+<span class="cstat-no" title="statement not covered" > setActiveContentType={setActiveContentType}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+ )}
 &nbsp;
-        {/* No results */}
-<span class="cstat-no" title="statement not covered" >        {filteredArticles.length === 0 &amp;&amp; !loading &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >            initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >            animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >            className="text-center py-16"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;div className="text-5xl mb-3 text-gray-500"&gt;🔍&lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;h3 className="text-xl font-bold text-gray-900 dark:text-gray-300 mb-2"&gt;</span>
-              No content found
-<span class="cstat-no" title="statement not covered" >            &lt;/h3&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              {debouncedSearchTerm</span>
-<span class="cstat-no" title="statement not covered" >                ? "Try a different search term"</span>
-<span class="cstat-no" title="statement not covered" >                : "No articles available for this category"}</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/motion.div&gt;</span>
-        )}
+ {/* No results */}
+<span class="cstat-no" title="statement not covered" > {filteredArticles.length === 0 &amp;&amp; !loading &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > className="text-center py-16"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;div className="text-5xl mb-3 text-gray-500"&gt;🔍&lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;h3 className="text-xl font-bold text-gray-900 dark:text-gray-300 mb-2"&gt;</span>
+ No content found
+<span class="cstat-no" title="statement not covered" > &lt;/h3&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {debouncedSearchTerm</span>
+<span class="cstat-no" title="statement not covered" > ? "Try a different search term"</span>
+<span class="cstat-no" title="statement not covered" > : "No articles available for this category"}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+ )}
 &nbsp;
-        {/* Market Insights */}
-<span class="cstat-no" title="statement not covered" >        {activeCategory === "all" &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;motion.section</span>
-<span class="cstat-no" title="statement not covered" >            initial={{ opacity: 0, y: 20 }}</span>
-<span class="cstat-no" title="statement not covered" >            animate={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >            transition={{ delay: 0.1 }}</span>
-<span class="cstat-no" title="statement not covered" >            className="mt-16 bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-md"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;h3 className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-5 text-center"&gt;</span>
-              Market Insights
-<span class="cstat-no" title="statement not covered" >            &lt;/h3&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-5"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              {[</span>
-<span class="cstat-no" title="statement not covered" >                {</span>
-<span class="cstat-no" title="statement not covered" >                  title: "AI Market Growth",</span>
-<span class="cstat-no" title="statement not covered" >                  value: "$1.8T",</span>
-<span class="cstat-no" title="statement not covered" >                  description: "Projected market value by 2030 at 38% CAGR",</span>
-<span class="cstat-no" title="statement not covered" >                  color: "from-purple-500 to-indigo-500",</span>
-<span class="cstat-no" title="statement not covered" >                },</span>
-<span class="cstat-no" title="statement not covered" >                {</span>
-<span class="cstat-no" title="statement not covered" >                  title: "Database Industry",</span>
-<span class="cstat-no" title="statement not covered" >                  value: "+24%",</span>
-<span class="cstat-no" title="statement not covered" >                  description:</span>
-<span class="cstat-no" title="statement not covered" >                    "Annual growth for AI-optimized database solutions",</span>
-<span class="cstat-no" title="statement not covered" >                  color: "from-cyan-500 to-blue-500",</span>
-<span class="cstat-no" title="statement not covered" >                },</span>
-<span class="cstat-no" title="statement not covered" >                {</span>
-<span class="cstat-no" title="statement not covered" >                  title: "Renewable Energy",</span>
-<span class="cstat-no" title="statement not covered" >                  value: "$2T",</span>
-<span class="cstat-no" title="statement not covered" >                  description:</span>
-<span class="cstat-no" title="statement not covered" >                    "Global investment by 2030, mostly in solar and wind",</span>
-<span class="cstat-no" title="statement not covered" >                  color: "from-green-500 to-emerald-500",</span>
-<span class="cstat-no" title="statement not covered" >                },</span>
-<span class="cstat-no" title="statement not covered" >              ].map((item, index) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >                &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >                  key={index}</span>
-<span class="cstat-no" title="statement not covered" >                  whileHover={{ y: -5 }}</span>
-<span class="cstat-no" title="statement not covered" >                  whileTap={{ scale: 0.98 }}</span>
-<span class="cstat-no" title="statement not covered" >                  className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}</span>
-                &gt;
-<span class="cstat-no" title="statement not covered" >                  &lt;h4 className="text-lg font-bold text-white mb-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    {item.title}</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;/h4&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;div className="text-2xl font-bold text-white mb-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    {item.value}</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;p className="text-white/90 text-sm"&gt;{item.description}&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/motion.div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              ))}</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/motion.section&gt;</span>
-        )}
+ {/* Market Insights */}
+<span class="cstat-no" title="statement not covered" > {activeCategory === "all" &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.section</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 20 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 0.1 }}</span>
+<span class="cstat-no" title="statement not covered" > className="mt-16 bg-white/5 border border-white/10 rounded-xl p-6 "</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;h3 className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-5 text-center"&gt;</span>
+ Market Insights
+<span class="cstat-no" title="statement not covered" > &lt;/h3&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-5"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {[</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > title: "AI Market Growth",</span>
+<span class="cstat-no" title="statement not covered" > value: "$1.8T",</span>
+<span class="cstat-no" title="statement not covered" > description: "Projected market value by 2030 at 38% CAGR",</span>
+<span class="cstat-no" title="statement not covered" > color: "from-purple-500 to-indigo-500",</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > title: "Database Industry",</span>
+<span class="cstat-no" title="statement not covered" > value: "+24%",</span>
+<span class="cstat-no" title="statement not covered" > description:</span>
+<span class="cstat-no" title="statement not covered" > "Annual growth for AI-optimized database solutions",</span>
+<span class="cstat-no" title="statement not covered" > color: "from-cyan-500 to-blue-500",</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > title: "Renewable Energy",</span>
+<span class="cstat-no" title="statement not covered" > value: "$2T",</span>
+<span class="cstat-no" title="statement not covered" > description:</span>
+<span class="cstat-no" title="statement not covered" > "Global investment by 2030, mostly in solar and wind",</span>
+<span class="cstat-no" title="statement not covered" > color: "from-green-500 to-emerald-500",</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > ].map((item, index) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > key={index}</span>
+<span class="cstat-no" title="statement not covered" > whileHover={{ y: -5 }}</span>
+<span class="cstat-no" title="statement not covered" > whileTap={{ scale: 0.98 }}</span>
+<span class="cstat-no" title="statement not covered" > className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;h4 className="text-lg font-bold text-white mb-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {item.title}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/h4&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="text-2xl font-bold text-white mb-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {item.value}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-white/90 text-sm"&gt;{item.description}&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.section&gt;</span>
+ )}
 &nbsp;
-        {/* Newsletter */}
-<span class="cstat-no" title="statement not covered" >        {activeCategory === "all" &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;motion.section</span>
-<span class="cstat-no" title="statement not covered" >            initial={{ opacity: 0, y: 20 }}</span>
-<span class="cstat-no" title="statement not covered" >            animate={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >            transition={{ delay: 0.2 }}</span>
-<span class="cstat-no" title="statement not covered" >            className="mt-16 text-center"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;div className="bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl mx-auto backdrop-blur-md"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-300 mb-3"&gt;</span>
-                Stay Informed
-<span class="cstat-no" title="statement not covered" >              &lt;/h3&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;p className="text-gray-800 dark:text-gray-300 mb-5 text-base sm:text-lg"&gt;</span>
-                Get weekly insights on AI breakthroughs, database innovations,
-                and renewable energy advancements.
-<span class="cstat-no" title="statement not covered" >              &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;div className="flex flex-col sm:flex-row gap-3 justify-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;input</span>
-<span class="cstat-no" title="statement not covered" >                  type="email"</span>
-<span class="cstat-no" title="statement not covered" >                  placeholder="Your email address"</span>
-<span class="cstat-no" title="statement not covered" >                  className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-900 dark:text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"</span>
-<span class="cstat-no" title="statement not covered" >                /&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors active:scale-95"&gt;</span>
-                  Subscribe
-<span class="cstat-no" title="statement not covered" >                &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/motion.section&gt;</span>
-        )}
+ {/* Newsletter */}
+<span class="cstat-no" title="statement not covered" > {activeCategory === "all" &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.section</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 20 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 0.2 }}</span>
+<span class="cstat-no" title="statement not covered" > className="mt-16 text-center"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;div className="bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl mx-auto "&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-300 mb-3"&gt;</span>
+ Stay Informed
+<span class="cstat-no" title="statement not covered" > &lt;/h3&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-gray-800 dark:text-gray-300 mb-5 text-base sm:text-lg"&gt;</span>
+ Get weekly insights on AI breakthroughs, database innovations,
+ and renewable energy advancements.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex flex-col sm:flex-row gap-3 justify-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;input</span>
+<span class="cstat-no" title="statement not covered" > type="email"</span>
+<span class="cstat-no" title="statement not covered" > placeholder="Your email address"</span>
+<span class="cstat-no" title="statement not covered" > className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-900 dark:text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors active:scale-95"&gt;</span>
+ Subscribe
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.section&gt;</span>
+ )}
 &nbsp;
-        {/* Back to top button */}
-<span class="cstat-no" title="statement not covered" >        {!loading &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;motion.button</span>
-<span class="cstat-no" title="statement not covered" >            onClick={() =&gt; window.scrollTo({ top: 0, behavior: "smooth" })}</span>
-<span class="cstat-no" title="statement not covered" >            className={`fixed ${isMobile ? "bottom-20" : "bottom-6"} right-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-3 shadow-lg z-50 backdrop-blur-sm transition-all`}</span>
-<span class="cstat-no" title="statement not covered" >            initial={{ opacity: 0, y: 20 }}</span>
-<span class="cstat-no" title="statement not covered" >            animate={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >            whileHover={{ scale: 1.1 }}</span>
-<span class="cstat-no" title="statement not covered" >            whileTap={{ scale: 0.95 }}</span>
-<span class="cstat-no" title="statement not covered" >            aria-label="Back to top"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;FaArrowUp className="text-cyan-400" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/motion.button&gt;</span>
-        )}
-<span class="cstat-no" title="statement not covered" >      &lt;/main&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+ {/* Back to top button */}
+<span class="cstat-no" title="statement not covered" > {!loading &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;motion.button</span>
+<span class="cstat-no" title="statement not covered" > onClick={() =&gt; window.scrollTo({ top: 0, behavior: "smooth" })}</span>
+<span class="cstat-no" title="statement not covered" > className={`fixed ${isMobile ? "bottom-20" : "bottom-6"} right-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-3 shadow-lg z-50 transition-all`}</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 20 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > whileHover={{ scale: 1.1 }}</span>
+<span class="cstat-no" title="statement not covered" > whileTap={{ scale: 0.95 }}</span>
+<span class="cstat-no" title="statement not covered" > aria-label="Back to top"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;FaArrowUp className="text-cyan-400" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.button&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/main&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -2959,7 +2959,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

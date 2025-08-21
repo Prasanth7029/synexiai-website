@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiRefreshCw, FiZap, FiHelpCircle, FiClock, FiTarget, FiInfo } from "react-icons/fi";
 import { FaTrophy } from "react-icons/fa";
+import { useProgress } from "@/context/ProgressContext.jsx";
 
 /**
  * Tile types (pipe shapes):
@@ -271,10 +272,18 @@ function PipeSeg({ x1,y1,x2,y2, glow, strokeWidth }) {
   );
 }
 
+export const gameMeta = {
+  id: "neon",                       // stable URL/query id
+  title: "Neon Energy Link",
+  description: "Link glowing nodes and route energy beams.",
+  thumbnail: "/assets/games/neon.png"
+};
+
 export default function NeonEnergyLink({
   size = DEFAULT_SIZE,
   onWin = () => {},
 }) {
+  const { setScore } = useProgress?.() ?? { setScore: () => {} };
   const [board, setBoard] = useState(() => makeBoard(size));
   const [moves, setMoves] = useState(0);
   const [startAt] = useState(() => Date.now());
@@ -313,6 +322,7 @@ export default function NeonEnergyLink({
       setBest(nextBest);
       try { localStorage.setItem("sx_energy_best", String(nextBest)); } catch {}
       onWin({ moves, elapsed, score });
+      setScore("neon", nextBest);
     }
   }, [flow.connected, done, moves, elapsed, best, onWin]);
 

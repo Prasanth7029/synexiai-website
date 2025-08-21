@@ -245,88 +245,88 @@
 <span class="cstat-no" title="statement not covered" >import styled from "styled-components";</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >const Switch = ({ checked, onChange }) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;StyledWrapper&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;input</span>
-<span class="cstat-no" title="statement not covered" >          type="checkbox"</span>
-<span class="cstat-no" title="statement not covered" >          id="checkbox"</span>
-<span class="cstat-no" title="statement not covered" >          checked={checked}</span>
-<span class="cstat-no" title="statement not covered" >          onChange={onChange}</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;label htmlFor="checkbox" className="toggle"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="bar bar--top" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="bar bar--middle" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="bar bar--bottom" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/label&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/StyledWrapper&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;StyledWrapper&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;input</span>
+<span class="cstat-no" title="statement not covered" > type="checkbox"</span>
+<span class="cstat-no" title="statement not covered" > id="checkbox"</span>
+<span class="cstat-no" title="statement not covered" > checked={checked}</span>
+<span class="cstat-no" title="statement not covered" > onChange={onChange}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;label htmlFor="checkbox" className="toggle"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="bar bar--top" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="bar bar--middle" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="bar bar--bottom" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/label&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/StyledWrapper&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >const StyledWrapper = styled.div`</span>
-  #checkbox {
-    display: none;
-  }
+ #checkbox {
+ display: none;
+ }
 &nbsp;
-  .toggle {
-    position: relative;
-    width: 40px;
-    cursor: pointer;
-    margin: auto;
-    display: block;
-    height: calc(4px * 3 + 11px * 2);
-  }
+ .toggle {
+ position: relative;
+ width: 40px;
+ cursor: pointer;
+ margin: auto;
+ display: block;
+ height: calc(4px * 3 + 11px * 2);
+ }
 &nbsp;
-  .bar {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 4px;
-    border-radius: calc(4px / 2);
-    background-color: #22d3ee; /* Tailwind cyan-500 */
-    color: inherit;
-    opacity: 1;
-    transition: none 0.35s cubic-bezier(0.5, -0.35, 0.35, 1.5) 0s;
-  }
+ .bar {
+ position: absolute;
+ left: 0;
+ right: 0;
+ height: 4px;
+ border-radius: calc(4px / 2);
+ background-color: #22d3ee; /* Tailwind cyan-500 */
+ color: inherit;
+ opacity: 1;
+ transition: none 0.35s cubic-bezier(0.5, -0.35, 0.35, 1.5) 0s;
+ }
 &nbsp;
-  /***** Spin Animation *****/
+ /***** Spin Animation *****/
 &nbsp;
-  .bar--top {
-    bottom: calc(50% + 11px + 4px / 2);
-    transition-property: bottom, transform;
-    transition-delay: calc(0s + 0.35s), 0s;
-  }
+ .bar--top {
+ bottom: calc(50% + 11px + 4px / 2);
+ transition-property: bottom, transform;
+ transition-delay: calc(0s + 0.35s), 0s;
+ }
 &nbsp;
-  .bar--middle {
-    top: calc(50% - 4px / 2);
-    transition-property: opacity;
-    transition-delay: calc(0s + 0.35s);
-  }
+ .bar--middle {
+ top: calc(50% - 4px / 2);
+ transition-property: opacity;
+ transition-delay: calc(0s + 0.35s);
+ }
 &nbsp;
-  .bar--bottom {
-    top: calc(50% + 11px + 4px / 2);
-    transition-property: top, transform;
-    transition-delay: calc(0s + 0.35s), 0s;
-  }
+ .bar--bottom {
+ top: calc(50% + 11px + 4px / 2);
+ transition-property: top, transform;
+ transition-delay: calc(0s + 0.35s), 0s;
+ }
 &nbsp;
-  #checkbox:checked + .toggle .bar--top {
-    bottom: calc(50% - 4px / 2);
-    transform: rotate(135deg);
-    transition-delay: 0s, calc(0s + 0.35s);
-  }
+ #checkbox:checked + .toggle .bar--top {
+ bottom: calc(50% - 4px / 2);
+ transform: rotate(135deg);
+ transition-delay: 0s, calc(0s + 0.35s);
+ }
 &nbsp;
-  #checkbox:checked + .toggle .bar--middle {
-    opacity: 0;
-    transition-duration: 0s;
-    transition-delay: calc(0s + 0.35s);
-  }
+ #checkbox:checked + .toggle .bar--middle {
+ opacity: 0;
+ transition-duration: 0s;
+ transition-delay: calc(0s + 0.35s);
+ }
 &nbsp;
-  #checkbox:checked + .toggle .bar--bottom {
-    top: calc(50% - 4px / 2);
-    transform: rotate(225deg);
-    transition-delay: 0s, calc(0s + 0.35s);
-  }
+ #checkbox:checked + .toggle .bar--bottom {
+ top: calc(50% - 4px / 2);
+ transform: rotate(225deg);
+ transition-delay: 0s, calc(0s + 0.35s);
+ }
 `;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default Switch;</span>
@@ -337,7 +337,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

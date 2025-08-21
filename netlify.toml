@@ -65,3 +65,9 @@ for = "/.netlify/functions/ai-fact"
 [headers.values]
 Cache-Control = "no-store"
 
+[[headers]]
+for = "/*"
+[headers.values]
+Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+

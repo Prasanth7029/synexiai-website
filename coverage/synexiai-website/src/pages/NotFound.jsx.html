@@ -279,98 +279,98 @@
 <span class="cstat-no" title="statement not covered" >const MotionP = motion.p;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function NotFound() {</span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;MotionDiv</span>
-<span class="cstat-no" title="statement not covered" >      initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >      animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >      exit={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >      transition={{ duration: 0.5 }}</span>
-<span class="cstat-no" title="statement not covered" >      className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"</span>
-    &gt;
-<span class="cstat-no" title="statement not covered" >      &lt;div className="max-w-md mx-auto"&gt;</span>
-        {/* Animated ghost icon */}
-<span class="cstat-no" title="statement not covered" >        &lt;MotionDiv</span>
-<span class="cstat-no" title="statement not covered" >          animate={{</span>
-<span class="cstat-no" title="statement not covered" >            y: [0, -15, 0],</span>
-<span class="cstat-no" title="statement not covered" >            rotate: [0, 5, -5, 0],</span>
-<span class="cstat-no" title="statement not covered" >          }}</span>
-<span class="cstat-no" title="statement not covered" >          transition={{</span>
-<span class="cstat-no" title="statement not covered" >            repeat: Infinity,</span>
-<span class="cstat-no" title="statement not covered" >            duration: 3,</span>
-<span class="cstat-no" title="statement not covered" >            ease: "easeInOut",</span>
-<span class="cstat-no" title="statement not covered" >          }}</span>
-<span class="cstat-no" title="statement not covered" >          className="mb-8"</span>
-        &gt;
-<span class="cstat-no" title="statement not covered" >          &lt;FaGhost className="text-8xl mx-auto text-[#00f7ff] drop-shadow-lg" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/MotionDiv&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;MotionDiv</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > exit={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ duration: 0.5 }}</span>
+<span class="cstat-no" title="statement not covered" > className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;div className="max-w-md mx-auto"&gt;</span>
+ {/* Animated ghost icon */}
+<span class="cstat-no" title="statement not covered" > &lt;MotionDiv</span>
+<span class="cstat-no" title="statement not covered" > animate={{</span>
+<span class="cstat-no" title="statement not covered" > y: [0, -15, 0],</span>
+<span class="cstat-no" title="statement not covered" > rotate: [0, 5, -5, 0],</span>
+<span class="cstat-no" title="statement not covered" > }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{</span>
+<span class="cstat-no" title="statement not covered" > repeat: Infinity,</span>
+<span class="cstat-no" title="statement not covered" > duration: 3,</span>
+<span class="cstat-no" title="statement not covered" > ease: "easeInOut",</span>
+<span class="cstat-no" title="statement not covered" > }}</span>
+<span class="cstat-no" title="statement not covered" > className="mb-8"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;FaGhost className="text-8xl mx-auto text-[#00f7ff] drop-shadow-lg" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/MotionDiv&gt;</span>
 &nbsp;
-        {/* 404 text with better animation */}
-<span class="cstat-no" title="statement not covered" >        &lt;MotionH1</span>
-<span class="cstat-no" title="statement not covered" >          initial={{ scale: 0.8, opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >          animate={{ scale: 1, opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >          transition={{ delay: 0.2, type: "spring" }}</span>
-<span class="cstat-no" title="statement not covered" >          className="text-7xl md:text-8xl font-extrabold mb-6 text-[#00f7ff] drop-shadow-lg"</span>
-<span class="cstat-no" title="statement not covered" >        &gt;</span>
-          404
-<span class="cstat-no" title="statement not covered" >        &lt;/MotionH1&gt;</span>
+ {/* 404 text with better animation */}
+<span class="cstat-no" title="statement not covered" > &lt;MotionH1</span>
+<span class="cstat-no" title="statement not covered" > initial={{ scale: 0.8, opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ scale: 1, opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 0.2, type: "spring" }}</span>
+<span class="cstat-no" title="statement not covered" > className="text-7xl md:text-8xl font-extrabold mb-6 text-[#00f7ff] drop-shadow-lg"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ 404
+<span class="cstat-no" title="statement not covered" > &lt;/MotionH1&gt;</span>
 &nbsp;
-        {/* Error message */}
-<span class="cstat-no" title="statement not covered" >        &lt;MotionP</span>
-<span class="cstat-no" title="statement not covered" >          initial={{ y: 20, opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >          animate={{ y: 0, opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >          transition={{ delay: 0.4 }}</span>
-<span class="cstat-no" title="statement not covered" >          className="text-xl md:text-2xl mb-6 font-medium"</span>
-<span class="cstat-no" title="statement not covered" >        &gt;</span>
-          Oops! The page you're looking for vanished into the digital void.
-<span class="cstat-no" title="statement not covered" >        &lt;/MotionP&gt;</span>
+ {/* Error message */}
+<span class="cstat-no" title="statement not covered" > &lt;MotionP</span>
+<span class="cstat-no" title="statement not covered" > initial={{ y: 20, opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ y: 0, opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 0.4 }}</span>
+<span class="cstat-no" title="statement not covered" > className="text-xl md:text-2xl mb-6 font-medium"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ Oops! The page you're looking for vanished into the digital void.
+<span class="cstat-no" title="statement not covered" > &lt;/MotionP&gt;</span>
 &nbsp;
-        {/* Additional helpful message */}
-<span class="cstat-no" title="statement not covered" >        &lt;MotionP</span>
-<span class="cstat-no" title="statement not covered" >          initial={{ y: 20, opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >          animate={{ y: 0, opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >          transition={{ delay: 0.6 }}</span>
-<span class="cstat-no" title="statement not covered" >          className="text-gray-600 dark:text-gray-400 mb-8"</span>
-<span class="cstat-no" title="statement not covered" >        &gt;</span>
-          Maybe the URL was mistyped, or the page was moved to another
-          dimension.
-<span class="cstat-no" title="statement not covered" >        &lt;/MotionP&gt;</span>
+ {/* Additional helpful message */}
+<span class="cstat-no" title="statement not covered" > &lt;MotionP</span>
+<span class="cstat-no" title="statement not covered" > initial={{ y: 20, opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ y: 0, opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 0.6 }}</span>
+<span class="cstat-no" title="statement not covered" > className="text-gray-600 dark:text-gray-400 mb-8"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ Maybe the URL was mistyped, or the page was moved to another
+ dimension.
+<span class="cstat-no" title="statement not covered" > &lt;/MotionP&gt;</span>
 &nbsp;
-        {/* Action buttons */}
-<span class="cstat-no" title="statement not covered" >        &lt;MotionDiv</span>
-<span class="cstat-no" title="statement not covered" >          initial={{ y: 20, opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >          animate={{ y: 0, opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >          transition={{ delay: 0.8 }}</span>
-<span class="cstat-no" title="statement not covered" >          className="flex flex-col sm:flex-row justify-center gap-4"</span>
-        &gt;
-<span class="cstat-no" title="statement not covered" >          &lt;Link</span>
-<span class="cstat-no" title="statement not covered" >            to="/"</span>
-<span class="cstat-no" title="statement not covered" >            className="flex items-center justify-center px-6 py-3 bg-[#00f7ff] hover:bg-cyan-400 text-gray-900 font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;FaHome className="mr-2" /&gt;</span>
-            Back to Home
-<span class="cstat-no" title="statement not covered" >          &lt;/Link&gt;</span>
+ {/* Action buttons */}
+<span class="cstat-no" title="statement not covered" > &lt;MotionDiv</span>
+<span class="cstat-no" title="statement not covered" > initial={{ y: 20, opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ y: 0, opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 0.8 }}</span>
+<span class="cstat-no" title="statement not covered" > className="flex flex-col sm:flex-row justify-center gap-4"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;Link</span>
+<span class="cstat-no" title="statement not covered" > to="/"</span>
+<span class="cstat-no" title="statement not covered" > className="flex items-center justify-center px-6 py-3 bg-[#00f7ff] hover:bg-cyan-400 text-gray-900 font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;FaHome className="mr-2" /&gt;</span>
+ Back to Home
+<span class="cstat-no" title="statement not covered" > &lt;/Link&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >          &lt;Link</span>
-<span class="cstat-no" title="statement not covered" >            to="/explore"</span>
-<span class="cstat-no" title="statement not covered" >            className="flex items-center justify-center px-6 py-3 bg-transparent border-2 border-[#00f7ff] text-[#00f7ff] hover:bg-[#00f7ff]/10 font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            &lt;FaCompass className="mr-2" /&gt;</span>
-            Explore Content
-<span class="cstat-no" title="statement not covered" >          &lt;/Link&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/MotionDiv&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Link</span>
+<span class="cstat-no" title="statement not covered" > to="/explore"</span>
+<span class="cstat-no" title="statement not covered" > className="flex items-center justify-center px-6 py-3 bg-transparent border-2 border-[#00f7ff] text-[#00f7ff] hover:bg-[#00f7ff]/10 font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-105"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;FaCompass className="mr-2" /&gt;</span>
+ Explore Content
+<span class="cstat-no" title="statement not covered" > &lt;/Link&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/MotionDiv&gt;</span>
 &nbsp;
-        {/* Fun fact */}
-<span class="cstat-no" title="statement not covered" >        &lt;MotionDiv</span>
-<span class="cstat-no" title="statement not covered" >          initial={{ opacity: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >          animate={{ opacity: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >          transition={{ delay: 1 }}</span>
-<span class="cstat-no" title="statement not covered" >          className="mt-12 p-4 bg-[#00f7ff]/10 border border-[#00f7ff]/30 rounded-lg text-sm"</span>
-        &gt;
-<span class="cstat-no" title="statement not covered" >          &lt;p&gt;Did you know? The first 404 error appeared at CERN in 1990!&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/MotionDiv&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/MotionDiv&gt;</span>
-  );
+ {/* Fun fact */}
+<span class="cstat-no" title="statement not covered" > &lt;MotionDiv</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay: 1 }}</span>
+<span class="cstat-no" title="statement not covered" > className="mt-12 p-4 bg-[#00f7ff]/10 border border-[#00f7ff]/30 rounded-lg text-sm"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;p&gt;Did you know? The first 404 error appeared at CERN in 1990!&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/MotionDiv&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/MotionDiv&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -379,7 +379,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

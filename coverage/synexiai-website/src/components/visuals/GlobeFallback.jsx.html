@@ -165,50 +165,50 @@
 <span class="cstat-no" title="statement not covered" >import React from "react";</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function GlobeFallback({ variant = "idle" }) {</span>
-<span class="cstat-no" title="statement not covered" >  const spin =</span>
-<span class="cstat-no" title="statement not covered" >    variant === "loading"</span>
-<span class="cstat-no" title="statement not covered" >      ? "spin 6s linear infinite"</span>
-<span class="cstat-no" title="statement not covered" >      : "spin 18s linear infinite";</span>
+<span class="cstat-no" title="statement not covered" > const spin =</span>
+<span class="cstat-no" title="statement not covered" > variant === "loading"</span>
+<span class="cstat-no" title="statement not covered" > ? "spin 6s linear infinite"</span>
+<span class="cstat-no" title="statement not covered" > : "spin 18s linear infinite";</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div className="w-full h-full max-w-full max-h-full overflow-hidden grid place-items-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="relative w-full h-full max-w-[100%] max-h-[100%] aspect-square"&gt;</span>
-        {/* Outer glow */}
-<span class="cstat-no" title="statement not covered" >        &lt;div className="absolute -inset-6 rounded-full bg-[radial-gradient(circle_at_center,rgba(34,211,238,.25),transparent_60%)] blur-xl" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="w-full h-full max-w-full max-h-full overflow-hidden grid place-items-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="relative w-full h-full max-w-[100%] max-h-[100%] aspect-square"&gt;</span>
+ {/* Outer glow */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="absolute -inset-6 rounded-full bg-[radial-gradient(circle_at_center,rgba(34,211,238,.25),transparent_60%)] blur-xl" /&gt;</span>
 &nbsp;
-        {/* Planet core */}
-<span class="cstat-no" title="statement not covered" >        &lt;div</span>
-<span class="cstat-no" title="statement not covered" >          className="absolute inset-0 rounded-full"</span>
-<span class="cstat-no" title="statement not covered" >          style={{</span>
-<span class="cstat-no" title="statement not covered" >            background:</span>
-<span class="cstat-no" title="statement not covered" >              "radial-gradient(40% 40% at 35% 35%, rgba(255,255,255,.25), transparent), radial-gradient(circle at 50% 50%, #60a5fa 0%, #06b6d4 55%, #1e293b 100%)",</span>
-<span class="cstat-no" title="statement not covered" >          }}</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
+ {/* Planet core */}
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 rounded-full"</span>
+<span class="cstat-no" title="statement not covered" > style={{</span>
+<span class="cstat-no" title="statement not covered" > background:</span>
+<span class="cstat-no" title="statement not covered" > "radial-gradient(40% 40% at 35% 35%, rgba(255,255,255,.25), transparent), radial-gradient(circle at 50% 50%, #60a5fa 0%, #06b6d4 55%, #1e293b 100%)",</span>
+<span class="cstat-no" title="statement not covered" > }}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
 &nbsp;
-        {/* Subtle meridians */}
-<span class="cstat-no" title="statement not covered" >        &lt;div</span>
-<span class="cstat-no" title="statement not covered" >          className="absolute inset-0 rounded-full opacity-30 mix-blend-screen"</span>
-<span class="cstat-no" title="statement not covered" >          style={{</span>
-<span class="cstat-no" title="statement not covered" >            background:</span>
-<span class="cstat-no" title="statement not covered" >              "repeating-conic-gradient(from 0deg, rgba(255,255,255,.15) 0deg 1deg, transparent 1deg 6deg)",</span>
-<span class="cstat-no" title="statement not covered" >          }}</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
+ {/* Subtle meridians */}
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 rounded-full opacity-30 mix-blend-screen"</span>
+<span class="cstat-no" title="statement not covered" > style={{</span>
+<span class="cstat-no" title="statement not covered" > background:</span>
+<span class="cstat-no" title="statement not covered" > "repeating-conic-gradient(from 0deg, rgba(255,255,255,.15) 0deg 1deg, transparent 1deg 6deg)",</span>
+<span class="cstat-no" title="statement not covered" > }}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
 &nbsp;
-        {/* Latitude rings */}
-<span class="cstat-no" title="statement not covered" >        &lt;div</span>
-<span class="cstat-no" title="statement not covered" >          className="absolute inset-0 rounded-full border border-white/10"</span>
-<span class="cstat-no" title="statement not covered" >          style={{ animation: spin }}</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div</span>
-<span class="cstat-no" title="statement not covered" >          className="absolute inset-3 rounded-full border border-white/10"</span>
-<span class="cstat-no" title="statement not covered" >          style={{ animation: "spin 22s linear infinite reverse" }}</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
+ {/* Latitude rings */}
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 rounded-full border border-white/10"</span>
+<span class="cstat-no" title="statement not covered" > style={{ animation: spin }}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-3 rounded-full border border-white/10"</span>
+<span class="cstat-no" title="statement not covered" > style={{ animation: "spin 22s linear infinite reverse" }}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
 &nbsp;
-        {/* Gloss highlight */}
-<span class="cstat-no" title="statement not covered" >        &lt;div className="absolute inset-0 rounded-full bg-[radial-gradient(60%_40%_at_30%_25%,rgba(255,255,255,.35),transparent_60%)]" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+ {/* Gloss highlight */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="absolute inset-0 rounded-full bg-[radial-gradient(60%_40%_at_30%_25%,rgba(255,255,255,.35),transparent_60%)]" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -217,7 +217,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

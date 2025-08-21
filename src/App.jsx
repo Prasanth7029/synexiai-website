@@ -6,7 +6,8 @@ import PrivacyPolicy from "./pages/legal/PrivacyPolicy.jsx";
 import TermsOfService from "./pages/legal/TermsOfService.jsx";
 import CookiePolicy from "./pages/legal/CookiePolicy.jsx";
 import LoaderScreen from "./components/LoaderScreen";
-
+import GamesPage from "./pages/games/GamesPage.jsx";
+import PlayGameRoute from "./pages/games/PlayGameRoute.jsx";
 
 
 // Lazy pages (single source of truth)
@@ -74,6 +75,8 @@ export default function App() {
  <Route path="/contact" element={<ContactPage />} />
  <Route path="/tech" element={<TechStackPage />} />
  <Route path="/ai-news" element={<NewsPage />} />
+ <Route path="/games" element={<GamesPage />} />
+ <Route path="/games/:id" element={<PlayGameRoute />} />
  <Route path="/privacy" element={<PrivacyPolicy />} />
  <Route path="/terms" element={<TermsOfService />} />
  <Route path="/cookie-policy" element={<CookiePolicy />} />

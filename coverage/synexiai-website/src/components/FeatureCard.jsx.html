@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/65</span>
+                <span class='fraction'>0/64</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/65</span>
+                <span class='fraction'>0/64</span>
             </div>
         
             
@@ -140,13 +140,11 @@
 <a name='L75'></a><a href='#L75'>75</a>
 <a name='L76'></a><a href='#L76'>76</a>
 <a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -225,78 +223,77 @@
 <span class="cstat-no" title="statement not covered" >const MotionArticle = motion.article;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function FeatureCard({</span>
-<span class="cstat-no" title="statement not covered" >  icon,</span>
-<span class="cstat-no" title="statement not covered" >  title,</span>
-<span class="cstat-no" title="statement not covered" >  description,</span>
-<span class="cstat-no" title="statement not covered" >  delay = 0,</span>
-<span class="cstat-no" title="statement not covered" >  className = "",</span>
+<span class="cstat-no" title="statement not covered" > icon,</span>
+<span class="cstat-no" title="statement not covered" > title,</span>
+<span class="cstat-no" title="statement not covered" > description,</span>
+<span class="cstat-no" title="statement not covered" > delay = 0,</span>
+<span class="cstat-no" title="statement not covered" > className = "",</span>
 <span class="cstat-no" title="statement not covered" >}) {</span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;MotionArticle</span>
-<span class="cstat-no" title="statement not covered" >      initial={{ opacity: 0, y: 14 }}</span>
-<span class="cstat-no" title="statement not covered" >      whileInView={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >      viewport={{ once: true, amount: 0.2 }}</span>
-<span class="cstat-no" title="statement not covered" >      transition={{ duration: 0.5, delay }}</span>
-<span class="cstat-no" title="statement not covered" >      className={[</span>
-<span class="cstat-no" title="statement not covered" >        "group flex h-full min-h-[220px] flex-col justify-between",</span>
-<span class="cstat-no" title="statement not covered" >        "rounded-2xl border backdrop-blur-sm",</span>
-<span class="cstat-no" title="statement not covered" >        "border-[var(--border-color)]",</span>
-<span class="cstat-no" title="statement not covered" >        "bg-white/5 dark:bg-white/5",</span>
-<span class="cstat-no" title="statement not covered" >        "shadow-sm hover:shadow-cyan-500/10",</span>
-<span class="cstat-no" title="statement not covered" >        "transition-[transform,box-shadow,background] duration-300",</span>
-<span class="cstat-no" title="statement not covered" >        "p-6 md:p-8",</span>
-<span class="cstat-no" title="statement not covered" >        className,</span>
-<span class="cstat-no" title="statement not covered" >      ].join(" ")}</span>
-<span class="cstat-no" title="statement not covered" >      role="region"</span>
-<span class="cstat-no" title="statement not covered" >      aria-label={title}</span>
-    &gt;
-      {/* Top row: icon + title */}
-<span class="cstat-no" title="statement not covered" >      &lt;div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div</span>
-<span class="cstat-no" title="statement not covered" >          className={[</span>
-<span class="cstat-no" title="statement not covered" >            "mb-5 inline-flex items-center justify-center",</span>
-<span class="cstat-no" title="statement not covered" >            "h-12 w-12 rounded-xl",</span>
-<span class="cstat-no" title="statement not covered" >            "bg-cyan-500/10 border border-cyan-400/20",</span>
-<span class="cstat-no" title="statement not covered" >            "ring-0 group-hover:ring-2 group-hover:ring-cyan-400/30",</span>
-<span class="cstat-no" title="statement not covered" >            "transition-shadow",</span>
-<span class="cstat-no" title="statement not covered" >          ].join(" ")}</span>
-<span class="cstat-no" title="statement not covered" >          aria-hidden="true"</span>
-        &gt;
-          {/* keep whatever icon color you pass in */}
-<span class="cstat-no" title="statement not covered" >          {icon}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;MotionArticle</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 14 }}</span>
+<span class="cstat-no" title="statement not covered" > whileInView={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > viewport={{ once: true, amount: 0.2 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ duration: 0.5, delay }}</span>
+<span class="cstat-no" title="statement not covered" > className={[</span>
+<span class="cstat-no" title="statement not covered" > "group flex h-full min-h-[220px] flex-col justify-between",</span>
+<span class="cstat-no" title="statement not covered" > "rounded-2xl border",</span>
+<span class="cstat-no" title="statement not covered" > "border-[var(--border-color)]",</span>
+<span class="cstat-no" title="statement not covered" > "shadow-sm hover:shadow-cyan-500/10",</span>
+<span class="cstat-no" title="statement not covered" > "transition-[transform,box-shadow,background] duration-300",</span>
+<span class="cstat-no" title="statement not covered" > "p-6 md:p-8",</span>
+<span class="cstat-no" title="statement not covered" > className,</span>
+<span class="cstat-no" title="statement not covered" > ].join(" ")}</span>
+<span class="cstat-no" title="statement not covered" > role="region"</span>
+<span class="cstat-no" title="statement not covered" > aria-label={title}</span>
+ &gt;
+ {/* Top row: icon + title */}
+<span class="cstat-no" title="statement not covered" > &lt;div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className={[</span>
+<span class="cstat-no" title="statement not covered" > "mb-5 inline-flex items-center justify-center",</span>
+<span class="cstat-no" title="statement not covered" > "h-12 w-12 rounded-xl",</span>
+<span class="cstat-no" title="statement not covered" > "bg-cyan-500/10 border border-cyan-400/20",</span>
+<span class="cstat-no" title="statement not covered" > "ring-0 group-hover:ring-2 group-hover:ring-cyan-400/30",</span>
+<span class="cstat-no" title="statement not covered" > "transition-shadow",</span>
+<span class="cstat-no" title="statement not covered" > ].join(" ")}</span>
+<span class="cstat-no" title="statement not covered" > aria-hidden="true"</span>
+ &gt;
+ {/* keep whatever icon color you pass in */}
+<span class="cstat-no" title="statement not covered" > {icon}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        &lt;h3</span>
-<span class="cstat-no" title="statement not covered" >          className={[</span>
-<span class="cstat-no" title="statement not covered" >            "text-xl md:text-2xl font-semibold leading-snug",</span>
-<span class="cstat-no" title="statement not covered" >            "text-gray-900 dark:text-gray-100",</span>
-<span class="cstat-no" title="statement not covered" >          ].join(" ")}</span>
-        &gt;
-<span class="cstat-no" title="statement not covered" >          {title}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/h3&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;h3</span>
+<span class="cstat-no" title="statement not covered" > className={[</span>
+<span class="cstat-no" title="statement not covered" > "text-xl md:text-2xl font-semibold leading-snug",</span>
+<span class="cstat-no" title="statement not covered" > "text-gray-900 dark:text-gray-100",</span>
+<span class="cstat-no" title="statement not covered" > ].join(" ")}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {title}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/h3&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        &lt;p</span>
-<span class="cstat-no" title="statement not covered" >          className={[</span>
-<span class="cstat-no" title="statement not covered" >            "mt-3 text-base md:text-lg",</span>
-<span class="cstat-no" title="statement not covered" >            "text-gray-700 dark:text-gray-300",</span>
-<span class="cstat-no" title="statement not covered" >          ].join(" ")}</span>
-        &gt;
-<span class="cstat-no" title="statement not covered" >          {description}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p</span>
+<span class="cstat-no" title="statement not covered" > className={[</span>
+<span class="cstat-no" title="statement not covered" > "mt-3 text-base md:text-lg",</span>
+<span class="cstat-no" title="statement not covered" > "text-gray-700 dark:text-gray-300",</span>
+<span class="cstat-no" title="statement not covered" > ].join(" ")}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {description}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-      {/* Bottom accent line on hover for polish */}
-<span class="cstat-no" title="statement not covered" >      &lt;div</span>
-<span class="cstat-no" title="statement not covered" >        className={[</span>
-<span class="cstat-no" title="statement not covered" >          "mt-6 h-px w-full",</span>
-<span class="cstat-no" title="statement not covered" >          "bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent",</span>
-<span class="cstat-no" title="statement not covered" >          "opacity-0 group-hover:opacity-100 transition-opacity",</span>
-<span class="cstat-no" title="statement not covered" >        ].join(" ")}</span>
-<span class="cstat-no" title="statement not covered" >        aria-hidden="true"</span>
-<span class="cstat-no" title="statement not covered" >      /&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/MotionArticle&gt;</span>
+ {/* Bottom accent line on hover for polish */}
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className={[</span>
+<span class="cstat-no" title="statement not covered" > "mt-6 h-px w-full",</span>
+<span class="cstat-no" title="statement not covered" > "bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent",</span>
+<span class="cstat-no" title="statement not covered" > "opacity-0 group-hover:opacity-100 transition-opacity",</span>
+<span class="cstat-no" title="statement not covered" > ].join(" ")}</span>
+<span class="cstat-no" title="statement not covered" > aria-hidden="true"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/MotionArticle&gt;</span>
 &nbsp;
-  );
+ );
 <span class="cstat-no" title="statement not covered" >}</span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -304,7 +301,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

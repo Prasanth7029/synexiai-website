@@ -211,70 +211,70 @@
 <span class="cstat-no" title="statement not covered" >import Globe from "react-globe.gl";</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function GlobeCanvas({ width, height }) {</span>
-<span class="cstat-no" title="statement not covered" >  const globeRef = useRef(null);</span>
+<span class="cstat-no" title="statement not covered" > const globeRef = useRef(null);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const g = globeRef.current;</span>
-<span class="cstat-no" title="statement not covered" >    if (!g) return;</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const g = globeRef.current;</span>
+<span class="cstat-no" title="statement not covered" > if (!g) return;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    try {</span>
-      // Globe controls
-<span class="cstat-no" title="statement not covered" >      g.controls().autoRotate = true;</span>
-<span class="cstat-no" title="statement not covered" >      g.controls().autoRotateSpeed = 0.5;</span>
-<span class="cstat-no" title="statement not covered" >      g.pointOfView({ lat: 10, lng: 0, altitude: 2.2 });</span>
+<span class="cstat-no" title="statement not covered" > try {</span>
+ // Globe controls
+<span class="cstat-no" title="statement not covered" > g.controls().autoRotate = true;</span>
+<span class="cstat-no" title="statement not covered" > g.controls().autoRotateSpeed = 0.5;</span>
+<span class="cstat-no" title="statement not covered" > g.pointOfView({ lat: 10, lng: 0, altitude: 2.2 });</span>
 &nbsp;
-      // iOS-friendly DPR cap
-<span class="cstat-no" title="statement not covered" >      const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);</span>
-<span class="cstat-no" title="statement not covered" >      const renderer = g.renderer?.();</span>
-<span class="cstat-no" title="statement not covered" >      if (renderer) {</span>
-<span class="cstat-no" title="statement not covered" >        renderer.setPixelRatio(isIOS ? 1 : Math.min(window.devicePixelRatio || 1, 2));</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    } catch (e) {</span>
-<span class="cstat-no" title="statement not covered" >      console.warn("[GlobeCanvas] setup warning", e);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }, [width, height]);</span>
+ // iOS-friendly DPR cap
+<span class="cstat-no" title="statement not covered" > const isIOS = /iP(hone|ad|od)/i.test(navigator.userAgent);</span>
+<span class="cstat-no" title="statement not covered" > const renderer = g.renderer?.();</span>
+<span class="cstat-no" title="statement not covered" > if (renderer) {</span>
+<span class="cstat-no" title="statement not covered" > renderer.setPixelRatio(isIOS ? 1 : Math.min(window.devicePixelRatio || 1, 2));</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > } catch (e) {</span>
+<span class="cstat-no" title="statement not covered" > console.warn("[GlobeCanvas] setup warning", e);</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > }, [width, height]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const arcs = [</span>
-<span class="cstat-no" title="statement not covered" >    {</span>
-<span class="cstat-no" title="statement not covered" >      startLat: 37.7749,</span>
-<span class="cstat-no" title="statement not covered" >      startLng: -122.4194,</span>
-<span class="cstat-no" title="statement not covered" >      endLat: 40.7128,</span>
-<span class="cstat-no" title="statement not covered" >      endLng: -74.006,</span>
-<span class="cstat-no" title="statement not covered" >      color: ["#06b6d4", "#3b82f6"],</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    {</span>
-<span class="cstat-no" title="statement not covered" >      startLat: 51.5072,</span>
-<span class="cstat-no" title="statement not covered" >      startLng: -0.1276,</span>
-<span class="cstat-no" title="statement not covered" >      endLat: 28.6139,</span>
-<span class="cstat-no" title="statement not covered" >      endLng: 77.209,</span>
-<span class="cstat-no" title="statement not covered" >      color: ["#22d3ee", "#34d399"],</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >  ];</span>
+<span class="cstat-no" title="statement not covered" > const arcs = [</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > startLat: 37.7749,</span>
+<span class="cstat-no" title="statement not covered" > startLng: -122.4194,</span>
+<span class="cstat-no" title="statement not covered" > endLat: 40.7128,</span>
+<span class="cstat-no" title="statement not covered" > endLng: -74.006,</span>
+<span class="cstat-no" title="statement not covered" > color: ["#06b6d4", "#3b82f6"],</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > startLat: 51.5072,</span>
+<span class="cstat-no" title="statement not covered" > startLng: -0.1276,</span>
+<span class="cstat-no" title="statement not covered" > endLat: 28.6139,</span>
+<span class="cstat-no" title="statement not covered" > endLng: 77.209,</span>
+<span class="cstat-no" title="statement not covered" > color: ["#22d3ee", "#34d399"],</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > ];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;Globe</span>
-<span class="cstat-no" title="statement not covered" >      ref={globeRef}</span>
-<span class="cstat-no" title="statement not covered" >      width={width}</span>
-<span class="cstat-no" title="statement not covered" >      height={height}</span>
-<span class="cstat-no" title="statement not covered" >      backgroundColor="rgba(0,0,0,0)"</span>
-<span class="cstat-no" title="statement not covered" >      globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"</span>
-<span class="cstat-no" title="statement not covered" >      bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"</span>
-<span class="cstat-no" title="statement not covered" >      arcsData={arcs}</span>
-<span class="cstat-no" title="statement not covered" >      arcColor={"color"}</span>
-<span class="cstat-no" title="statement not covered" >      arcDashLength={0.6}</span>
-<span class="cstat-no" title="statement not covered" >      arcDashGap={0.15}</span>
-<span class="cstat-no" title="statement not covered" >      arcDashAnimateTime={3000}</span>
-<span class="cstat-no" title="statement not covered" >      atmosphereColor="#67e8f9"</span>
-<span class="cstat-no" title="statement not covered" >      atmosphereAltitude={0.15}</span>
-<span class="cstat-no" title="statement not covered" >      rendererConfig={{</span>
-<span class="cstat-no" title="statement not covered" >        alpha: true,</span>
-<span class="cstat-no" title="statement not covered" >        antialias: false, // ✅ iOS friendly</span>
-<span class="cstat-no" title="statement not covered" >        powerPreference: "default", // Avoid forcing high-performance on iOS</span>
-<span class="cstat-no" title="statement not covered" >        preserveDrawingBuffer: false,</span>
-<span class="cstat-no" title="statement not covered" >        failIfMajorPerformanceCaveat: true,</span>
-<span class="cstat-no" title="statement not covered" >      }}</span>
-<span class="cstat-no" title="statement not covered" >    /&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;Globe</span>
+<span class="cstat-no" title="statement not covered" > ref={globeRef}</span>
+<span class="cstat-no" title="statement not covered" > width={width}</span>
+<span class="cstat-no" title="statement not covered" > height={height}</span>
+<span class="cstat-no" title="statement not covered" > backgroundColor="rgba(0,0,0,0)"</span>
+<span class="cstat-no" title="statement not covered" > globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"</span>
+<span class="cstat-no" title="statement not covered" > bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"</span>
+<span class="cstat-no" title="statement not covered" > arcsData={arcs}</span>
+<span class="cstat-no" title="statement not covered" > arcColor={"color"}</span>
+<span class="cstat-no" title="statement not covered" > arcDashLength={0.6}</span>
+<span class="cstat-no" title="statement not covered" > arcDashGap={0.15}</span>
+<span class="cstat-no" title="statement not covered" > arcDashAnimateTime={3000}</span>
+<span class="cstat-no" title="statement not covered" > atmosphereColor="#67e8f9"</span>
+<span class="cstat-no" title="statement not covered" > atmosphereAltitude={0.15}</span>
+<span class="cstat-no" title="statement not covered" > rendererConfig={{</span>
+<span class="cstat-no" title="statement not covered" > alpha: true,</span>
+<span class="cstat-no" title="statement not covered" > antialias: false, // ✅ iOS friendly</span>
+<span class="cstat-no" title="statement not covered" > powerPreference: "default", // Avoid forcing high-performance on iOS</span>
+<span class="cstat-no" title="statement not covered" > preserveDrawingBuffer: false,</span>
+<span class="cstat-no" title="statement not covered" > failIfMajorPerformanceCaveat: true,</span>
+<span class="cstat-no" title="statement not covered" > }}</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -283,7 +283,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

@@ -544,235 +544,235 @@
 <span class="cstat-no" title="statement not covered" >const UPDATED = "August 11, 2025";</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function PrivacyPolicy() {</span>
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    window.scrollTo(0, 0);</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > window.scrollTo(0, 0);</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;Helmet&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;title&gt;Privacy Policy | SynexiAI&lt;/title&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;meta</span>
-<span class="cstat-no" title="statement not covered" >          name="description"</span>
-<span class="cstat-no" title="statement not covered" >          content="How SynexiAI collects, uses, and protects your data."</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;meta name="robots" content="index, follow" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/Helmet&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Helmet&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;title&gt;Privacy Policy | SynexiAI&lt;/title&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;meta</span>
+<span class="cstat-no" title="statement not covered" > name="description"</span>
+<span class="cstat-no" title="statement not covered" > content="How SynexiAI collects, uses, and protects your data."</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;meta name="robots" content="index, follow" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/Helmet&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;main className="min-h-screen bg-[var(--bg-gradient)] text-[var(--text-color)]"&gt;</span>
-        {/* tighter vertical padding */}
-<span class="cstat-no" title="statement not covered" >        &lt;section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-4 py-12 sm:py-14"&gt;</span>
-          {/* tighter card padding */}
-<span class="cstat-no" title="statement not covered" >          &lt;div className="bg-[var(--card-bg)] text-[var(--card-text)] rounded-2xl shadow-xl p-5 sm:p-7 lg:p-8 border border-[var(--border-color)]"&gt;</span>
-            {/* smaller hero */}
-<span class="cstat-no" title="statement not covered" >            &lt;div className="text-center mb-6"&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;h1 className="text-2xl sm:text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]"&gt;</span>
-                Privacy Policy
-<span class="cstat-no" title="statement not covered" >              &lt;/h1&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;p className="text-sm md:text-base opacity-90"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                Last updated: {UPDATED}</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;main className="min-h-screen bg-[var(--bg-gradient)] text-[var(--text-color)]"&gt;</span>
+ {/* tighter vertical padding */}
+<span class="cstat-no" title="statement not covered" > &lt;section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-4 py-12 sm:py-14"&gt;</span>
+ {/* tighter card padding */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="bg-[var(--card-bg)] text-[var(--card-text)] rounded-2xl shadow-xl p-5 sm:p-7 lg:p-8 border border-[var(--border-color)]"&gt;</span>
+ {/* smaller hero */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="text-center mb-6"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;h1 className="text-2xl sm:text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]"&gt;</span>
+ Privacy Policy
+<span class="cstat-no" title="statement not covered" > &lt;/h1&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-sm md:text-base opacity-90"&gt;</span>
+<span class="cstat-no" title="statement not covered" > Last updated: {UPDATED}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-            {/* compact prose + accordions */}
-<span class="cstat-no" title="statement not covered" >            &lt;div</span>
-<span class="cstat-no" title="statement not covered" >              className="</span>
-              prose prose-xs md:prose-sm dark:prose-invert max-w-none
-              prose-p:leading-snug prose-li:leading-snug
-              prose-headings:mt-6 prose-headings:mb-2
-              prose-ul:my-2 prose-ol:my-2
-            "
-            &gt;
-<span class="cstat-no" title="statement not covered" >              &lt;p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                This Privacy Policy explains how &lt;strong&gt;SynexiAI&lt;/strong&gt;{" "}</span>
-                (“we”, “us”, “our”) collects, uses, and safeguards personal
-<span class="cstat-no" title="statement not covered" >                information when you use &lt;code&gt;synexiai.online&lt;/code&gt; and our</span>
-                services (collectively, the “Services”).
-<span class="cstat-no" title="statement not covered" >              &lt;/p&gt;</span>
+ {/* compact prose + accordions */}
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className="</span>
+ prose prose-xs md:prose-sm dark:prose-invert max-w-none
+ prose-p:leading-snug prose-li:leading-snug
+ prose-headings:mt-6 prose-headings:mb-2
+ prose-ul:my-2 prose-ol:my-2
+ "
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;p&gt;</span>
+<span class="cstat-no" title="statement not covered" > This Privacy Policy explains how &lt;strong&gt;SynexiAI&lt;/strong&gt;{" "}</span>
+ (“we”, “us”, “our”) collects, uses, and safeguards personal
+<span class="cstat-no" title="statement not covered" > information when you use &lt;code&gt;synexiai.online&lt;/code&gt; and our</span>
+ services (collectively, the “Services”).
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;details</span>
-<span class="cstat-no" title="statement not covered" >                className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)]"</span>
-<span class="cstat-no" title="statement not covered" >                open</span>
-              &gt;
-<span class="cstat-no" title="statement not covered" >                &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span&gt;Information We Collect&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
-                    +
-<span class="cstat-no" title="statement not covered" >                  &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/summary&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;ul className="space-y-1.5"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;strong&gt;Contact data&lt;/strong&gt; (e.g., name, email) when you</span>
-                      submit a form or contact us.
-<span class="cstat-no" title="statement not covered" >                    &lt;/li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;strong&gt;Usage data&lt;/strong&gt; (pages viewed, device,</span>
-                      approximate location).
-<span class="cstat-no" title="statement not covered" >                    &lt;/li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;strong&gt;Cookies&lt;/strong&gt; and similar technologies. See our{" "}</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;Link to="/cookie-policy" className="link-accent"&gt;</span>
-                        Cookie Policy
-<span class="cstat-no" title="statement not covered" >                      &lt;/Link&gt;</span>
-                      .
-<span class="cstat-no" title="statement not covered" >                    &lt;/li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;strong&gt;AI chat inputs&lt;/strong&gt; you submit in our on-site</span>
-                      chat widget to respond and improve the experience.
-<span class="cstat-no" title="statement not covered" >                    &lt;/li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;/ul&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/details&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;details</span>
+<span class="cstat-no" title="statement not covered" > className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)]"</span>
+<span class="cstat-no" title="statement not covered" > open</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span&gt;Information We Collect&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
+ +
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/summary&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;ul className="space-y-1.5"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;strong&gt;Contact data&lt;/strong&gt; (e.g., name, email) when you</span>
+ submit a form or contact us.
+<span class="cstat-no" title="statement not covered" > &lt;/li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;strong&gt;Usage data&lt;/strong&gt; (pages viewed, device,</span>
+ approximate location).
+<span class="cstat-no" title="statement not covered" > &lt;/li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;strong&gt;Cookies&lt;/strong&gt; and similar technologies. See our{" "}</span>
+<span class="cstat-no" title="statement not covered" > &lt;Link to="/cookie-policy" className="link-accent"&gt;</span>
+ Cookie Policy
+<span class="cstat-no" title="statement not covered" > &lt;/Link&gt;</span>
+ .
+<span class="cstat-no" title="statement not covered" > &lt;/li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;strong&gt;AI chat inputs&lt;/strong&gt; you submit in our on-site</span>
+ chat widget to respond and improve the experience.
+<span class="cstat-no" title="statement not covered" > &lt;/li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/ul&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/details&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;details</span>
-<span class="cstat-no" title="statement not covered" >                className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"</span>
-<span class="cstat-no" title="statement not covered" >                open</span>
-              &gt;
-<span class="cstat-no" title="statement not covered" >                &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span&gt;How We Use Information&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
-                    +
-<span class="cstat-no" title="statement not covered" >                  &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/summary&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;ul className="space-y-1.5"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;li&gt;</span>
-                      Provide, maintain, and improve the website and chat
-                      experience.
-<span class="cstat-no" title="statement not covered" >                    &lt;/li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;li&gt;Respond to inquiries and support requests.&lt;/li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;li&gt;Analyze site performance and security.&lt;/li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;li&gt;Comply with legal obligations.&lt;/li&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;/ul&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/details&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;details</span>
+<span class="cstat-no" title="statement not covered" > className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"</span>
+<span class="cstat-no" title="statement not covered" > open</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span&gt;How We Use Information&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
+ +
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/summary&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;ul className="space-y-1.5"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;li&gt;</span>
+ Provide, maintain, and improve the website and chat
+ experience.
+<span class="cstat-no" title="statement not covered" > &lt;/li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;li&gt;Respond to inquiries and support requests.&lt;/li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;li&gt;Analyze site performance and security.&lt;/li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;li&gt;Comply with legal obligations.&lt;/li&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/ul&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/details&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span&gt;Sharing &amp;amp; Disclosure&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
-                    +
-<span class="cstat-no" title="statement not covered" >                  &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/summary&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;p&gt;</span>
-                    We do not sell your personal information. We may share data
-                    with service providers (e.g., analytics, hosting) under
-                    contractual confidentiality and security obligations, or
-                    when required by law.
-<span class="cstat-no" title="statement not covered" >                  &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/details&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span&gt;Sharing &amp;amp; Disclosure&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
+ +
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/summary&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p&gt;</span>
+ We do not sell your personal information. We may share data
+ with service providers (e.g., analytics, hosting) under
+ contractual confidentiality and security obligations, or
+ when required by law.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/details&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span&gt;Data Retention&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
-                    +
-<span class="cstat-no" title="statement not covered" >                  &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/summary&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;p&gt;</span>
-                    We retain personal data only as long as necessary for the
-                    purposes described or as required by law. You can request
-                    deletion where applicable.
-<span class="cstat-no" title="statement not covered" >                  &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/details&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span&gt;Data Retention&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
+ +
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/summary&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p&gt;</span>
+ We retain personal data only as long as necessary for the
+ purposes described or as required by law. You can request
+ deletion where applicable.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/details&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span&gt;Security&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
-                    +
-<span class="cstat-no" title="statement not covered" >                  &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/summary&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;p&gt;</span>
-                    We use reasonable technical and organizational measures to
-                    protect your data. No system is 100% secure, but we
-                    continuously improve safeguards.
-<span class="cstat-no" title="statement not covered" >                  &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/details&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span&gt;Security&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
+ +
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/summary&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p&gt;</span>
+ We use reasonable technical and organizational measures to
+ protect your data. No system is 100% secure, but we
+ continuously improve safeguards.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/details&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span&gt;Your Rights&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
-                    +
-<span class="cstat-no" title="statement not covered" >                  &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/summary&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;p&gt;</span>
-                    Depending on your location, you may have rights to access,
-                    correct, delete, or restrict processing of your data, and
-                    opt-out of certain uses. Contact us to exercise these
-                    rights.
-<span class="cstat-no" title="statement not covered" >                  &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/details&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span&gt;Your Rights&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
+ +
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/summary&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p&gt;</span>
+ Depending on your location, you may have rights to access,
+ correct, delete, or restrict processing of your data, and
+ opt-out of certain uses. Contact us to exercise these
+ rights.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/details&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span&gt;Children’s Privacy&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
-                    +
-<span class="cstat-no" title="statement not covered" >                  &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/summary&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;p&gt;</span>
-                    Our Services are not directed to children under 13. We do
-                    not knowingly collect their personal information.
-<span class="cstat-no" title="statement not covered" >                  &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/details&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span&gt;Children’s Privacy&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
+ +
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/summary&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p&gt;</span>
+ Our Services are not directed to children under 13. We do
+ not knowingly collect their personal information.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/details&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span&gt;Changes to This Policy&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
-                    +
-<span class="cstat-no" title="statement not covered" >                  &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/summary&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;p&gt;</span>
-                    We may update this Policy. We’ll post updates here and
-                    revise the “Last updated” date. Please review periodically.
-<span class="cstat-no" title="statement not covered" >                  &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/details&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span&gt;Changes to This Policy&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
+ +
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/summary&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p&gt;</span>
+ We may update this Policy. We’ll post updates here and
+ revise the “Last updated” date. Please review periodically.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/details&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span&gt;Contact Us&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
-                    +
-<span class="cstat-no" title="statement not covered" >                  &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/summary&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;div className="mt-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    Email:{" "}</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;a</span>
-<span class="cstat-no" title="statement not covered" >                      href="mailto:privacy@synexiai.online"</span>
-<span class="cstat-no" title="statement not covered" >                      className="link-accent"</span>
-<span class="cstat-no" title="statement not covered" >                    &gt;</span>
-                      privacy@synexiai.online
-<span class="cstat-no" title="statement not covered" >                    &lt;/a&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;p className="text-xs opacity-70"&gt;</span>
-                    This page is provided for informational purposes and is not
-                    legal advice.
-<span class="cstat-no" title="statement not covered" >                  &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >                &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;/details&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/section&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/main&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > &lt;details className="group border border-[var(--border-color)] rounded-xl p-4 bg-[var(--card-bg)] mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;summary className="cursor-pointer font-semibold text-[15px] flex items-center justify-between"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span&gt;Contact Us&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="ml-3 text-[var(--primary)] transition-transform group-open:rotate-45"&gt;</span>
+ +
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/summary&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p&gt;</span>
+<span class="cstat-no" title="statement not covered" > Email:{" "}</span>
+<span class="cstat-no" title="statement not covered" > &lt;a</span>
+<span class="cstat-no" title="statement not covered" > href="mailto:privacy@synexiai.online"</span>
+<span class="cstat-no" title="statement not covered" > className="link-accent"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ privacy@synexiai.online
+<span class="cstat-no" title="statement not covered" > &lt;/a&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-xs opacity-70"&gt;</span>
+ This page is provided for informational purposes and is not
+ legal advice.
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/details&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/section&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/main&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -781,7 +781,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

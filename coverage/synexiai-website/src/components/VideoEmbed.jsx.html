@@ -176,57 +176,57 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import React, { useRef, useState, useEffect } from "react";<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function VideoEmbed({ src, title }) {</span>
-<span class="cstat-no" title="statement not covered" >  const [active, setActive] = useState(false);</span>
-<span class="cstat-no" title="statement not covered" >  const [visible, setVisible] = useState(false);</span>
-<span class="cstat-no" title="statement not covered" >  const ref = useRef(null);</span>
+<span class="cstat-no" title="statement not covered" > const [active, setActive] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const [visible, setVisible] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" > const ref = useRef(null);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (!ref.current || active) return;</span>
-<span class="cstat-no" title="statement not covered" >    const io = new IntersectionObserver(</span>
-<span class="cstat-no" title="statement not covered" >      ([entry]) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        if (entry.isIntersecting) {</span>
-<span class="cstat-no" title="statement not covered" >          setVisible(true);</span>
-<span class="cstat-no" title="statement not covered" >          io.disconnect();</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      },</span>
-<span class="cstat-no" title="statement not covered" >      { rootMargin: "200px" },</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >    io.observe(ref.current);</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; io.disconnect();</span>
-<span class="cstat-no" title="statement not covered" >  }, [active]);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (!ref.current || active) return;</span>
+<span class="cstat-no" title="statement not covered" > const io = new IntersectionObserver(</span>
+<span class="cstat-no" title="statement not covered" > ([entry]) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > if (entry.isIntersecting) {</span>
+<span class="cstat-no" title="statement not covered" > setVisible(true);</span>
+<span class="cstat-no" title="statement not covered" > io.disconnect();</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > { rootMargin: "200px" },</span>
+<span class="cstat-no" title="statement not covered" > );</span>
+<span class="cstat-no" title="statement not covered" > io.observe(ref.current);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; io.disconnect();</span>
+<span class="cstat-no" title="statement not covered" > }, [active]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const start = () =&gt; setActive(true);</span>
+<span class="cstat-no" title="statement not covered" > const start = () =&gt; setActive(true);</span>
 &nbsp;
-  // derive a poster if your API has thumbnails; otherwise show a play overlay
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div</span>
-<span class="cstat-no" title="statement not covered" >      ref={ref}</span>
-<span class="cstat-no" title="statement not covered" >      className="relative pt-[56.25%] bg-black overflow-hidden rounded-t-xl"</span>
-    &gt;
-<span class="cstat-no" title="statement not covered" >      {active || visible ? (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;iframe</span>
-<span class="cstat-no" title="statement not covered" >          title={title}</span>
-<span class="cstat-no" title="statement not covered" >          src={active ? src : undefined} // only set src after click -&gt; zero CPU before</span>
-<span class="cstat-no" title="statement not covered" >          loading="lazy"</span>
-<span class="cstat-no" title="statement not covered" >          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"</span>
-<span class="cstat-no" title="statement not covered" >          allowFullScreen</span>
-<span class="cstat-no" title="statement not covered" >          className="absolute inset-0 w-full h-full"</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      ) : null}</span>
-<span class="cstat-no" title="statement not covered" >      {!active &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;button</span>
-<span class="cstat-no" title="statement not covered" >          onClick={start}</span>
-<span class="cstat-no" title="statement not covered" >          className="absolute inset-0 w-full h-full flex items-center justify-center</span>
-                     text-white/90 bg-gradient-to-b from-black/40 to-black/50"
-<span class="cstat-no" title="statement not covered" >          aria-label={`Play video: ${title}`}</span>
-        &gt;
-<span class="cstat-no" title="statement not covered" >          &lt;div className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 backdrop-blur"&gt;</span>
-            ▶ Play
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/button&gt;</span>
-      )}
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+ // derive a poster if your API has thumbnails; otherwise show a play overlay
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > ref={ref}</span>
+<span class="cstat-no" title="statement not covered" > className="relative pt-[56.25%] bg-black overflow-hidden rounded-t-xl"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {active || visible ? (</span>
+<span class="cstat-no" title="statement not covered" > &lt;iframe</span>
+<span class="cstat-no" title="statement not covered" > title={title}</span>
+<span class="cstat-no" title="statement not covered" > src={active ? src : undefined} // only set src after click -&gt; zero CPU before</span>
+<span class="cstat-no" title="statement not covered" > loading="lazy"</span>
+<span class="cstat-no" title="statement not covered" > allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"</span>
+<span class="cstat-no" title="statement not covered" > allowFullScreen</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 w-full h-full"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > ) : null}</span>
+<span class="cstat-no" title="statement not covered" > {!active &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={start}</span>
+<span class="cstat-no" title="statement not covered" > className="absolute inset-0 w-full h-full flex items-center justify-center</span>
+ text-white/90 bg-gradient-to-b from-black/40 to-black/50"
+<span class="cstat-no" title="statement not covered" > aria-label={`Play video: ${title}`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;div className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 "&gt;</span>
+ ▶ Play
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -235,7 +235,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

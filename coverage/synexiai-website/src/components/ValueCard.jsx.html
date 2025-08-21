@@ -182,54 +182,54 @@
 <span class="cstat-no" title="statement not covered" >const MotionDiv = motion.div;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function ValueCard({</span>
-<span class="cstat-no" title="statement not covered" >  icon,</span>
-<span class="cstat-no" title="statement not covered" >  title,</span>
-<span class="cstat-no" title="statement not covered" >  description,</span>
-<span class="cstat-no" title="statement not covered" >  delay = 0, // seconds, e.g. 0.1, 0.2 ...</span>
-<span class="cstat-no" title="statement not covered" >  className = "",</span>
-<span class="cstat-no" title="statement not covered" >  highlightColor = "cyan", // "cyan" | "teal" | "blue" | "purple" | "emerald"</span>
+<span class="cstat-no" title="statement not covered" > icon,</span>
+<span class="cstat-no" title="statement not covered" > title,</span>
+<span class="cstat-no" title="statement not covered" > description,</span>
+<span class="cstat-no" title="statement not covered" > delay = 0, // seconds, e.g. 0.1, 0.2 ...</span>
+<span class="cstat-no" title="statement not covered" > className = "",</span>
+<span class="cstat-no" title="statement not covered" > highlightColor = "cyan", // "cyan" | "teal" | "blue" | "purple" | "emerald"</span>
 <span class="cstat-no" title="statement not covered" >}) {</span>
-<span class="cstat-no" title="statement not covered" >  const gradientMap = {</span>
-<span class="cstat-no" title="statement not covered" >    cyan: "from-cyan-400 to-teal-400",</span>
-<span class="cstat-no" title="statement not covered" >    teal: "from-teal-400 to-emerald-400",</span>
-<span class="cstat-no" title="statement not covered" >    blue: "from-blue-400 to-cyan-400",</span>
-<span class="cstat-no" title="statement not covered" >    purple: "from-purple-400 to-cyan-400",</span>
-<span class="cstat-no" title="statement not covered" >    emerald: "from-emerald-400 to-teal-400",</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
-<span class="cstat-no" title="statement not covered" >  const accent = gradientMap[highlightColor] || gradientMap.cyan;</span>
+<span class="cstat-no" title="statement not covered" > const gradientMap = {</span>
+<span class="cstat-no" title="statement not covered" > cyan: "from-cyan-400 to-teal-400",</span>
+<span class="cstat-no" title="statement not covered" > teal: "from-teal-400 to-emerald-400",</span>
+<span class="cstat-no" title="statement not covered" > blue: "from-blue-400 to-cyan-400",</span>
+<span class="cstat-no" title="statement not covered" > purple: "from-purple-400 to-cyan-400",</span>
+<span class="cstat-no" title="statement not covered" > emerald: "from-emerald-400 to-teal-400",</span>
+<span class="cstat-no" title="statement not covered" > };</span>
+<span class="cstat-no" title="statement not covered" > const accent = gradientMap[highlightColor] || gradientMap.cyan;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const base =</span>
-<span class="cstat-no" title="statement not covered" >    "rounded-xl p-6 text-center bg-white/5 border border-white/10 backdrop-blur-sm " +</span>
-    "shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-2";
+<span class="cstat-no" title="statement not covered" > const base =</span>
+<span class="cstat-no" title="statement not covered" > "rounded-xl p-6 text-center border " +</span>
+ "shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-2";
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;MotionDiv</span>
-<span class="cstat-no" title="statement not covered" >      role="article"</span>
-<span class="cstat-no" title="statement not covered" >      initial={{ opacity: 0, y: 30 }}</span>
-<span class="cstat-no" title="statement not covered" >      whileInView={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >      viewport={{ once: true, amount: 0.2 }}</span>
-<span class="cstat-no" title="statement not covered" >      transition={{ delay, duration: 0.5 }}</span>
-<span class="cstat-no" title="statement not covered" >      className={`${base} ${className}`}</span>
-    &gt;
-      {/* icon in a soft glass circle */}
-<span class="cstat-no" title="statement not covered" >      &lt;div className="mb-4 flex justify-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 border border-white/10"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {icon}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;MotionDiv</span>
+<span class="cstat-no" title="statement not covered" > role="article"</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 30 }}</span>
+<span class="cstat-no" title="statement not covered" > whileInView={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > viewport={{ once: true, amount: 0.2 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ delay, duration: 0.5 }}</span>
+<span class="cstat-no" title="statement not covered" > className={`${base} ${className}`}</span>
+ &gt;
+ {/* icon in a soft glass circle */}
+<span class="cstat-no" title="statement not covered" > &lt;div className="mb-4 flex justify-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 border border-white/10"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {icon}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-      {/* gradient title */}
-<span class="cstat-no" title="statement not covered" >      &lt;h4</span>
-<span class="cstat-no" title="statement not covered" >        className={`text-lg font-semibold mb-2 bg-clip-text text-transparent bg-gradient-to-r ${accent}`}</span>
-      &gt;
-<span class="cstat-no" title="statement not covered" >        {title}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/h4&gt;</span>
+ {/* gradient title */}
+<span class="cstat-no" title="statement not covered" > &lt;h4</span>
+<span class="cstat-no" title="statement not covered" > className={`text-lg font-semibold mb-2 bg-clip-text text-transparent bg-gradient-to-r ${accent}`}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {title}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/h4&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {description}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/MotionDiv&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > &lt;p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {description}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/MotionDiv&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -238,7 +238,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

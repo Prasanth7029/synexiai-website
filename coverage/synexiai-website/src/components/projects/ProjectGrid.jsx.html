@@ -255,86 +255,86 @@
  * - Case-insensitive filters for category, tag, and text
  *
  * Props:
- *  - items: Array&lt;Project&gt;
- *  - state: { q?: string, category?: string, tag?: string }
- *  - limit?: number
- *  - className?: string (optional additional classes for outer wrapper)
+ * - items: Array&lt;Project&gt;
+ * - state: { q?: string, category?: string, tag?: string }
+ * - limit?: number
+ * - className?: string (optional additional classes for outer wrapper)
  */
 <span class="cstat-no" title="statement not covered" >export default function ProjectGrid({</span>
-<span class="cstat-no" title="statement not covered" >  items = [],</span>
-<span class="cstat-no" title="statement not covered" >  state = {},</span>
-<span class="cstat-no" title="statement not covered" >  limit,</span>
-<span class="cstat-no" title="statement not covered" >  className = "",</span>
+<span class="cstat-no" title="statement not covered" > items = [],</span>
+<span class="cstat-no" title="statement not covered" > state = {},</span>
+<span class="cstat-no" title="statement not covered" > limit,</span>
+<span class="cstat-no" title="statement not covered" > className = "",</span>
 <span class="cstat-no" title="statement not covered" >}) {</span>
-<span class="cstat-no" title="statement not covered" >  const filtered = useMemo(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const q = (state.q || "").toLowerCase().trim();</span>
-<span class="cstat-no" title="statement not covered" >    const selCat = (state.category || "").toLowerCase();</span>
-<span class="cstat-no" title="statement not covered" >    const selTag = (state.tag || "").toLowerCase();</span>
+<span class="cstat-no" title="statement not covered" > const filtered = useMemo(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const q = (state.q || "").toLowerCase().trim();</span>
+<span class="cstat-no" title="statement not covered" > const selCat = (state.category || "").toLowerCase();</span>
+<span class="cstat-no" title="statement not covered" > const selTag = (state.tag || "").toLowerCase();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return items.filter((p) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      const title = (p.title || "").toLowerCase();</span>
-<span class="cstat-no" title="statement not covered" >      const blurb = (p.blurb || "").toLowerCase();</span>
-<span class="cstat-no" title="statement not covered" >      const tech = (Array.isArray(p.tech) ? p.tech : []).map((t) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >        String(t).toLowerCase(),</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >      const tags = (Array.isArray(p.tags) ? p.tags : []).map((t) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >        String(t).toLowerCase(),</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >      const cat = (p.category || "").toLowerCase();</span>
+<span class="cstat-no" title="statement not covered" > return items.filter((p) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > const title = (p.title || "").toLowerCase();</span>
+<span class="cstat-no" title="statement not covered" > const blurb = (p.blurb || "").toLowerCase();</span>
+<span class="cstat-no" title="statement not covered" > const tech = (Array.isArray(p.tech) ? p.tech : []).map((t) =&gt;</span>
+<span class="cstat-no" title="statement not covered" > String(t).toLowerCase(),</span>
+<span class="cstat-no" title="statement not covered" > );</span>
+<span class="cstat-no" title="statement not covered" > const tags = (Array.isArray(p.tags) ? p.tags : []).map((t) =&gt;</span>
+<span class="cstat-no" title="statement not covered" > String(t).toLowerCase(),</span>
+<span class="cstat-no" title="statement not covered" > );</span>
+<span class="cstat-no" title="statement not covered" > const cat = (p.category || "").toLowerCase();</span>
 &nbsp;
-      // Category match: allow "all" or empty to mean "no filter"
-<span class="cstat-no" title="statement not covered" >      const categoryOk = !selCat || selCat === "all" || cat === selCat;</span>
+ // Category match: allow "all" or empty to mean "no filter"
+<span class="cstat-no" title="statement not covered" > const categoryOk = !selCat || selCat === "all" || cat === selCat;</span>
 &nbsp;
-      // Text search across title + blurb + tech + tags
-<span class="cstat-no" title="statement not covered" >      const textOk =</span>
-<span class="cstat-no" title="statement not covered" >        !q ||</span>
-<span class="cstat-no" title="statement not covered" >        title.includes(q) ||</span>
-<span class="cstat-no" title="statement not covered" >        blurb.includes(q) ||</span>
-<span class="cstat-no" title="statement not covered" >        tech.some((t) =&gt; t.includes(q)) ||</span>
-<span class="cstat-no" title="statement not covered" >        tags.some((t) =&gt; t.includes(q));</span>
+ // Text search across title + blurb + tech + tags
+<span class="cstat-no" title="statement not covered" > const textOk =</span>
+<span class="cstat-no" title="statement not covered" > !q ||</span>
+<span class="cstat-no" title="statement not covered" > title.includes(q) ||</span>
+<span class="cstat-no" title="statement not covered" > blurb.includes(q) ||</span>
+<span class="cstat-no" title="statement not covered" > tech.some((t) =&gt; t.includes(q)) ||</span>
+<span class="cstat-no" title="statement not covered" > tags.some((t) =&gt; t.includes(q));</span>
 &nbsp;
-      // Tag filter
-<span class="cstat-no" title="statement not covered" >      const tagOk = !selTag || tags.includes(selTag);</span>
+ // Tag filter
+<span class="cstat-no" title="statement not covered" > const tagOk = !selTag || tags.includes(selTag);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      return categoryOk &amp;&amp; textOk &amp;&amp; tagOk;</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }, [items, state.q, state.category, state.tag]);</span>
+<span class="cstat-no" title="statement not covered" > return categoryOk &amp;&amp; textOk &amp;&amp; tagOk;</span>
+<span class="cstat-no" title="statement not covered" > });</span>
+<span class="cstat-no" title="statement not covered" > }, [items, state.q, state.category, state.tag]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  const list = limit ? filtered.slice(0, limit) : filtered;</span>
+<span class="cstat-no" title="statement not covered" > const list = limit ? filtered.slice(0, limit) : filtered;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!list.length) {</span>
-<span class="cstat-no" title="statement not covered" >    return (</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div</span>
-<span class="cstat-no" title="statement not covered" >        className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]/60</span>
-                   backdrop-blur-md p-8 text-center opacity-90"
-<span class="cstat-no" title="statement not covered" >        role="status"</span>
-<span class="cstat-no" title="statement not covered" >        aria-live="polite"</span>
-<span class="cstat-no" title="statement not covered" >      &gt;</span>
-        No projects found. Try clearing filters or searching a different term.
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-    );
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" > if (!list.length) {</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className="rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]/60</span>
+ p-8 text-center opacity-90"
+<span class="cstat-no" title="statement not covered" > role="status"</span>
+<span class="cstat-no" title="statement not covered" > aria-live="polite"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ No projects found. Try clearing filters or searching a different term.
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
+<span class="cstat-no" title="statement not covered" > }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div</span>
-<span class="cstat-no" title="statement not covered" >      className={[</span>
-        // Mobile-first grid
-<span class="cstat-no" title="statement not covered" >        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",</span>
-        // Use auto-fit at wide screens for nicer wrapping without overflow
-<span class="cstat-no" title="statement not covered" >        "xl:[grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]",</span>
-        // Comfortable gaps
-<span class="cstat-no" title="statement not covered" >        "gap-4 sm:gap-5 lg:gap-6",</span>
-<span class="cstat-no" title="statement not covered" >        className,</span>
-<span class="cstat-no" title="statement not covered" >      ].join(" ")}</span>
-    &gt;
-<span class="cstat-no" title="statement not covered" >      {list.map((p, i) =&gt; (</span>
-        // min-w-0 ensures child content (long words, code blocks) doesn't widen the column
-<span class="cstat-no" title="statement not covered" >        &lt;div key={p.id ?? i} className="min-w-0"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;ProjectCard item={p} idx={i} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      ))}</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div</span>
+<span class="cstat-no" title="statement not covered" > className={[</span>
+ // Mobile-first grid
+<span class="cstat-no" title="statement not covered" > "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",</span>
+ // Use auto-fit at wide screens for nicer wrapping without overflow
+<span class="cstat-no" title="statement not covered" > "xl:[grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]",</span>
+ // Comfortable gaps
+<span class="cstat-no" title="statement not covered" > "gap-4 sm:gap-5 lg:gap-6",</span>
+<span class="cstat-no" title="statement not covered" > className,</span>
+<span class="cstat-no" title="statement not covered" > ].join(" ")}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {list.map((p, i) =&gt; (</span>
+ // min-w-0 ensures child content (long words, code blocks) doesn't widen the column
+<span class="cstat-no" title="statement not covered" > &lt;div key={p.id ?? i} className="min-w-0"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;ProjectCard item={p} idx={i} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -343,7 +343,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

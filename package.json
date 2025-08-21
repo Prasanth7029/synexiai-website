@@ -27,6 +27,7 @@
     "format": "prettier -w ."
   },
   "dependencies": {
+    "@netlify/blobs": "^10.0.8",
     "aos": "^2.3.4",
     "axios": "^1.10.0",
     "framer-motion": "^12.23.6",

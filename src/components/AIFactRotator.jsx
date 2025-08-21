@@ -13,6 +13,12 @@ import { fnUrl } from "../lib/api.js";
 const FETCH_MS = 0.75 * 60 * 1000; // 15s rotation
 const TICK_MS = 1000;               // countdown tick
 
+const MotionDiv = motion.div;
+const MotionSection = motion.section;
+const MotionSpan = motion.span;
+const MotionButton = motion.button;
+const MotionPath = motion.path;
+
 export default function AIFactRotator({
   className = "",
   title = "AI Insights",
@@ -141,7 +147,7 @@ export default function AIFactRotator({
   };
 
   return (
-    <motion.section
+    <MotionSection
       aria-live="polite"
       className={[
         "relative rounded-2xl overflow-hidden",
@@ -166,13 +172,13 @@ export default function AIFactRotator({
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-start gap-4">
-            <motion.span
+            <MotionSpan
               className="inline-grid place-items-center w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 text-white shadow-lg"
               animate={{ rotate: isHovered ? 10 : 0 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <FaRobot className="text-lg" aria-hidden />
-            </motion.span>
+            </MotionSpan>
             <div>
               <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>
               <p className="text-sm text-gray-400 mt-1">{subtitle}</p>
@@ -186,7 +192,7 @@ export default function AIFactRotator({
         <div className="mb-6 min-h-[120px]">
           <AnimatePresence mode="wait">
             {loading ? (
-              <motion.div
+              <MotionDiv
                 key="skeleton"
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -203,9 +209,9 @@ export default function AIFactRotator({
                   <div className="h-full w-3/5 bg-gradient-to-r from-transparent via-violet-500/20 to-transparent animate-[shimmer_1.5s_infinite_0.4s]" />
                 </div>
                 <style>{`@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }`}</style>
-              </motion.div>
+              </MotionDiv>
             ) : (
-              <motion.div
+              <MotionDiv
                 key={fact?.updatedAt || "fact"}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -228,7 +234,7 @@ export default function AIFactRotator({
                     </span>
                   )}
                 </div>
-              </motion.div>
+              </MotionDiv>
             )}
           </AnimatePresence>
         </div>
@@ -242,7 +248,7 @@ export default function AIFactRotator({
               <span>{formatTime(timeLeft)}</span>
             </div>
             <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden">
-              <motion.div
+              <MotionDiv
                 className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500"
                 initial={false}
                 animate={{ width: `${Math.round(progress * 100)}%` }}
@@ -260,7 +266,7 @@ export default function AIFactRotator({
           </div>
         </div>
       </div>
-    </motion.section>
+    </MotionSection>
   );
 }
 
@@ -268,20 +274,20 @@ export default function AIFactRotator({
 
 function CategoryPill({ label }) {
   return (
-    <motion.span
+    <MotionSpan
       className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-700/50 bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-xs font-medium text-cyan-400 backdrop-blur-sm shadow-sm"
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 400 }}
     >
       <span className="w-2 h-2 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 shadow-sm" />
       {label}
-    </motion.span>
+    </MotionSpan>
   );
 }
 
 function ActionBtn({ title, onClick, icon, disabled }) {
   return (
-    <motion.button
+    <MotionButton
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -298,7 +304,7 @@ function ActionBtn({ title, onClick, icon, disabled }) {
     >
       <span className="relative z-10 text-base">{icon}</span>
       <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    </motion.button>
+    </MotionButton>
   );
 }
 

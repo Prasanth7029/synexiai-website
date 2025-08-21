@@ -7,6 +7,7 @@ import { initWebVitals } from "./reportWebVitals";
 import { LoadingProvider } from "./lib/LoadingProvider.jsx";
 import LoadingOverlay from "./components/LoadingOverlay.jsx";
 import { attachAxiosLoading } from "./lib/setupAxiosLoading.js";
+import { ProgressProvider } from "./context/ProgressContext.jsx";
 
 // ✅ New import for persona context
 import { PersonaProvider } from "./context/PersonaContext.jsx";
@@ -38,7 +39,9 @@ if (!import.meta.env.PROD) {
  <HelmetProvider>
  <PersonaProvider>
  <LoadingProvider>
+ <ProgressProvider>
  <App />
+ </ProgressProvider>
  <LoadingOverlay />
  </LoadingProvider>
  </PersonaProvider>
@@ -51,7 +54,9 @@ if (!import.meta.env.PROD) {
  <HelmetProvider>
  <PersonaProvider>
  <LoadingProvider>
+ <ProgressProvider>
  <App />
+ </ProgressProvider>
  <LoadingOverlay />
  </LoadingProvider>
  </PersonaProvider>

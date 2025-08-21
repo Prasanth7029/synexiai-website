@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/66</span>
+                <span class='fraction'>0/67</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/66</span>
+                <span class='fraction'>0/67</span>
             </div>
         
             
@@ -131,7 +131,7 @@
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -198,71 +198,71 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >export const PROJECT_CATEGORIES = ["AI", "Cloud", "Energy", "Tools"];<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-&nbsp;
+<span class="cstat-no" title="statement not covered" >export { projects as portfolio } from "./projects.js";</span>
 <span class="cstat-no" title="statement not covered" >export const projects = [</span>
-<span class="cstat-no" title="statement not covered" >  {</span>
-<span class="cstat-no" title="statement not covered" >    id: "ai-optimizer",</span>
-<span class="cstat-no" title="statement not covered" >    title: "AI Query Optimizer",</span>
-<span class="cstat-no" title="statement not covered" >    blurb:</span>
-<span class="cstat-no" title="statement not covered" >      "Self-healing DB optimizer that predicts slow queries and fixes them.",</span>
-<span class="cstat-no" title="statement not covered" >    category: "AI",</span>
-<span class="cstat-no" title="statement not covered" >    status: "MVP",</span>
-<span class="cstat-no" title="statement not covered" >    tech: ["Python", "LLM", "PostgreSQL", "Kubernetes"],</span>
-<span class="cstat-no" title="statement not covered" >    tags: ["AIOps", "Optimization", "Zero-Trust"],</span>
-<span class="cstat-no" title="statement not covered" >    links: { demo: "#", repo: "#", doc: "#" },</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  {</span>
-<span class="cstat-no" title="statement not covered" >    id: "green-dc",</span>
-<span class="cstat-no" title="statement not covered" >    title: "Green Data Center Model",</span>
-<span class="cstat-no" title="statement not covered" >    blurb:</span>
-<span class="cstat-no" title="statement not covered" >      "ARM-based cluster + solar-aware scheduler for carbon-aware workloads.",</span>
-<span class="cstat-no" title="statement not covered" >    category: "Energy",</span>
-<span class="cstat-no" title="statement not covered" >    status: "R&amp;D",</span>
-<span class="cstat-no" title="statement not covered" >    tech: ["Go", "ARM", "Grafana", "Prometheus"],</span>
-<span class="cstat-no" title="statement not covered" >    tags: ["Carbon aware", "Scheduling", "Edge"],</span>
-<span class="cstat-no" title="statement not covered" >    links: { demo: "#", repo: "#", doc: "#" },</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  {</span>
-<span class="cstat-no" title="statement not covered" >    id: "synexi-cloud",</span>
-<span class="cstat-no" title="statement not covered" >    title: "Synexi Cloud",</span>
-<span class="cstat-no" title="statement not covered" >    blurb:</span>
-<span class="cstat-no" title="statement not covered" >      "Multi-tenant platform with auto-scaling microservices and secure APIs.",</span>
-<span class="cstat-no" title="statement not covered" >    category: "Cloud",</span>
-<span class="cstat-no" title="statement not covered" >    status: "Alpha",</span>
-<span class="cstat-no" title="statement not covered" >    tech: ["React", "Node", "Redis", "Nginx"],</span>
-<span class="cstat-no" title="statement not covered" >    tags: ["Microservices", "Autoscale", "Observability"],</span>
-<span class="cstat-no" title="statement not covered" >    links: { demo: "#", repo: "#", doc: "#" },</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  {</span>
-<span class="cstat-no" title="statement not covered" >    id: "energy-insights",</span>
-<span class="cstat-no" title="statement not covered" >    title: "Energy Insights",</span>
-<span class="cstat-no" title="statement not covered" >    blurb: "Live telemetry + anomaly detection for solar/battery fleets.",</span>
-<span class="cstat-no" title="statement not covered" >    category: "Energy",</span>
-<span class="cstat-no" title="statement not covered" >    status: "PoC",</span>
-<span class="cstat-no" title="statement not covered" >    tech: ["TS", "Kafka", "TimescaleDB"],</span>
-<span class="cstat-no" title="statement not covered" >    tags: ["Streaming", "Anomaly", "IoT"],</span>
-<span class="cstat-no" title="statement not covered" >    links: { demo: "#", repo: "#", doc: "#" },</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  {</span>
-<span class="cstat-no" title="statement not covered" >    id: "stack-kit",</span>
-<span class="cstat-no" title="statement not covered" >    title: "Stack Kit",</span>
-<span class="cstat-no" title="statement not covered" >    blurb: "Reusable UI + DevOps templates for rapid SynexiAI apps.",</span>
-<span class="cstat-no" title="statement not covered" >    category: "Tools",</span>
-<span class="cstat-no" title="statement not covered" >    status: "Stable",</span>
-<span class="cstat-no" title="statement not covered" >    tech: ["Vite", "Tailwind", "GH Actions"],</span>
-<span class="cstat-no" title="statement not covered" >    tags: ["DX", "Boilerplate", "CI/CD"],</span>
-<span class="cstat-no" title="statement not covered" >    links: { demo: "#", repo: "#", doc: "#" },</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  {</span>
-<span class="cstat-no" title="statement not covered" >    id: "llm-dash",</span>
-<span class="cstat-no" title="statement not covered" >    title: "LLM Ops Dashboard",</span>
-<span class="cstat-no" title="statement not covered" >    blurb: "Latency, cost, and safety guardrails across models and providers.",</span>
-<span class="cstat-no" title="statement not covered" >    category: "AI",</span>
-<span class="cstat-no" title="statement not covered" >    status: "Design",</span>
-<span class="cstat-no" title="statement not covered" >    tech: ["React", "OpenAI", "Framer Motion"],</span>
-<span class="cstat-no" title="statement not covered" >    tags: ["Guardrails", "Monitoring"],</span>
-<span class="cstat-no" title="statement not covered" >    links: { demo: "#", repo: "#", doc: "#" },</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > id: "ai-optimizer",</span>
+<span class="cstat-no" title="statement not covered" > title: "AI Query Optimizer",</span>
+<span class="cstat-no" title="statement not covered" > blurb:</span>
+<span class="cstat-no" title="statement not covered" > "Self-healing DB optimizer that predicts slow queries and fixes them.",</span>
+<span class="cstat-no" title="statement not covered" > category: "AI",</span>
+<span class="cstat-no" title="statement not covered" > status: "MVP",</span>
+<span class="cstat-no" title="statement not covered" > tech: ["Python", "LLM", "PostgreSQL", "Kubernetes"],</span>
+<span class="cstat-no" title="statement not covered" > tags: ["AIOps", "Optimization", "Zero-Trust"],</span>
+<span class="cstat-no" title="statement not covered" > links: { demo: "#", repo: "#", doc: "#" },</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > id: "green-dc",</span>
+<span class="cstat-no" title="statement not covered" > title: "Green Data Center Model",</span>
+<span class="cstat-no" title="statement not covered" > blurb:</span>
+<span class="cstat-no" title="statement not covered" > "ARM-based cluster + solar-aware scheduler for carbon-aware workloads.",</span>
+<span class="cstat-no" title="statement not covered" > category: "Energy",</span>
+<span class="cstat-no" title="statement not covered" > status: "R&amp;D",</span>
+<span class="cstat-no" title="statement not covered" > tech: ["Go", "ARM", "Grafana", "Prometheus"],</span>
+<span class="cstat-no" title="statement not covered" > tags: ["Carbon aware", "Scheduling", "Edge"],</span>
+<span class="cstat-no" title="statement not covered" > links: { demo: "#", repo: "#", doc: "#" },</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > id: "synexi-cloud",</span>
+<span class="cstat-no" title="statement not covered" > title: "Synexi Cloud",</span>
+<span class="cstat-no" title="statement not covered" > blurb:</span>
+<span class="cstat-no" title="statement not covered" > "Multi-tenant platform with auto-scaling microservices and secure APIs.",</span>
+<span class="cstat-no" title="statement not covered" > category: "Cloud",</span>
+<span class="cstat-no" title="statement not covered" > status: "Alpha",</span>
+<span class="cstat-no" title="statement not covered" > tech: ["React", "Node", "Redis", "Nginx"],</span>
+<span class="cstat-no" title="statement not covered" > tags: ["Microservices", "Autoscale", "Observability"],</span>
+<span class="cstat-no" title="statement not covered" > links: { demo: "#", repo: "#", doc: "#" },</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > id: "energy-insights",</span>
+<span class="cstat-no" title="statement not covered" > title: "Energy Insights",</span>
+<span class="cstat-no" title="statement not covered" > blurb: "Live telemetry + anomaly detection for solar/battery fleets.",</span>
+<span class="cstat-no" title="statement not covered" > category: "Energy",</span>
+<span class="cstat-no" title="statement not covered" > status: "PoC",</span>
+<span class="cstat-no" title="statement not covered" > tech: ["TS", "Kafka", "TimescaleDB"],</span>
+<span class="cstat-no" title="statement not covered" > tags: ["Streaming", "Anomaly", "IoT"],</span>
+<span class="cstat-no" title="statement not covered" > links: { demo: "#", repo: "#", doc: "#" },</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > id: "stack-kit",</span>
+<span class="cstat-no" title="statement not covered" > title: "Stack Kit",</span>
+<span class="cstat-no" title="statement not covered" > blurb: "Reusable UI + DevOps templates for rapid SynexiAI apps.",</span>
+<span class="cstat-no" title="statement not covered" > category: "Tools",</span>
+<span class="cstat-no" title="statement not covered" > status: "Stable",</span>
+<span class="cstat-no" title="statement not covered" > tech: ["Vite", "Tailwind", "GH Actions"],</span>
+<span class="cstat-no" title="statement not covered" > tags: ["DX", "Boilerplate", "CI/CD"],</span>
+<span class="cstat-no" title="statement not covered" > links: { demo: "#", repo: "#", doc: "#" },</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > {</span>
+<span class="cstat-no" title="statement not covered" > id: "llm-dash",</span>
+<span class="cstat-no" title="statement not covered" > title: "LLM Ops Dashboard",</span>
+<span class="cstat-no" title="statement not covered" > blurb: "Latency, cost, and safety guardrails across models and providers.",</span>
+<span class="cstat-no" title="statement not covered" > category: "AI",</span>
+<span class="cstat-no" title="statement not covered" > status: "Design",</span>
+<span class="cstat-no" title="statement not covered" > tech: ["React", "OpenAI", "Framer Motion"],</span>
+<span class="cstat-no" title="statement not covered" > tags: ["Guardrails", "Monitoring"],</span>
+<span class="cstat-no" title="statement not covered" > links: { demo: "#", repo: "#", doc: "#" },</span>
+<span class="cstat-no" title="statement not covered" > },</span>
 <span class="cstat-no" title="statement not covered" >];</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -271,7 +271,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/23</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/23</span>
             </div>
         
             
@@ -95,20 +95,15 @@
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -117,10 +112,27 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -134,30 +146,36 @@
 <span class="cstat-no" title="statement not covered" >import Footer from "./Footer";</span>
 <span class="cstat-no" title="statement not covered" >import ChatWidget from "./ChatWidget";</span>
 &nbsp;
+&nbsp;
 <span class="cstat-no" title="statement not covered" >export default function Layout({ children }) {</span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div className="flex flex-col min-h-screen text-white"&gt;</span>
-      {/* Header */}
-<span class="cstat-no" title="statement not covered" >      &lt;Header /&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex flex-col min-h-svh antialiased bg-[var(--bg-gradient)] text-[var(--text-color)]"&gt;</span>
+ {/* Header */}
+<span class="cstat-no" title="statement not covered" > &lt;Header /&gt;</span>
 &nbsp;
-      {/* Page Content */}
-<span class="cstat-no" title="statement not covered" >      &lt;main id="main" className="min-h-screen"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {children}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/main&gt;</span>
+ {/* Page Content */}
+<span class="cstat-no" title="statement not covered" > &lt;main</span>
+<span class="cstat-no" title="statement not covered" > id="main"</span>
+<span class="cstat-no" title="statement not covered" > className="flex-1 pb-24 sm:pb-0"</span>
+ /* pb-24 ensures floating chat doesn't cover bottom content on small screens */
+ &gt;
+<span class="cstat-no" title="statement not covered" > {children}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/main&gt;</span>
 &nbsp;
-      {/* Footer */}
-<span class="cstat-no" title="statement not covered" >      &lt;motion.div</span>
-<span class="cstat-no" title="statement not covered" >        initial={{ opacity: 0, y: 30 }}</span>
-<span class="cstat-no" title="statement not covered" >        animate={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}</span>
-      &gt;
-<span class="cstat-no" title="statement not covered" >        &lt;Footer /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/motion.div&gt;</span>
+ {/* Footer */}
+<span class="cstat-no" title="statement not covered" > &lt;motion.div</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 30 }}</span>
+<span class="cstat-no" title="statement not covered" > animate={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;Footer /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/motion.div&gt;</span>
 &nbsp;
-      {/* Chat */}
-<span class="cstat-no" title="statement not covered" >      &lt;ChatWidget side="right" z={9999} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+&nbsp;
+ {/* Chat */}
+<span class="cstat-no" title="statement not covered" > &lt;ChatWidget side="right" z={9999} desktopWidthPx={360}/&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -166,7 +184,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

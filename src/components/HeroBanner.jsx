@@ -188,7 +188,7 @@ export default function HeroBanner() {
  exit={{ opacity: 0, y: -18 }}
  transition={{ duration: 0.45, ease: "easeOut" }}
  className="font-extrabold leading-[0.98] tracking-tight subpixel-antialiased
- text-[clamp(1.6rem,6.2vw,3.2rem)] md:text-[clamp(2.75rem,4vw,4.75rem)]
+ text-[clamp(1.4rem,6.2vw,3rem)] md:text-[clamp(2.25rem,4vw,4.25rem)]
  bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500
  whitespace-normal"
  >

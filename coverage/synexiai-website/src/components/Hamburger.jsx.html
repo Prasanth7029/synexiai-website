@@ -154,49 +154,49 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >export default function Hamburger({ open, onChange }) {<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;button</span>
-<span class="cstat-no" title="statement not covered" >      type="button"</span>
-<span class="cstat-no" title="statement not covered" >      className="relative w-full h-full flex items-center justify-center group focus:outline-none"</span>
-<span class="cstat-no" title="statement not covered" >      onClick={onChange}</span>
-<span class="cstat-no" title="statement not covered" >      aria-expanded={open}</span>
-<span class="cstat-no" title="statement not covered" >      aria-label="Toggle navigation menu"</span>
-    &gt;
-<span class="cstat-no" title="statement not covered" >      &lt;div className="relative w-6 h-5 flex flex-col justify-between"&gt;</span>
-        {/* Top bar */}
-<span class="cstat-no" title="statement not covered" >        &lt;span</span>
-<span class="cstat-no" title="statement not covered" >          className={`</span>
-            block absolute h-[2px] w-full bg-gradient-to-r from-cyan-400 to-teal-500 rounded-full
-            transition-all duration-500 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]
-<span class="cstat-no" title="statement not covered" >            top-0 ${open ? "top-1/2 -translate-y-1/2 rotate-45" : ""}</span>
-            shadow-[0_0_4px_rgba(34,211,238,0.5)]
-          `}
-<span class="cstat-no" title="statement not covered" >          aria-hidden="true"</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > type="button"</span>
+<span class="cstat-no" title="statement not covered" > className="relative w-full h-full flex items-center justify-center group focus:outline-none"</span>
+<span class="cstat-no" title="statement not covered" > onClick={onChange}</span>
+<span class="cstat-no" title="statement not covered" > aria-expanded={open}</span>
+<span class="cstat-no" title="statement not covered" > aria-label="Toggle navigation menu"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;div className="relative w-6 h-5 flex flex-col justify-between"&gt;</span>
+ {/* Top bar */}
+<span class="cstat-no" title="statement not covered" > &lt;span</span>
+<span class="cstat-no" title="statement not covered" > className={`</span>
+ block absolute h-[2px] w-full bg-gradient-to-r from-cyan-400 to-teal-500 rounded-full
+ transition-all duration-500 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]
+<span class="cstat-no" title="statement not covered" > top-0 ${open ? "top-1/2 -translate-y-1/2 rotate-45" : ""}</span>
+ shadow-[0_0_4px_rgba(34,211,238,0.5)]
+ `}
+<span class="cstat-no" title="statement not covered" > aria-hidden="true"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
 &nbsp;
-        {/* Middle bar */}
-<span class="cstat-no" title="statement not covered" >        &lt;span</span>
-<span class="cstat-no" title="statement not covered" >          className={`</span>
-            block absolute h-[2px] w-full bg-gradient-to-r from-cyan-400 to-teal-500 rounded-full
-            transition-all duration-300 ease-in-out
-            top-1/2 -translate-y-1/2
-<span class="cstat-no" title="statement not covered" >            ${open ? "scale-0 opacity-0" : ""}</span>
-          `}
-<span class="cstat-no" title="statement not covered" >          aria-hidden="true"</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
+ {/* Middle bar */}
+<span class="cstat-no" title="statement not covered" > &lt;span</span>
+<span class="cstat-no" title="statement not covered" > className={`</span>
+ block absolute h-[2px] w-full bg-gradient-to-r from-cyan-400 to-teal-500 rounded-full
+ transition-all duration-300 ease-in-out
+ top-1/2 -translate-y-1/2
+<span class="cstat-no" title="statement not covered" > ${open ? "scale-0 opacity-0" : ""}</span>
+ `}
+<span class="cstat-no" title="statement not covered" > aria-hidden="true"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
 &nbsp;
-        {/* Bottom bar */}
-<span class="cstat-no" title="statement not covered" >        &lt;span</span>
-<span class="cstat-no" title="statement not covered" >          className={`</span>
-            block absolute h-[2px] w-full bg-gradient-to-r from-cyan-400 to-teal-500 rounded-full
-            transition-all duration-500 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]
-<span class="cstat-no" title="statement not covered" >            bottom-0 ${open ? "top-1/2 -translate-y-1/2 -rotate-45" : ""}</span>
-          `}
-<span class="cstat-no" title="statement not covered" >          aria-hidden="true"</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/button&gt;</span>
-  );
+ {/* Bottom bar */}
+<span class="cstat-no" title="statement not covered" > &lt;span</span>
+<span class="cstat-no" title="statement not covered" > className={`</span>
+ block absolute h-[2px] w-full bg-gradient-to-r from-cyan-400 to-teal-500 rounded-full
+ transition-all duration-500 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]
+<span class="cstat-no" title="statement not covered" > bottom-0 ${open ? "top-1/2 -translate-y-1/2 -rotate-45" : ""}</span>
+ `}
+<span class="cstat-no" title="statement not covered" > aria-hidden="true"</span>
+<span class="cstat-no" title="statement not covered" > /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -205,7 +205,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -248,87 +248,87 @@
 <span class="cstat-no" title="statement not covered" >const MotionArticle = motion.article;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function ProjectCard({ item, idx = 0 }) {</span>
-<span class="cstat-no" title="statement not covered" >  const askAI = useAskAI();</span>
-<span class="cstat-no" title="statement not covered" >  const onExplain = () =&gt;</span>
-<span class="cstat-no" title="statement not covered" >    askAI({</span>
-<span class="cstat-no" title="statement not covered" >      type: "explain-project",</span>
-<span class="cstat-no" title="statement not covered" >      persona: localStorage.getItem("persona") || "general",</span>
-<span class="cstat-no" title="statement not covered" >      autoSend: true, // &lt;-- auto answer on open</span>
-<span class="cstat-no" title="statement not covered" >      project: {</span>
-<span class="cstat-no" title="statement not covered" >        id: item.id,</span>
-<span class="cstat-no" title="statement not covered" >        title: item.title,</span>
-<span class="cstat-no" title="statement not covered" >        blurb: item.blurb,</span>
-<span class="cstat-no" title="statement not covered" >        tech: item.tech,</span>
-<span class="cstat-no" title="statement not covered" >        status: item.status,</span>
-<span class="cstat-no" title="statement not covered" >        category: item.category,</span>
-<span class="cstat-no" title="statement not covered" >        tags: item.tags,</span>
-<span class="cstat-no" title="statement not covered" >      },</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" > const askAI = useAskAI();</span>
+<span class="cstat-no" title="statement not covered" > const onExplain = () =&gt;</span>
+<span class="cstat-no" title="statement not covered" > askAI({</span>
+<span class="cstat-no" title="statement not covered" > type: "explain-project",</span>
+<span class="cstat-no" title="statement not covered" > persona: localStorage.getItem("persona") || "general",</span>
+<span class="cstat-no" title="statement not covered" > autoSend: true, // &lt;-- auto answer on open</span>
+<span class="cstat-no" title="statement not covered" > project: {</span>
+<span class="cstat-no" title="statement not covered" > id: item.id,</span>
+<span class="cstat-no" title="statement not covered" > title: item.title,</span>
+<span class="cstat-no" title="statement not covered" > blurb: item.blurb,</span>
+<span class="cstat-no" title="statement not covered" > tech: item.tech,</span>
+<span class="cstat-no" title="statement not covered" > status: item.status,</span>
+<span class="cstat-no" title="statement not covered" > category: item.category,</span>
+<span class="cstat-no" title="statement not covered" > tags: item.tags,</span>
+<span class="cstat-no" title="statement not covered" > },</span>
+<span class="cstat-no" title="statement not covered" > });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;MotionArticle</span>
-<span class="cstat-no" title="statement not covered" >      initial={{ opacity: 0, y: 10 }}</span>
-<span class="cstat-no" title="statement not covered" >      whileInView={{ opacity: 1, y: 0 }}</span>
-<span class="cstat-no" title="statement not covered" >      viewport={{ once: true, amount: 0.2 }}</span>
-<span class="cstat-no" title="statement not covered" >      transition={{ duration: 0.4, delay: idx * 0.03 }}</span>
-<span class="cstat-no" title="statement not covered" >      className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-5 shadow-xl shadow-cyan-500/10 flex flex-col"</span>
-    &gt;
-<span class="cstat-no" title="statement not covered" >      &lt;div className="flex items-start justify-between gap-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;h3 className="text-lg font-semibold"&gt;{item.title}&lt;/h3&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;span className="text-[11px] px-2 py-1 rounded-full bg-white/5 border border-white/10"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {item.status}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;p className="mt-2 text-sm opacity-90"&gt;{item.blurb}&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;MotionArticle</span>
+<span class="cstat-no" title="statement not covered" > initial={{ opacity: 0, y: 10 }}</span>
+<span class="cstat-no" title="statement not covered" > whileInView={{ opacity: 1, y: 0 }}</span>
+<span class="cstat-no" title="statement not covered" > viewport={{ once: true, amount: 0.2 }}</span>
+<span class="cstat-no" title="statement not covered" > transition={{ duration: 0.4, delay: idx * 0.03 }}</span>
+<span class="cstat-no" title="statement not covered" > className="h-full flex flex-col rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)]/60 p-6 shadow-lg"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > &lt;div className="flex items-start justify-between gap-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;h3 className="text-lg font-semibold"&gt;{item.title}&lt;/h3&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;span className="text-[11px] px-2 py-1 rounded-full bg-white/5 border border-white/10"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {item.status}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;p className="mt-2 text-sm opacity-90"&gt;{item.blurb}&lt;/p&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;div className="mt-3 flex flex-wrap gap-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {item.tech.slice(0, 4).map((t) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;span</span>
-<span class="cstat-no" title="statement not covered" >            key={t}</span>
-<span class="cstat-no" title="statement not covered" >            className="text-[11px] px-2 py-1 rounded-full bg-white/5 border border-white/10"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            {t}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >        ))}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3 flex flex-wrap gap-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {item.tech.slice(0, 4).map((t) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;span</span>
+<span class="cstat-no" title="statement not covered" > key={t}</span>
+<span class="cstat-no" title="statement not covered" > className="text-[11px] px-2 py-1 rounded-full bg-white/5 border border-white/10"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {t}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;div className="mt-3 flex flex-wrap gap-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {item.tags.map((t) =&gt; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;span</span>
-<span class="cstat-no" title="statement not covered" >            key={t}</span>
-<span class="cstat-no" title="statement not covered" >            className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20"</span>
-          &gt;
-<span class="cstat-no" title="statement not covered" >            {t}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >        ))}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-3 flex flex-wrap gap-2"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {item.tags.map((t) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;span</span>
+<span class="cstat-no" title="statement not covered" > key={t}</span>
+<span class="cstat-no" title="statement not covered" > className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20"</span>
+ &gt;
+<span class="cstat-no" title="statement not covered" > {t}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" > ))}</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;div className="mt-4 flex items-center gap-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {item.links.demo &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;a href={item.links.demo} className="text-sm underline"&gt;</span>
-            Demo
-<span class="cstat-no" title="statement not covered" >          &lt;/a&gt;</span>
-        )}
-<span class="cstat-no" title="statement not covered" >        {item.links.repo &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;a href={item.links.repo} className="text-sm underline"&gt;</span>
-            Repo
-<span class="cstat-no" title="statement not covered" >          &lt;/a&gt;</span>
-        )}
-<span class="cstat-no" title="statement not covered" >        {item.links.doc &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;a href={item.links.doc} className="text-sm underline"&gt;</span>
-            Docs
-<span class="cstat-no" title="statement not covered" >          &lt;/a&gt;</span>
-        )}
-<span class="cstat-no" title="statement not covered" >        &lt;div className="ml-auto" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;button</span>
-<span class="cstat-no" title="statement not covered" >          onClick={onExplain}</span>
-<span class="cstat-no" title="statement not covered" >          className="text-sm px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500"</span>
-<span class="cstat-no" title="statement not covered" >        &gt;</span>
-          Explain with AI
-<span class="cstat-no" title="statement not covered" >        &lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/MotionArticle&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-4 flex items-center gap-3"&gt;</span>
+<span class="cstat-no" title="statement not covered" > {item.links.demo &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;a href={item.links.demo} className="text-sm underline"&gt;</span>
+ Demo
+<span class="cstat-no" title="statement not covered" > &lt;/a&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > {item.links.repo &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;a href={item.links.repo} className="text-sm underline"&gt;</span>
+ Repo
+<span class="cstat-no" title="statement not covered" > &lt;/a&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > {item.links.doc &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" > &lt;a href={item.links.doc} className="text-sm underline"&gt;</span>
+ Docs
+<span class="cstat-no" title="statement not covered" > &lt;/a&gt;</span>
+ )}
+<span class="cstat-no" title="statement not covered" > &lt;div className="mt-auto pt-4" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;button</span>
+<span class="cstat-no" title="statement not covered" > onClick={onExplain}</span>
+<span class="cstat-no" title="statement not covered" > className="text-sm px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500"</span>
+<span class="cstat-no" title="statement not covered" > &gt;</span>
+ Explain with AI
+<span class="cstat-no" title="statement not covered" > &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/MotionArticle&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -337,7 +337,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

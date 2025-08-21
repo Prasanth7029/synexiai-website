@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/76</span>
+                <span class='fraction'>0/79</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/76</span>
+                <span class='fraction'>0/79</span>
             </div>
         
             
@@ -162,13 +162,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -229,6 +227,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -246,22 +246,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import React, { useEffect, Suspense, lazy } from "react";<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >import { HashRouter as Router, Routes, Route } from "react-router-dom";</span>
+<span class="cstat-no" title="statement not covered" >import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";</span>
 <span class="cstat-no" title="statement not covered" >import ScrollToTop from "./components/ScrollToTop";</span>
 <span class="cstat-no" title="statement not covered" >import Layout from "./components/Layout";</span>
 <span class="cstat-no" title="statement not covered" >import PrivacyPolicy from "./pages/legal/PrivacyPolicy.jsx";</span>
 <span class="cstat-no" title="statement not covered" >import TermsOfService from "./pages/legal/TermsOfService.jsx";</span>
 <span class="cstat-no" title="statement not covered" >import CookiePolicy from "./pages/legal/CookiePolicy.jsx";</span>
 <span class="cstat-no" title="statement not covered" >import LoaderScreen from "./components/LoaderScreen";</span>
+<span class="cstat-no" title="statement not covered" >import GamesPage from "./pages/games/GamesPage.jsx";</span>
+<span class="cstat-no" title="statement not covered" >import PlayGameRoute from "./pages/games/PlayGameRoute.jsx";</span>
 &nbsp;
-&nbsp;
-// ⛔️ remove this line (was causing confusion / unused):
-// import ProjectsPage from "./pages/Projects.jsx";
 &nbsp;
 // Lazy pages (single source of truth)
 <span class="cstat-no" title="statement not covered" >const HomePage = lazy(() =&gt; import("./pages/HomePage.jsx"));</span>
 <span class="cstat-no" title="statement not covered" >const AboutPage = lazy(() =&gt; import("./pages/AboutPage.jsx"));</span>
-<span class="cstat-no" title="statement not covered" >const ProjectsPage = lazy(() =&gt; import("./pages/Projects.jsx")); // ✅ use this one</span>
 <span class="cstat-no" title="statement not covered" >const PortfolioPage = lazy(() =&gt; import("./pages/Portfolio.jsx"));</span>
 <span class="cstat-no" title="statement not covered" >const VisionPage = lazy(() =&gt; import("./pages/VisionPage.jsx"));</span>
 <span class="cstat-no" title="statement not covered" >const NotFound = lazy(() =&gt; import("./pages/NotFound"));</span>
@@ -271,70 +269,72 @@
 &nbsp;
 // Defer AOS
 <span class="cstat-no" title="statement not covered" >function useDeferredAOS() {</span>
-<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    let cancelled = false;</span>
-<span class="cstat-no" title="statement not covered" >    const init = async () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      try {</span>
-<span class="cstat-no" title="statement not covered" >        const [{ default: AOS }] = await Promise.all([</span>
-<span class="cstat-no" title="statement not covered" >          import("aos"),</span>
-<span class="cstat-no" title="statement not covered" >          import("aos/dist/aos.css"),</span>
-<span class="cstat-no" title="statement not covered" >        ]);</span>
-<span class="cstat-no" title="statement not covered" >        if (!cancelled) {</span>
-<span class="cstat-no" title="statement not covered" >          AOS.init({</span>
-<span class="cstat-no" title="statement not covered" >            duration: 1000,</span>
-<span class="cstat-no" title="statement not covered" >            easing: "ease-out",</span>
-<span class="cstat-no" title="statement not covered" >            once: true,</span>
-<span class="cstat-no" title="statement not covered" >            mirror: false,</span>
-<span class="cstat-no" title="statement not covered" >          });</span>
-<span class="cstat-no" title="statement not covered" >          AOS.refresh();</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      } catch {</span>
-        // no-op
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >    if ("requestIdleCallback" in window)</span>
-<span class="cstat-no" title="statement not covered" >      window.requestIdleCallback(() =&gt; init());</span>
-<span class="cstat-no" title="statement not covered" >    else {</span>
-<span class="cstat-no" title="statement not covered" >      const t = setTimeout(init, 1200);</span>
-<span class="cstat-no" title="statement not covered" >      return () =&gt; clearTimeout(t);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      cancelled = true;</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >  }, []);</span>
+<span class="cstat-no" title="statement not covered" > useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > let cancelled = false;</span>
+<span class="cstat-no" title="statement not covered" > const init = async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > try {</span>
+<span class="cstat-no" title="statement not covered" > const [{ default: AOS }] = await Promise.all([</span>
+<span class="cstat-no" title="statement not covered" > import("aos"),</span>
+<span class="cstat-no" title="statement not covered" > import("aos/dist/aos.css"),</span>
+<span class="cstat-no" title="statement not covered" > ]);</span>
+<span class="cstat-no" title="statement not covered" > if (!cancelled) {</span>
+<span class="cstat-no" title="statement not covered" > AOS.init({</span>
+<span class="cstat-no" title="statement not covered" > duration: 1000,</span>
+<span class="cstat-no" title="statement not covered" > easing: "ease-out",</span>
+<span class="cstat-no" title="statement not covered" > once: true,</span>
+<span class="cstat-no" title="statement not covered" > mirror: false,</span>
+<span class="cstat-no" title="statement not covered" > });</span>
+<span class="cstat-no" title="statement not covered" > AOS.refresh();</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > } catch {</span>
+ // no-op
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > };</span>
+<span class="cstat-no" title="statement not covered" > if ("requestIdleCallback" in window)</span>
+<span class="cstat-no" title="statement not covered" > window.requestIdleCallback(() =&gt; init());</span>
+<span class="cstat-no" title="statement not covered" > else {</span>
+<span class="cstat-no" title="statement not covered" > const t = setTimeout(init, 1200);</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; clearTimeout(t);</span>
+<span class="cstat-no" title="statement not covered" > }</span>
+<span class="cstat-no" title="statement not covered" > return () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" > cancelled = true;</span>
+<span class="cstat-no" title="statement not covered" > };</span>
+<span class="cstat-no" title="statement not covered" > }, []);</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default function App() {</span>
-<span class="cstat-no" title="statement not covered" >  useDeferredAOS();</span>
+<span class="cstat-no" title="statement not covered" > useDeferredAOS();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;Router&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;ScrollToTop behavior="smooth" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;Suspense fallback={&lt;LoaderScreen /&gt;}&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;Layout&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;Routes&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/" element={&lt;HomePage /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/about" element={&lt;AboutPage /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/projects" element={&lt;ProjectsPage /&gt;} /&gt;{" "}</span>
-              {/* curated showcase */}
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/portfolio" element={&lt;PortfolioPage /&gt;} /&gt;{" "}</span>
-              {/* GitHub + roadmap */}
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/vision" element={&lt;VisionPage /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/contact" element={&lt;ContactPage /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/tech" element={&lt;TechStackPage /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/ai-news" element={&lt;NewsPage /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/privacy" element={&lt;PrivacyPolicy /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/terms" element={&lt;TermsOfService /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="/cookie-policy" element={&lt;CookiePolicy /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >              &lt;Route path="*" element={&lt;NotFound /&gt;} /&gt;</span>
-<span class="cstat-no" title="statement not covered" >            &lt;/Routes&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/Layout&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/Suspense&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/Router&gt;</span>
+<span class="cstat-no" title="statement not covered" > return (</span>
+<span class="cstat-no" title="statement not covered" > &lt;&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Router&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;ScrollToTop behavior="smooth" /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Suspense fallback={&lt;LoaderScreen /&gt;}&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Layout&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Routes&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/" element={&lt;HomePage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/about" element={&lt;AboutPage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/projects" element={&lt;Navigate to="/portfolio" replace /&gt;} /&gt;</span>
+ {/* curated showcase */}
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/portfolio" element={&lt;PortfolioPage /&gt;} /&gt;{" "}</span>
+ {/* GitHub + roadmap */}
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/vision" element={&lt;VisionPage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/contact" element={&lt;ContactPage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/tech" element={&lt;TechStackPage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/ai-news" element={&lt;NewsPage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/games" element={&lt;GamesPage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/games/:id" element={&lt;PlayGameRoute /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/privacy" element={&lt;PrivacyPolicy /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/terms" element={&lt;TermsOfService /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="/cookie-policy" element={&lt;CookiePolicy /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;Route path="*" element={&lt;NotFound /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/Routes&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/Layout&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/Suspense&gt;</span>
+<span class="cstat-no" title="statement not covered" > &lt;/Router&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    &lt;/&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" > &lt;/&gt;</span>
+ );
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -343,7 +343,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-16T10:04:32.945Z
+                at 2025-08-21T14:19:34.400Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
