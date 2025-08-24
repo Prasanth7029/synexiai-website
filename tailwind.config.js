@@ -1,10 +1,23 @@
+// tailwind.config.js
+import typography from "@tailwindcss/typography";
+import forms from "@tailwindcss/forms";
+// ❌ remove this → import lineClamp from "@tailwindcss/line-clamp";
+
 export default {
   darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      screens: {
+        xs: "360px",
+        sm: "480px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+      },
       fontFamily: {
-        sans: ["var(--font-sans)"], // uses our token
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
         text: "var(--text)",
@@ -15,5 +28,5 @@ export default {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [typography, forms], // ✅ only keep needed ones
 };

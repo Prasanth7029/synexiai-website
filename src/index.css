@@ -12,8 +12,8 @@
     --color-muted: #5b6475;
     --color-border: rgba(2, 132, 199, 0.25); /* cyan border glow-lite */
 
-    --brand-cyan: #22d3ee; /* Tailwind cyan-400 */
-    --brand-cyan-600: #0891b2; /* cyan-600 for accents on light */
+    --brand-cyan: #22d3ee;
+    --brand-cyan-600: #0891b2;
     --brand-cyan-soft: rgba(34, 211, 238, 0.12);
 
     --surface: #ffffff; /* card bg (light) */
@@ -580,3 +580,46 @@
 .sx-chat .text-xs      { font-size: 0.8em; }
 .sx-chat input,
 .sx-chat button        { font-size: 0.95em; }
+
+/* container */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (min-width: 768px) {
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+}
+
+@media (min-width: 768px) { /* md */
+  .grid-2-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+}
+@media (min-width: 1024px) { /* lg */
+  .grid-2-3 { gap: 20px; }
+}
+
+
+
+/* === Global responsive grid utilities === */
+/* Phones: 2 cols → Tablet+: 3 cols */
+.grid-2-3 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (min-width: 768px) { .grid-2-3 { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+@media (min-width: 1024px){ .grid-2-3 { gap: 20px; } }
+
+/* Larger collections (Features/Projects/Logos) – start at 2 cols on phones */
+.grid-1-2-3-4-5 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* start at 2 on phones */
+  gap: 12px;
+}
+@media (max-width: 340px) { .grid-1-2-3-4-5 { grid-template-columns: 1fr; } } /* ultra-small */
+@media (min-width: 768px)  { .grid-1-2-3-4-5 { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+@media (min-width: 1024px) { .grid-1-2-3-4-5 { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+@media (min-width: 1280px) { .grid-1-2-3-4-5 { grid-template-columns: repeat(5, 1fr); } }
+
+/* equal-height rows for cards */
+.auto-rows-fr { grid-auto-rows: 1fr; }
