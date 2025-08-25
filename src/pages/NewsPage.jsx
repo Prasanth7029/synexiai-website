@@ -438,7 +438,7 @@ const CategorySection = React.memo(function CategorySection({
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  transition={{ staggerChildren: 0.06 }}
- className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
+ className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
  >
  {videos.slice(0, VISIBLE_MAX).map((article) => (
  <div
@@ -464,7 +464,7 @@ const CategorySection = React.memo(function CategorySection({
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  transition={{ staggerChildren: 0.06 }}
- className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
+ className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
  >
  {blogs.slice(0, VISIBLE_MAX).map((article) => (
  <div

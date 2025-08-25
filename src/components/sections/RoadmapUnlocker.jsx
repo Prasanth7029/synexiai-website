@@ -89,7 +89,7 @@ export default function RoadmapUnlocker() {
         Play puzzles to reveal SynexiAI’s 5, 10, and 20-year roadmap.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
         {PANELS.map((p) => (
           <UnlockCard
             key={p.key}

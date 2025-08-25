@@ -623,3 +623,28 @@
 
 /* equal-height rows for cards */
 .auto-rows-fr { grid-auto-rows: 1fr; }
+
+/* ===== Ultra-compact helpers for 320–360px ===== */
+@media (max-width: 380px) {
+  .xs-text       { font-size: 11px; line-height: 1.35; }
+  .xs-text-sm    { font-size: 11.5px; line-height: 1.4; }
+  .xs-text-md    { font-size: 13px; line-height: 1.45; }
+  .xs-h1         { font-size: 1.25rem; line-height: 1.2; letter-spacing: -0.01em; }
+  .xs-h2         { font-size: 1.1rem; line-height: 1.2; letter-spacing: -0.01em; }
+  .xs-h3         { font-size: 0.95rem; line-height: 1.2; letter-spacing: -0.005em; }
+
+  .xs-px         { padding-left: .65rem !important; padding-right: .65rem !important; }
+  .xs-py         { padding-top: .75rem !important; padding-bottom: .75rem !important; }
+  .xs-gap        { gap: .6rem !important; }
+
+  .xs-card       { padding: .75rem !important; border-radius: .75rem !important; }
+  .xs-btn        { padding: .55rem .9rem !important; font-size: 11.5px !important; border-radius: .6rem !important; }
+  .xs-btn-full   { width: 100% !important; }
+
+  .xs-shadow     { box-shadow: 0 4px 18px rgba(0,0,0,.18) !important; }
+  .xs-muted      { opacity: .85; }
+
+  /* keep content away from notches */
+  .safe-top      { padding-top: calc(env(safe-area-inset-top) + .5rem) !important; }
+}
+

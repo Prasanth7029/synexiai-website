@@ -117,7 +117,7 @@ const ArchitectureDiagram = () => (
  SynexisAI Architecture Blueprint
  </h3>
 
- <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8 items-stretch">
+ <div className="grid grid-cols-2 md:grid-cols-12 gap-4 mb-8 items-stretch">
  {/* User Layer */}
  <div className="md:col-span-12 rounded-xl p-4 sm:p-6 border border-cyan-500/20 bg-gray-900/40 h-full">
  <div className="flex items-center justify-center mb-2">
@@ -349,7 +349,7 @@ export default function TechStackPage() {
  We're continuously researching and integrating emerging technologies to stay at the forefront of innovation
  </p>
 
- <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+ <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
  <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/20 h-full">
  <h4 className="text-xl font-bold text-green-400 mb-4 flex items-center">
  <FaBolt className="mr-2" /> Quantum Computing
@@ -388,7 +388,7 @@ export default function TechStackPage() {
  {/* Technology Principles */}
  <div
  id="principles"
- className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 scroll-mt-[calc(var(--header-h,64px)+16px)]"
+ className="mt-16 grid grid-cols-2 md:grid-cols-3 gap-8 scroll-mt-[calc(var(--header-h,64px)+16px)]"
  >
  <div className="bg-gradient-to-br from-cyan-900/20 to-cyan-800/10 border border-cyan-500/20 rounded-2xl p-6 h-full">
  <div className="text-cyan-400 text-3xl mb-4" aria-hidden="true">⚙️</div>
