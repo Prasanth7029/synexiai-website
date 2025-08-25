@@ -16,6 +16,7 @@ import FeatureCard from "../components/FeatureCard";
 import BuildWithSynexiAI from "../components/sections/BuildWithSynexiAI.jsx";
 import AIFactRotator from "../components/AIFactRotator.jsx";
 
+
 // Content
 import { projects as portfolio } from "../content/projects.js";
 import { partnerOrgs, testimonials, milestones } from "../content/socialProof.js";
@@ -110,8 +111,8 @@ export default function HomePage() {
       <HeroBanner title={p.heroTitle} subtitle={p.heroSubtitle} />
 
       {/* AI Fact Rotator */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 my-10">
-        <AIFactRotator />
+      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 my-6">
+        <AIFactRotator size="sm" className="sx-chat" />
       </div>
 
       {/* Build With SynexiAI */}
@@ -148,16 +149,24 @@ export default function HomePage() {
       {/* Main content container */}
       <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">
         {/* Intro row */}
-        <section className="mb-12 scroll-mt-[calc(var(--header-h,64px)+16px)]" id="intro">
-          <div className="mb-20 grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-            <div className="lg:col-span-2 min-w-0">
-              <Suspense fallback={<SectionSkeleton className="h-64" />}>
-                <AIPipeline />
+        <section
+          id="intro"
+          className="mb-8 sm:mb-12 scroll-mt-[calc(var(--header-h,64px)+12px)]"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch">
+            {/* AIPipeline */}
+            <div className="lg:col-span-2 min-w-0 scale-[.92] sm:scale-100 origin-top-left sx-chat">
+              <Suspense fallback={<SectionSkeleton className="h-48 sm:h-64" />}>
+                {/* if you add density prop later it’ll tighten padding; safe to leave here */}
+                <AIPipeline density="compact" />
               </Suspense>
             </div>
-            <div className="lg:col-span-1 min-w-0">
-              <Suspense fallback={<SectionSkeleton className="h-64" />}>
-                <MetricCard autoUpdate />
+
+            {/* MetricCard */}
+            <div className="lg:col-span-1 min-w-0 scale-[.92] sm:scale-100 origin-top-left sx-chat">
+              <Suspense fallback={<SectionSkeleton className="h-48 sm:h-64" />}>
+                {/* see step 3 for the size prop */}
+                <MetricCard autoUpdate size="sm" />
               </Suspense>
             </div>
           </div>

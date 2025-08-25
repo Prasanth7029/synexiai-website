@@ -1,29 +1,55 @@
-// src/components/AIFactRotator.jsx — updated
-// - Fixes: stale cache on Shuffle/interval, stable UI key, Explain-with-AI handoff
-// - Notes:
-//   * Ensure your Netlify function returns no-store headers (see snippet below)
-//   * ChatWidget should listen for the "chatwidget:open" event to prefill input
-
+// src/components/AIFactRotator.jsx
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaLightbulb, FaRobot } from "react-icons/fa";
 import { FiRefreshCw, FiCopy, FiCheck, FiAlertCircle, FiShare } from "react-icons/fi";
 import { fnUrl } from "../lib/api.js";
 
-const FETCH_MS = 0.75 * 60 * 1000; // 15s rotation
-const TICK_MS = 1000;               // countdown tick
+const FETCH_MS = 0.75 * 60 * 1000; // 45s rotation
+const TICK_MS = 1000;
 
 const MotionDiv = motion.div;
 const MotionSection = motion.section;
 const MotionSpan = motion.span;
 const MotionButton = motion.button;
-const MotionPath = motion.path;
 
 export default function AIFactRotator({
   className = "",
   title = "AI Insights",
   subtitle = "Fresh knowledge every 45 seconds",
+  size = "md", // "sm" | "md"
 }) {
+  // ---------- size presets (compact on mobile) ----------
+  const S = size === "sm"
+    ? {
+        pad: "p-4 sm:p-5",
+        headGap: "gap-3",
+        headMb: "mb-4",
+        bodyMb: "mb-4",
+        iconWH: "w-10 h-10",
+        title: "text-[clamp(15px,3.8vw,18px)] font-bold",
+        subtitle: "text-[12px] text-gray-400 mt-0.5",
+        fact: "text-[clamp(13px,3.8vw,15px)] leading-relaxed text-gray-100",
+        pill: "px-2.5 py-1 text-[11px]",
+        barH: "h-1",
+        btnPad: "p-2",
+        btnIcon: "text-sm",
+      }
+    : {
+        pad: "p-6",
+        headGap: "gap-4",
+        headMb: "mb-6",
+        bodyMb: "mb-6",
+        iconWH: "w-12 h-12",
+        title: "text-xl font-bold",
+        subtitle: "text-sm text-gray-400 mt-1",
+        fact: "text-lg leading-relaxed text-gray-100",
+        pill: "px-3 py-1.5 text-xs",
+        barH: "h-1.5",
+        btnPad: "p-2.5",
+        btnIcon: "text-base",
+      };
+
   const [fact, setFact] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -38,31 +64,21 @@ export default function AIFactRotator({
   const hiddenRef = useRef(typeof document !== "undefined" ? document.hidden : false);
 
   const timeLeft = Math.max(0, lastFetchAt + FETCH_MS - now);
-  const progress = 1 - timeLeft / FETCH_MS; // 0..1
+  const progress = 1 - timeLeft / FETCH_MS;
 
   const fetchFact = useCallback(async () => {
     setLoading(true);
     setErrorMsg("");
     try {
-      const url = `${fnUrl("ai-fact")}?t=${Date.now()}`; // cache-buster
-      const res = await fetch(url, {
-        method: "GET",
-        cache: "no-store",
-        headers: { "Cache-Control": "no-cache" },
-      });
-
+      const url = `${fnUrl("ai-fact")}?t=${Date.now()}`;
+      const res = await fetch(url, { method: "GET", cache: "no-store", headers: { "Cache-Control": "no-cache" } });
       const ct = res.headers.get("content-type") || "";
       if (!ct.includes("application/json")) {
         const raw = await res.text();
         throw new Error(`Non-JSON response: ${raw.slice(0, 120)}…`);
       }
-
       const data = await res.json();
-      if (!res.ok || data.ok === false) {
-        throw new Error(data?.error || "Failed to load AI fact.");
-      }
-
-      // Force a fresh UI key on every successful fetch
+      if (!res.ok || data.ok === false) throw new Error(data?.error || "Failed to load AI fact.");
       setFact({ ...data, updatedAt: new Date().toISOString() });
       setLastFetchAt(Date.now());
     } catch (e) {
@@ -73,13 +89,12 @@ export default function AIFactRotator({
         fact: "We're refreshing facts. Please try again in a moment.",
         updatedAt: new Date().toISOString(),
       });
-      setLastFetchAt(Date.now()); // keep countdown flowing
+      setLastFetchAt(Date.now());
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // pause/resume when tab hidden
   useEffect(() => {
     const onVisibility = () => {
       hiddenRef.current = document.hidden;
@@ -89,7 +104,6 @@ export default function AIFactRotator({
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, [fetchFact]);
 
-  // initial + interval
   useEffect(() => {
     fetchFact();
     fetchTimerRef.current = setInterval(() => {
@@ -98,7 +112,6 @@ export default function AIFactRotator({
     return () => clearInterval(fetchTimerRef.current);
   }, [fetchFact]);
 
-  // per-second countdown tick
   useEffect(() => {
     tickTimerRef.current = setInterval(() => setNow(Date.now()), TICK_MS);
     return () => clearInterval(tickTimerRef.current);
@@ -110,39 +123,27 @@ export default function AIFactRotator({
       await navigator.clipboard?.writeText?.(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
-    } catch {
-      /* ignore */
-    }
+    } catch {}
   };
 
   const onShare = async () => {
     try {
       const text = fact ? `${fact.fact} — ${fact.category}` : "";
-      if (navigator.share) {
-        await navigator.share({ title: "AI Insight", text });
-      } else {
-        await onCopy();
-      }
+      if (navigator.share) await navigator.share({ title: "AI Insight", text });
+      else await onCopy();
       setShared(true);
       setTimeout(() => setShared(false), 1200);
-    } catch {
-      /* ignore */
-    }
+    } catch {}
   };
 
   const onShuffle = () => fetchFact();
-
   const onExplain = () => {
     const text = fact
       ? `Explain this in simple terms and give 2 examples:\n\n"${fact.fact}"`
       : "Explain the latest AI fact.";
-
-    // Preferred: event that your ChatWidget listens to
     window.dispatchEvent(new CustomEvent("chatwidget:open", { detail: { prompt: text } }));
-
-    // Fallback if you exposed a helper
     if (typeof window.openChatWith === "function") {
-      try { window.openChatWith(text); } catch { /* ignore */ }
+      try { window.openChatWith(text); } catch {}
     }
   };
 
@@ -160,7 +161,7 @@ export default function AIFactRotator({
       onHoverEnd={() => setIsHovered(false)}
       whileHover={{ y: -2 }}
     >
-      {/* Animated background */}
+      {/* BG */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl" />
         <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-violet-500/5 rounded-full blur-3xl" />
@@ -168,28 +169,28 @@ export default function AIFactRotator({
       </div>
 
       {/* Content */}
-      <div className="relative z-10 p-6">
+      <div className={`relative z-10 ${S.pad}`}>
         {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-start gap-4">
+        <div className={`flex items-start justify-between ${S.headMb}`}>
+          <div className={`flex items-start ${S.headGap}`}>
             <MotionSpan
-              className="inline-grid place-items-center w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 text-white shadow-lg"
+              className={`inline-grid place-items-center ${S.iconWH} rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 text-white shadow-lg`}
               animate={{ rotate: isHovered ? 10 : 0 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <FaRobot className="text-lg" aria-hidden />
+              <FaRobot className="text-sm" aria-hidden />
             </MotionSpan>
             <div>
-              <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>
-              <p className="text-sm text-gray-400 mt-1">{subtitle}</p>
+              <h3 className={`${S.title} text-white tracking-tight`}>{title}</h3>
+              <p className={S.subtitle}>{subtitle}</p>
             </div>
           </div>
 
-          <CategoryPill label={fact?.category || "—"} />
+          <CategoryPill small={size === "sm"} label={fact?.category || "—"} />
         </div>
 
         {/* Body */}
-        <div className="mb-6 min-h-[120px]">
+        <div className={`${S.bodyMb} min-h-[90px]`}>
           <AnimatePresence mode="wait">
             {loading ? (
               <MotionDiv
@@ -197,15 +198,15 @@ export default function AIFactRotator({
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
-                className="space-y-4"
+                className="space-y-3"
               >
-                <div className="h-5 w-11/12 rounded-md bg-white/5 overflow-hidden">
+                <div className="h-4 w-11/12 rounded-md bg-white/5 overflow-hidden">
                   <div className="h-full w-1/2 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-[shimmer_1.5s_infinite]" />
                 </div>
-                <div className="h-5 w-9/12 rounded-md bg-white/5 overflow-hidden">
+                <div className="h-4 w-9/12 rounded-md bg-white/5 overflow-hidden">
                   <div className="h-full w-2/3 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent animate-[shimmer_1.5s_infinite_0.2s]" />
                 </div>
-                <div className="h-5 w-10/12 rounded-md bg-white/5 overflow-hidden">
+                <div className="h-4 w-10/12 rounded-md bg-white/5 overflow-hidden">
                   <div className="h-full w-3/5 bg-gradient-to-r from-transparent via-violet-500/20 to-transparent animate-[shimmer_1.5s_infinite_0.4s]" />
                 </div>
                 <style>{`@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }`}</style>
@@ -216,11 +217,11 @@ export default function AIFactRotator({
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
-                className="space-y-4"
+                className="space-y-3"
               >
-                <p className="text-lg leading-relaxed text-gray-100 tracking-wide">{fact?.fact}</p>
+                <p className={S.fact}>{fact?.fact}</p>
 
-                <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
+                <div className="flex flex-wrap items-center gap-3 text-[12px] text-gray-400">
                   <span className="inline-flex items-center gap-1.5">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -239,15 +240,14 @@ export default function AIFactRotator({
           </AnimatePresence>
         </div>
 
-        {/* Footer: countdown + actions */}
+        {/* Footer */}
         <div className="flex items-center justify-between gap-4">
-          {/* progress bar */}
           <div className="flex-1">
-            <div className="flex items-center justify-between text-xs text-gray-400 mb-1.5">
+            <div className="flex items-center justify-between text-[11px] text-gray-400 mb-1">
               <span>Next refresh</span>
               <span>{formatTime(timeLeft)}</span>
             </div>
-            <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden">
+            <div className={`${S.barH} rounded-full bg-gray-800 overflow-hidden`}>
               <MotionDiv
                 className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500"
                 initial={false}
@@ -257,12 +257,19 @@ export default function AIFactRotator({
             </div>
           </div>
 
-          {/* actions */}
           <div className="flex items-center gap-2">
-            <ActionBtn title="Explain with AI" onClick={onExplain} icon={<FaLightbulb />} />
-            <ActionBtn title="Refresh" onClick={onShuffle} disabled={loading} icon={<FiRefreshCw className={loading ? "animate-spin" : ""} />} />
-            <ActionBtn title={copied ? "Copied!" : "Copy"} onClick={onCopy} icon={copied ? <FiCheck /> : <FiCopy />} />
-            <ActionBtn title={shared ? "Shared!" : "Share"} onClick={onShare} icon={<FiShare />} />
+            <ActionBtn title="Explain with AI" onClick={onExplain} size={size}>
+              <FaLightbulb />
+            </ActionBtn>
+            <ActionBtn title="Refresh" onClick={onShuffle} disabled={loading} size={size}>
+              <FiRefreshCw className={loading ? "animate-spin" : ""} />
+            </ActionBtn>
+            <ActionBtn title={copied ? "Copied!" : "Copy"} onClick={onCopy} size={size}>
+              {copied ? <FiCheck /> : <FiCopy />}
+            </ActionBtn>
+            <ActionBtn title={shared ? "Shared!" : "Share"} onClick={onShare} size={size}>
+              <FiShare />
+            </ActionBtn>
           </div>
         </div>
       </div>
@@ -272,10 +279,14 @@ export default function AIFactRotator({
 
 /* ------------------------------- Subcomponents ------------------------------ */
 
-function CategoryPill({ label }) {
+function CategoryPill({ label, small = false }) {
   return (
     <MotionSpan
-      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-700/50 bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-xs font-medium text-cyan-400 backdrop-blur-sm shadow-sm"
+      className={[
+        "inline-flex items-center gap-2 rounded-full border border-gray-700/50",
+        "bg-gradient-to-r from-gray-800/50 to-gray-900/50 text-cyan-400 backdrop-blur-sm shadow-sm",
+        small ? "px-2.5 py-1 text-[11px]" : "px-3 py-1.5 text-xs",
+      ].join(" ")}
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 400 }}
     >
@@ -285,14 +296,17 @@ function CategoryPill({ label }) {
   );
 }
 
-function ActionBtn({ title, onClick, icon, disabled }) {
+function ActionBtn({ title, onClick, disabled, size = "md", children }) {
+  const pad = size === "sm" ? "p-2" : "p-2.5";
+  const icon = size === "sm" ? "text-sm" : "text-base";
   return (
     <MotionButton
       type="button"
       onClick={onClick}
       disabled={disabled}
       className={[
-        "group relative inline-flex items-center justify-center p-2.5 rounded-xl",
+        "group relative inline-flex items-center justify-center rounded-xl",
+        pad,
         "bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800",
         "border border-gray-700/50 shadow-sm",
         "transition-all duration-300 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed",
@@ -302,14 +316,13 @@ function ActionBtn({ title, onClick, icon, disabled }) {
       whileTap={{ scale: 0.95 }}
       title={title}
     >
-      <span className="relative z-10 text-base">{icon}</span>
+      <span className={`relative z-10 ${icon}`}>{children}</span>
       <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     </MotionButton>
   );
 }
 
 /* ---------------------------------- Utils ---------------------------------- */
-
 function formatTime(ms) {
   const s = Math.max(0, Math.round(ms / 1000));
   const m = Math.floor(s / 60);
