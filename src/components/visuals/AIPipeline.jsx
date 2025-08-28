@@ -13,7 +13,7 @@ export default function AIPipeline() {
  <div className="text-center mb-8">
  <h2
  id="ai-pipeline-title"
- className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400"
+ className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400"
  >
  AI Pipeline • From Data to Decisions
  </h2>
@@ -23,7 +23,7 @@ export default function AIPipeline() {
  </div>
 
  <div className="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-emerald-500/10 p-6">
- <svg viewBox="0 0 1200 240" className="w-full h-48">
+ <svg viewBox="0 0 1200 240" >
  {/* Nodes */}
  <g>
  <circle cx="150" cy="120" r="36" className="fill-emerald-400/80" />

@@ -68,13 +68,13 @@ const ProjectCard = ({ repo, index }) => (
     whileHover={{ y: -5 }}
     className="rounded-xl p-3 sm:p-6 border border-white/10 bg-white/5 shadow-lg hover:shadow-cyan-500/20 transition-all h-full xs-card"
   >
-    <div className="flex justify-between items-start mb-3 gap-3 min-w-0">
-      <h3 className="xs-text-md sm:text-xl font-semibold text-cyan-400 min-w-0">
+    <div className="flex justify-between items-start mb-2.5 gap-2 min-w-0">
+      <h3 className="text-[13.5px] sm:text-xl font-semibold text-cyan-400 min-w-0 leading-tight">
         <a
           href={repo.html_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:underline break-words"
+          className="hover:underline break-words line-clamp-2"
         >
           {repo.name}
         </a>
@@ -84,12 +84,13 @@ const ProjectCard = ({ repo, index }) => (
       </span>
     </div>
 
-    <p className="text-gray-300 mb-3 line-clamp-3 xs-text-sm sm:text-[14px]">
+    {/* Description: visible ≥381px, hidden on ultra-small phones */}
+    <p className="text-gray-300 mb-2 sm:mb-3 line-clamp-2 text-[12px] sm:text-[14px] xs-hide">
       {repo.description || "No description provided"}
     </p>
 
     {repo.language && (
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-2">
         <span
           className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full"
           style={{ backgroundColor: getLanguageColor(repo.language) }}
@@ -360,7 +361,7 @@ export default function Portfolio() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-8 items-stretch">
+          <div className="grid grid-cols-2  md:grid-cols-3 gap-4 sm:gap-8 items-stretch">
             <VisionCard
               icon="🤖"
               title="AI Innovation"

@@ -176,6 +176,9 @@ export default function ChatWidget({
   });
   const lastBrandRef = useRef({ topic: "", entity: "" });
 
+  // --- iOS detection (used only for font-size rule to stop Safari auto-zoom)
+  const isIOS = typeof window !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent);
+
   useEffect(() => { try { if (guestName) localStorage.setItem("sx_guest_name", guestName); } catch {/* no op */} }, [guestName]);
 
   useEffect(() => {
@@ -352,7 +355,7 @@ export default function ChatWidget({
           `• Founder: ${companyInfo.team.founder}\n` +
           `• Mission: ${companyInfo.mission}\n` +
           "• Focus: AI + Green Datacenter + Database Platform\n" +
-          "• Next step: 15‑min intro call",
+          "• Next step: 15-min intro call",
         actions: [
           { label: "Email Investor Relations", type: "link", href: `mailto:${companyInfo.contact.email}?subject=Investor%20Intro%20—%20SynexiAI` },
           { label: "See Projects", type: "event", event: { name: "synexiai:navigate", detail: { to: "#projects" } } },
@@ -392,7 +395,6 @@ export default function ChatWidget({
       },
     },
   };
-
 
   const tryHandleSkill = useCallback((userText) => {
     for (const [, skill] of Object.entries(SKILLS)) {
@@ -437,7 +439,7 @@ export default function ChatWidget({
         lastBrandRef.current = { topic: "invest", entity: "investor-relations" };
       }
 
-      // quick coreference for short follow-ups (his/he/who is he/name?)
+      // quick coreference for short follow-ups
       if (/^(what('?| i)s\s+his\s+name|who\s+is\s+he|his\s+name\??)$/i.test(content)) {
         const leader = companyInfo?.team?.founder || "";
         const reply = leader
@@ -552,7 +554,7 @@ export default function ChatWidget({
 
     window.addEventListener("chatwidget:open", onOpen);
     return () => window.removeEventListener("chatwidget:open", onOpen);
-  }, [sendMessage]); // Add sendMessage to dependencies
+  }, [sendMessage]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -597,9 +599,9 @@ export default function ChatWidget({
   const bottomFab = `calc(${isMobile ? mobileInset : desktopInset}px + env(safe-area-inset-bottom, 0px) + ${kbOffset}px)`;
   const panelBottomBase = `calc(${isMobile ? panelLiftMobile : panelLiftDesktop}px + env(safe-area-inset-bottom, 0px) + ${kbOffset}px)`;
 
-  // dynamic max height (respect header + keyboard)
+  // dynamic max height (respect header + keyboard; use dvh/svh for robust mobile behavior)
   const topClear = (safeTop || 0) + 100;
-  const panelMaxHeight = `calc(100svh - (${topClear}px + ${isMobile ? panelLiftMobile : panelLiftDesktop}px + env(safe-area-inset-bottom, 0px) + ${kbOffset}px))`;
+  const panelMaxHeight = `calc(min(100dvh, 100svh) - (${topClear}px + ${isMobile ? panelLiftMobile : panelLiftDesktop}px + env(safe-area-inset-bottom, 0px) + ${kbOffset}px))`;
 
   const scale = isMobile ? 1 : scaleDesktop;
 
@@ -741,7 +743,7 @@ export default function ChatWidget({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.15 }}
-                  className="grid grid-cols-2 gap-2 mt-2"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2"
                 >
                   {quickQuestions.map((q, i) => (
                     <button
@@ -773,7 +775,10 @@ export default function ChatWidget({
             </div>
 
             {/* Composer */}
-            <div className={`${isCompact ? "p-2.5" : "p-3"} border-t border-white/10 bg-white/5 backdrop-blur-md`} style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+            <div
+              className={`${isCompact ? "p-2.5" : "p-3"} border-t border-white/10 bg-white/5 backdrop-blur-md`}
+              style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 6px)" }}
+            >
               {error && (
                 <div className="mb-2 px-3 py-2 text-xs text-rose-600 dark:text-rose-300 bg-rose-100/70 dark:bg-rose-900/40 rounded-lg">
                   Error: {error.message}
@@ -792,7 +797,11 @@ export default function ChatWidget({
                   onKeyDown={handleKeyDown}
                   placeholder={guestName ? `Talk to us, ${guestName}…` : "Type your message..."}
                   disabled={loading}
-                  className={`flex-1 ${isCompact ? "px-3 py-1.5 text-[13px]" : "px-4 py-2"} rounded-xl bg-white/10 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 border border-white/15 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 disabled:opacity-50 backdrop-blur-md`}
+                  inputMode="text"
+                  enterKeyHint="send"
+                  className={`flex-1 ${isCompact ? "px-3 py-2" : "px-4 py-2"} rounded-xl bg-white/10 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 border border-white/15 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 disabled:opacity-50 backdrop-blur-md ${
+                    (isMobile || isIOS) ? "text-[16px]" : (isCompact ? "text-[13px]" : "text-sm")
+                  }`}
                   aria-label="Type your message"
                 />
                 <button

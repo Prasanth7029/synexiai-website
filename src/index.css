@@ -648,3 +648,9 @@
   .safe-top      { padding-top: calc(env(safe-area-inset-top) + .5rem) !important; }
 }
 
+/* Hide non-essentials only on ultra-small screens */
+@media (max-width: 380px) {
+  .xs-hide { display: none !important; }
+}
+
+
