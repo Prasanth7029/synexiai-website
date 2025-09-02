@@ -4,18 +4,30 @@ import { useLocation } from "react-router-dom";
 
 /**
  * ScrollToTop
- * - Resets scroll on route changes (ignores hash so we always go to top)
- * - Optional smooth/instant behavior
+ * - On route change:
+ *    • if URL has #hash -> scrollIntoView that element
+ *    • else -> scroll to page top
+ *    • also focus #main (if present) for a11y
  */
 export default function ScrollToTop({ behavior = "smooth" }) {
- const { pathname, search } = useLocation();
+  const { pathname, search, hash } = useLocation();
 
- useEffect(() => {
- // Ensure we scroll after the new page paints
- requestAnimationFrame(() => {
- window.scrollTo({ top: 0, left: 0, behavior });
- });
- }, [pathname, search, behavior]);
+  useEffect(() => {
+    // Wait until the next paint so the new route has rendered
+    requestAnimationFrame(() => {
+      const main = document.getElementById("main");
+      if (hash) {
+        const el = document.getElementById(hash.slice(1));
+        if (el) {
+          el.scrollIntoView({ behavior, block: "start" });
+          if (main) main.focus?.();
+          return;
+        }
+      }
+      window.scrollTo({ top: 0, left: 0, behavior });
+      if (main) main.focus?.();
+    });
+  }, [pathname, search, hash, behavior]);
 
- return null;
+  return null;
 }

@@ -52,20 +52,13 @@ function useDeferredAOS() {
 
     return () => {
       cancelled = true;
-      if (idleId && "cancelIdleCallback" in window) {
-        window.cancelIdleCallback(idleId);
-      }
+      if (idleId && "cancelIdleCallback" in window) window.cancelIdleCallback(idleId);
       if (timeoutId) window.clearTimeout(timeoutId);
     };
   }, []);
 }
 
 /* --------------------------- Route Prefetcher ---------------------------- */
-/**
- * Adds two boosts:
- * 1) Idle-preload your top routes (Home, Games).
- * 2) Hover/touch prefetch: add data-prefetch="/path" on any <Link> in nav.
- */
 function RoutePrefetcher() {
   useEffect(() => {
     const map = {
@@ -85,10 +78,7 @@ function RoutePrefetcher() {
     // Idle-preload most visited
     let idleId;
     const idlePreload = () => {
-      try {
-        map["/"]?.();
-        map["/games"]?.();
-      } catch {}
+      try { map["/"]?.(); map["/games"]?.(); } catch {}
     };
     if ("requestIdleCallback" in window) {
       idleId = window.requestIdleCallback(idlePreload, { timeout: 2500 });
@@ -99,26 +89,20 @@ function RoutePrefetcher() {
     // Hover/touch prefetch for any element with data-prefetch="/path"
     const handler = (e) => {
       const t = e.target;
-      // Guard: not all event targets are Elements (e.g., Text nodes)
       if (!t || typeof t.closest !== "function") return;
       const el = t.closest("[data-prefetch]");
       if (!el) return;
       const p = el.getAttribute("data-prefetch");
-      if (p && map[p]) {
-        try { map[p](); } catch {}
-      }
+      if (p && map[p]) { try { map[p](); } catch {} }
     };
 
     document.addEventListener("mouseover", handler, true);
-    // Use capture:true to match removal; passive avoids blocking scrolling
     document.addEventListener("touchstart", handler, { passive: true, capture: true });
 
     return () => {
-      if (idleId && "cancelIdleCallback" in window) {
-        window.cancelIdleCallback(idleId);
-      }
+      if (idleId && "cancelIdleCallback" in window) window.cancelIdleCallback(idleId);
       document.removeEventListener("mouseover", handler, true);
-      // When removing, pass the same capture flag you used on addEventListener
+      // For removeEventListener, only the capture flag must match:
       document.removeEventListener("touchstart", handler, true);
     };
   }, []);
@@ -131,12 +115,13 @@ export default function App() {
 
   return (
     <Router>
+      {/* Always above routes so it listens to every navigation */}
       <ScrollToTop behavior="smooth" />
       <RoutePrefetcher />
 
       <Suspense fallback={<LoaderScreen />}>
         <Layout>
-          {/* Route-level Suspense boundary: progressive reveal when navigating */}
+          {/* Route-level Suspense boundary */}
           <Suspense fallback={<LoaderScreen />}>
             <Routes>
               <Route path="/" element={<HomePage />} />

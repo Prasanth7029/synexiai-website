@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   FaGithub,
@@ -17,47 +17,31 @@ const MotionA = motion.a;
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const headingId = "site-footer-heading-nav";
 
   const socialLinks = [
-    { icon: <FaGithub />, url: "https://github.com/synexiai", label: "GitHub" },
-    {
-      icon: <FaLinkedin />,
-      url: "https://www.linkedin.com/company/synexisai",
-      label: "LinkedIn",
-    },
-    { icon: <FaGlobe />, url: "https://www.synexiai.online", label: "Website" },
-    {
-      icon: <FaTwitter />,
-      url: "https://twitter.com/synexiai",
-      label: "Twitter",
-    },
-    {
-      icon: <FaDiscord />,
-      url: "https://discord.gg/synexiai",
-      label: "Discord",
-    },
-    {
-      icon: <SiNotion />,
-      url: "https://synexiai.notion.site",
-      label: "Notion",
-    },
+    { icon: <FaGithub />,  url: "https://github.com/synexiai",           label: "GitHub" },
+    { icon: <FaLinkedin />, url: "https://www.linkedin.com/company/synexisai", label: "LinkedIn" },
+    { icon: <FaGlobe />,   url: "https://www.synexiai.online",           label: "Website" },
+    { icon: <FaTwitter />, url: "https://twitter.com/synexiai",          label: "Twitter" },
+    { icon: <FaDiscord />, url: "https://discord.gg/synexiai",           label: "Discord" },
+    { icon: <SiNotion />,  url: "https://synexiai.notion.site",          label: "Notion" },
   ];
 
+  // Use /portfolio instead of /projects (App.jsx redirects anyway)
   const navLinks = [
-    { label: "Home", path: "/" },
-    { label: "About", path: "/about" },
-    { label: "Projects", path: "/projects" },
-    { label: "Vision", path: "/vision" },
-    { label: "Tech", path: "/tech" },
-    { label: "Contact", path: "/contact" },
+    { label: "Home",     path: "/" },
+    { label: "About",    path: "/about" },
+    { label: "Portfolio",path: "/portfolio" },
+    { label: "Vision",   path: "/vision" },
+    { label: "Tech",     path: "/tech" },
+    { label: "Contact",  path: "/contact" },
   ];
-
-  const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 
   return (
     <footer
       className="relative bg-gradient-to-b from-black to-[#0a0a0a] dark:bg-gradient-to-b dark:from-black dark:to-gray-900 text-white pt-20 pb-12 px-6 overflow-hidden border-t border-cyan-500/20"
-      aria-labelledby="site-footer-heading"
+      aria-labelledby={headingId}
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden z-0">
@@ -67,7 +51,7 @@ export default function Footer() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        {/* Visitors / Updated Bar (added, uses your existing component) */}
+        {/* Visitors / Updated Bar */}
         <VisitorsBar className="mb-10" />
 
         {/* Main Content */}
@@ -87,8 +71,7 @@ export default function Footer() {
             >
               <Link
                 to="/"
-                onClick={toTop}
-                data-scroll-top
+                data-prefetch="/"
                 className="bg-gradient-to-r from-cyan-400 to-teal-500 bg-clip-text text-transparent inline-block focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-black rounded"
               >
                 SynexiAI
@@ -103,7 +86,7 @@ export default function Footer() {
           {/* Navigation Column */}
           <nav className="md:col-span-4" aria-label="Footer Navigation">
             <h3
-              id="site-footer-heading"
+              id={headingId}
               className="text-cyan-400 font-semibold mb-4 text-sm uppercase tracking-wider"
             >
               Navigation
@@ -117,15 +100,19 @@ export default function Footer() {
                   transition={{ delay: index * 0.05, duration: 0.3 }}
                   viewport={{ once: true }}
                 >
-                  <Link
+                  <NavLink
                     to={link.path}
-                    onClick={toTop}
-                    data-scroll-top
-                    className="text-gray-300 hover:text-cyan-400 transition-colors duration-300 text-sm flex items-center group"
+                    data-prefetch={link.path}
+                    className={({ isActive }) =>
+                      [
+                        "text-sm flex items-center group transition-colors duration-300",
+                        isActive ? "text-cyan-400" : "text-gray-300 hover:text-cyan-400",
+                      ].join(" ")
+                    }
                   >
                     <span className="w-1 h-1 bg-cyan-400 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     {link.label}
-                  </Link>
+                  </NavLink>
                 </MotionLi>
               ))}
             </ul>
@@ -145,11 +132,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   initial={{ scale: 0, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
-                  transition={{
-                    delay: index * 0.05,
-                    type: "spring",
-                    stiffness: 300,
-                  }}
+                  transition={{ delay: index * 0.05, type: "spring", stiffness: 300 }}
                   viewport={{ once: true }}
                   className="w-10 h-10 rounded-full bg-gray-900/50 border border-gray-800 flex items-center justify-center text-gray-300 hover:text-cyan-400 hover:border-cyan-400/30 transition-all duration-300 group relative overflow-hidden"
                   aria-label={social.label}
@@ -178,28 +161,13 @@ export default function Footer() {
           </div>
 
           <div className="flex gap-6 text-gray-500">
-            <Link
-              to="/privacy"
-              onClick={toTop}
-              data-scroll-top
-              className="hover:text-cyan-400 transition-colors"
-            >
+            <Link to="/privacy" data-prefetch="/privacy" className="hover:text-cyan-400 transition-colors">
               Privacy Policy
             </Link>
-            <Link
-              to="/terms"
-              onClick={toTop}
-              data-scroll-top
-              className="hover:text-cyan-400 transition-colors"
-            >
+            <Link to="/terms" data-prefetch="/terms" className="hover:text-cyan-400 transition-colors">
               Terms of Service
             </Link>
-            <Link
-              to="/cookie-policy"
-              onClick={toTop}
-              data-scroll-top
-              className="hover:text-cyan-400 transition-colors"
-            >
+            <Link to="/cookie-policy" data-prefetch="/cookie-policy" className="hover:text-cyan-400 transition-colors">
               Cookie Policy
             </Link>
           </div>
