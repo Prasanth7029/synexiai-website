@@ -3,6 +3,7 @@ import React, { useEffect, Suspense, lazy } from "react";
 import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import LoaderScreen from "./components/LoaderScreen.jsx";
+import CookieConsent from "@/components/privacy/CookieConsent.jsx";
 
 // Lazier: even Layout & legal pages
 const Layout         = lazy(() => import("./components/Layout.jsx"));
@@ -145,6 +146,7 @@ export default function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          <CookieConsent />
         </Layout>
       </Suspense>
     </Router>
