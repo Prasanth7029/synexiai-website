@@ -4,6 +4,7 @@ import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import LoaderScreen from "./components/LoaderScreen.jsx";
 import CookieConsent from "@/components/privacy/CookieConsent.jsx";
+import EdgeScrollButtons from "./components/EdgeScrollButtons.jsx"; // ⬅️ mount once at App level
 
 // Lazier: even Layout & legal pages
 const Layout         = lazy(() => import("./components/Layout.jsx"));
@@ -40,9 +41,7 @@ function useDeferredAOS() {
           AOS.init({ duration: 1000, easing: "ease-out", once: true, mirror: false });
           AOS.refresh();
         }
-      } catch {
-        // no-op
-      }
+      } catch { /* noop */ }
     };
 
     if ("requestIdleCallback" in window) {
@@ -78,20 +77,16 @@ function RoutePrefetcher() {
 
     // Idle-preload most visited
     let idleId;
-    const idlePreload = () => {
-      try { map["/"]?.(); map["/games"]?.(); } catch {}
-    };
+    const idlePreload = () => { try { map["/"]?.(); map["/games"]?.(); } catch {} };
     if ("requestIdleCallback" in window) {
       idleId = window.requestIdleCallback(idlePreload, { timeout: 2500 });
     } else {
       setTimeout(idlePreload, 1200);
     }
 
-    // Hover/touch prefetch for any element with data-prefetch="/path"
+    // Hover/touch prefetch
     const handler = (e) => {
-      const t = e.target;
-      if (!t || typeof t.closest !== "function") return;
-      const el = t.closest("[data-prefetch]");
+      const el = e.target?.closest?.("[data-prefetch]");
       if (!el) return;
       const p = el.getAttribute("data-prefetch");
       if (p && map[p]) { try { map[p](); } catch {} }
@@ -103,11 +98,9 @@ function RoutePrefetcher() {
     return () => {
       if (idleId && "cancelIdleCallback" in window) window.cancelIdleCallback(idleId);
       document.removeEventListener("mouseover", handler, true);
-      // For removeEventListener, only the capture flag must match:
       document.removeEventListener("touchstart", handler, true);
     };
   }, []);
-
   return null;
 }
 
@@ -120,9 +113,18 @@ export default function App() {
       <ScrollToTop behavior="smooth" />
       <RoutePrefetcher />
 
+      {/* ⬇️ Floating arrows mounted ABOVE Layout. Nothing can clip them. */}
+     <EdgeScrollButtons
+       // Let it auto-detect the scroller; do NOT pass scrollContainerSelector
+       scrollContainerSelector="#main"
+       forceVisible
+       debug
+       posDown="left-6 top-32 z-[200000]"   // ⬅ sit clearly under navbar
+       posUp="left-6 bottom-10 z-[200000]" // ⬅ left side, well above chatbot/dock
+     />
+
       <Suspense fallback={<LoaderScreen />}>
         <Layout>
-          {/* Route-level Suspense boundary */}
           <Suspense fallback={<LoaderScreen />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
