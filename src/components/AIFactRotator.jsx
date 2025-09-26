@@ -29,7 +29,7 @@ export default function AIFactRotator({
         iconWH: "w-10 h-10",
         title: "text-[clamp(15px,3.8vw,18px)] font-bold",
         subtitle: "text-[12px] text-gray-400 mt-0.5",
-        fact: "text-[clamp(13px,3.8vw,15px)] leading-relaxed text-gray-100",
+        fact: "text-[clamp(13px,3.8vw,15px)] leading-relaxed ",
         pill: "px-2.5 py-1 text-[11px]",
         barH: "h-1",
         btnPad: "p-2",
@@ -152,7 +152,7 @@ export default function AIFactRotator({
       aria-live="polite"
       className={[
         "relative rounded-2xl overflow-hidden",
-        "bg-gradient-to-br from-gray-900/80 to-gray-950/90 backdrop-blur-xl",
+        " from-gray-900/80 to-gray-950/90 backdrop-blur-xl",
         "border border-gray-700/30 shadow-2xl shadow-blue-500/10",
         "hover:shadow-blue-500/20 transition-all duration-500",
         className,
@@ -174,14 +174,14 @@ export default function AIFactRotator({
         <div className={`flex items-start justify-between ${S.headMb}`}>
           <div className={`flex items-start ${S.headGap}`}>
             <MotionSpan
-              className={`inline-grid place-items-center ${S.iconWH} rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 text-white shadow-lg`}
+              className={`inline-grid place-items-center ${S.iconWH} rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600  shadow-lg`}
               animate={{ rotate: isHovered ? 10 : 0 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <FaRobot className="text-sm" aria-hidden />
             </MotionSpan>
             <div>
-              <h3 className={`${S.title} text-white tracking-tight`}>{title}</h3>
+              <h3 className={`${S.title}  tracking-tight`}>{title}</h3>
               <p className={S.subtitle}>{subtitle}</p>
             </div>
           </div>
@@ -221,7 +221,7 @@ export default function AIFactRotator({
               >
                 <p className={S.fact}>{fact?.fact}</p>
 
-                <div className="flex flex-wrap items-center gap-3 text-[12px] text-gray-400">
+                <div className="flex flex-wrap items-center gap-3 text-[12px] ">
                   <span className="inline-flex items-center gap-1.5">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

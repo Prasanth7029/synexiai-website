@@ -2,20 +2,12 @@
 import React, { useEffect, lazy, Suspense, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-  FaReact,
-  FaServer,
-  FaBell,
-  FaChartLine,
-  FaBrain,
-  FaGamepad,
-} from "react-icons/fa";
+import { FaReact, FaServer, FaBell, FaChartLine, FaBrain, FaGamepad } from "react-icons/fa";
 
 import HeroBanner from "../components/HeroBanner";
 import FeatureCard from "../components/FeatureCard";
 import BuildWithSynexiAI from "../components/sections/BuildWithSynexiAI.jsx";
 import AIFactRotator from "../components/AIFactRotator.jsx";
-
 
 // Content
 import { projects as portfolio } from "../content/projects.js";
@@ -29,59 +21,60 @@ import usePersonaDetector from "../hooks/usePersonaDetector.js";
 const MotionDiv = motion.div;
 
 /* Lazy heavy sections for faster TTI */
-const SocialProofSection = lazy(() =>
-  import("../components/social/SocialProofSection.jsx")
-);
-const ProjectsSection = lazy(() =>
-  import("../components/projects/ProjectsSection.jsx")
-);
-const AIPipeline = lazy(() =>
-  import("../components/visuals/AIPipeline.jsx")
-);
-const MetricCard = lazy(() =>
-  import("../components/visuals/MetricCard.jsx")
-);
+const SocialProofSection = lazy(() => import("../components/social/SocialProofSection.jsx"));
+const ProjectsSection = lazy(() => import("../components/projects/ProjectsSection.jsx"));
+const AIPipeline = lazy(() => import("../components/visuals/AIPipeline.jsx"));
+const MetricCard = lazy(() => import("../components/visuals/MetricCard.jsx"));
 
-/* Small skeletons for lazy sections */
+/* Skeleton for lazy sections — themed surface */
 function SectionSkeleton({ className = "" }) {
   return (
     <div
-      className={`w-full h-40 rounded-xl border border-white/10 bg-white/5 animate-pulse ${className}`}
+      className={`w-full h-40 rounded-xl border animate-pulse ${className}`}
       aria-hidden="true"
+      style={{
+        background: "color-mix(in oklab, var(--card-bg) 86%, transparent)",
+        borderColor: "var(--border-color)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+      }}
     />
   );
 }
 
-/* Extended features */
+/* Feature list (icons recolored via tokens) */
 const features = [
   {
-    icon: <FaReact className="text-4xl text-cyan-400" />,
+    icon: <FaReact className="text-4xl" style={{ color: "var(--brand-cyan)" }} />,
     title: "Modular Architecture",
-    description:
-      "Solutions born from the fusion of AI, cloud systems, and renewable intelligence",
+    description: "Solutions born from the fusion of AI, cloud systems, and renewable intelligence",
     delay: 0.1,
   },
   {
-    icon: <FaServer className="text-4xl text-cyan-400" />,
+    icon: <FaServer className="text-4xl" style={{ color: "var(--brand-cyan)" }} />,
     title: "AI Microservices",
     description: "Scalable AI-powered dashboards and microservice ecosystems",
     delay: 0.2,
   },
   {
-    icon: <FaBell className="text-4xl text-cyan-400" />,
+    icon: <FaBell className="text-4xl" style={{ color: "var(--brand-cyan)" }} />,
     title: "Real-Time Systems",
     description: "Notification layers and seamless third-party integrations",
     delay: 0.3,
   },
   {
-    icon: <FaChartLine className="text-4xl text-cyan-400" />,
+    icon: (
+      <FaChartLine
+        className="text-4xl"
+        style={{ color: "color-mix(in oklab, var(--brand-cyan) 30%, #22c55e)" }}
+      />
+    ),
     title: "Data Applications",
-    description:
-      "Cloud-native, data-driven applications with actionable insights",
+    description: "Cloud-native, data-driven applications with actionable insights",
     delay: 0.4,
   },
   {
-    icon: <FaBrain className="text-4xl text-cyan-400" />,
+    icon: <FaBrain className="text-4xl" style={{ color: "var(--brand-cyan)" }} />,
     title: "Innovation Engine",
     description: "The digital core of SynexiAI's future technologies",
     delay: 0.5,
@@ -93,7 +86,6 @@ export default function HomePage() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Persona-aware copy
   usePersonaDetector();
   const { persona } = usePersona();
   const p = personaCopy[persona] || personaCopy.general;
@@ -108,7 +100,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <HeroBanner title={p.heroTitle} subtitle={p.heroSubtitle} />
+      <HeroBanner className="hero-no-grid hero-veil" title={p.heroTitle} subtitle={p.heroSubtitle} />
 
       {/* AI Fact Rotator */}
       <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 my-6">
@@ -119,25 +111,25 @@ export default function HomePage() {
       <BuildWithSynexiAI />
 
       {/* Games CTA */}
-      <section
-        className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-12"
-        aria-labelledby="games-cta-title"
-      >
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-12" aria-labelledby="games-cta-title">
+        <div className="section p-6 sm:p-8 text-center">
           <div className="flex items-center justify-center gap-3 mb-2">
-            <FaGamepad className="text-2xl text-cyan-400" aria-hidden="true" />
+            <FaGamepad className="text-2xl" aria-hidden="true" style={{ color: "var(--brand-cyan)" }} />
             <h2 id="games-cta-title" className="text-xl sm:text-2xl font-bold">
               Play Our Games & Puzzles
             </h2>
           </div>
-          <p className="opacity-80 max-w-2xl mx-auto">
-            Try our interactive mini‑games — logic, energy routing, pipeline
-            building, and more — all curated in one place.
+          <p
+            className="max-w-2xl mx-auto"
+            style={{ opacity: 0.85, color: "color-mix(in oklab, var(--color-text) 85%, transparent)" }}
+          >
+            Try our interactive mini-games — logic, energy routing, pipeline building, and more — all curated in one
+            place.
           </p>
           <div className="mt-4">
             <Link
               to="/games"
-              className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-5 py-3 text-sm sm:text-base hover:bg-cyan-500/20 transition-colors"
+              className="btn-ghost inline-flex items-center gap-2 px-5 py-3 text-sm sm:text-base"
               aria-label="Open the Games page"
             >
               Open Games <span aria-hidden>→</span>
@@ -147,17 +139,16 @@ export default function HomePage() {
       </section>
 
       {/* Main content container */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20 text-gray-900 dark:text-gray-100">
+      <div
+        className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20"
+        style={{ color: "var(--color-text)" }}
+      >
         {/* Intro row */}
-        <section
-          id="intro"
-          className="mb-8 sm:mb-12 scroll-mt-[calc(var(--header-h,64px)+12px)]"
-        >
+        <section id="intro" className="mb-8 sm:mb-12 scroll-mt-[calc(var(--header-h,64px)+12px)]">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch">
             {/* AIPipeline */}
             <div className="lg:col-span-2 min-w-0 scale-[.92] sm:scale-100 origin-top-left sx-chat">
               <Suspense fallback={<SectionSkeleton className="h-48 sm:h-64" />}>
-                {/* if you add density prop later it’ll tighten padding; safe to leave here */}
                 <AIPipeline density="compact" />
               </Suspense>
             </div>
@@ -165,7 +156,6 @@ export default function HomePage() {
             {/* MetricCard */}
             <div className="lg:col-span-1 min-w-0 scale-[.92] sm:scale-100 origin-top-left sx-chat">
               <Suspense fallback={<SectionSkeleton className="h-48 sm:h-64" />}>
-                {/* see step 3 for the size prop */}
                 <MetricCard autoUpdate size="sm" />
               </Suspense>
             </div>
@@ -175,11 +165,7 @@ export default function HomePage() {
         {/* Social Proof */}
         <section id="proof" className="scroll-mt-[calc(var(--header-h,64px)+16px)]">
           <Suspense fallback={<SectionSkeleton className="h-48" />}>
-            <SocialProofSection
-              logos={partnerOrgs}
-              stats={milestones}
-              quotes={testimonials}
-            />
+            <SocialProofSection logos={partnerOrgs} stats={milestones} quotes={testimonials} />
           </Suspense>
         </section>
 
@@ -190,12 +176,8 @@ export default function HomePage() {
           </Suspense>
         </section>
 
-        {/* Tri‑Force */}
-        <section
-          id="tri-force"
-          aria-labelledby="tri-force-title"
-          className="mb-24 scroll-mt-[calc(var(--header-h,64px)+16px)]"
-        >
+        {/* Tri-Force */}
+        <section id="tri-force" aria-labelledby="tri-force-title" className="mb-24 scroll-mt-[calc(var(--header-h,64px)+16px)]">
           <MotionDiv
             initial={prefersReduced ? false : { opacity: 0, y: 20 }}
             whileInView={prefersReduced ? {} : { opacity: 1, y: 0 }}
@@ -207,51 +189,51 @@ export default function HomePage() {
               id="tri-force-title"
               className="text-[clamp(1.65rem,3.8vw,2.75rem)] font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-green-400"
             >
-              The SynexiAI Tri‑Force
+              The SynexiAI Tri-Force
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10">
+            <p className="text-base sm:text-lg md:text-xl" style={{ color: "color-mix(in oklab, var(--color-text) 80%, transparent)" }}>
               Everything we build stems from these 3 power pillars
             </p>
 
-            <div className="grid-2-3 auto-rows-fr gap-8 items-stretch [grid-auto-rows:1fr]">
+            <div className="grid-2-3 auto-rows-fr gap-8 items-stretch [grid-auto-rows:1fr] mt-10">
               <div className="min-w-0 h-full">
                 <FeatureCard
-                  icon={<FaBrain className="text-4xl text-cyan-400" />}
+                  icon={<FaBrain className="text-4xl" style={{ color: "var(--brand-cyan)" }} />}
                   title="AI Innovation"
-                  description="Next‑gen ML, LLMs, and predictive systems"
+                  description="Next-gen ML, LLMs, and predictive systems"
                   delay={0.1}
-                  className="h-full bg-white/5 border border-white/10"
+                  className="h-full card"
                 />
               </div>
               <div className="min-w-0 h-full">
                 <FeatureCard
-                  icon={<FaServer className="text-4xl text-cyan-400" />}
+                  icon={<FaServer className="text-4xl" style={{ color: "var(--brand-cyan)" }} />}
                   title="Cloud & Databases"
-                  description="Self‑healing, scalable, hybrid cloud"
+                  description="Self-healing, scalable, hybrid cloud"
                   delay={0.2}
-                  className="h-full bg-white/5 border border-white/10"
+                  className="h-full card"
                 />
               </div>
               <div className="min-w-0 h-full">
                 <FeatureCard
-                  icon={<FaChartLine className="text-4xl text-green-400" />}
+                  icon={
+                    <FaChartLine
+                      className="text-4xl"
+                      style={{ color: "color-mix(in oklab, var(--brand-cyan) 30%, #22c55e)" }}
+                    />
+                  }
                   title="Renewable Tech"
-                  description="Energy‑aware AI & green data infrastructure"
+                  description="Energy-aware AI & green data infrastructure"
                   delay={0.3}
-                  className="h-full bg-white/5 border border-white/10"
+                  className="h-full card"
                 />
               </div>
             </div>
           </MotionDiv>
         </section>
 
-
         {/* Extended Features */}
-        <section
-          id="what-powers-synexiai"
-          aria-labelledby="powers-title"
-          className="mb-24 scroll-mt-[calc(var(--header-h,64px)+16px)]"
-        >
+        <section id="what-powers-synexiai" aria-labelledby="powers-title" className="mb-24 scroll-mt-[calc(var(--header-h,64px)+16px)]">
           <MotionDiv
             initial={prefersReduced ? false : { opacity: 0, y: 20 }}
             whileInView={prefersReduced ? {} : { opacity: 1, y: 0 }}
@@ -265,7 +247,7 @@ export default function HomePage() {
             >
               What Powers SynexiAI
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto" style={{ color: "color-mix(in oklab, var(--color-text) 80%, transparent)" }}>
               Solutions born from the fusion of AI, cloud systems, and renewable intelligence
             </p>
           </MotionDiv>
@@ -278,7 +260,7 @@ export default function HomePage() {
                   title={feature.title}
                   description={feature.description}
                   delay={feature.delay}
-                  className="h-full bg-white/5 border border-white/10"
+                  className="h-full card"
                 />
               </div>
             ))}
@@ -289,7 +271,7 @@ export default function HomePage() {
         <section
           id="mission"
           aria-labelledby="mission-title"
-          className="px-4 sm:px-8 py-12 sm:py-16 rounded-3xl border border-white/10 bg-white/5 shadow-xl shadow-cyan-500/10 mb-24 scroll-mt-[calc(var(--header-h,64px)+16px)]"
+          className="px-4 sm:px-8 py-12 sm:py-16 rounded-3xl mb-24 scroll-mt-[calc(var(--header-h,64px)+16px)] section"
         >
           <MotionDiv
             initial={prefersReduced ? false : { opacity: 0, y: 20 }}
@@ -298,49 +280,40 @@ export default function HomePage() {
             viewport={{ once: true, amount: 0.2 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <h3
-              id="mission-title"
-              className="text-[clamp(1.4rem,3.2vw,2.1rem)] font-bold text-gray-900 dark:text-white mb-8"
-            >
-              “From <span className="text-cyan-500">Zero to Forever</span> — Building Systems That Last”
+            <h3 id="mission-title" className="text-[clamp(1.4rem,3.2vw,2.1rem)] font-bold mb-8" style={{ color: "var(--color-text)" }}>
+              “From <span style={{ color: "var(--brand-cyan)" }}>Zero to Forever</span> — Building Systems That Last”
             </h3>
-            <p className="text-base sm:text-lg md:text-xl text-gray-800 dark:text-gray-300 leading-relaxed">
+            <p
+              className="text-base sm:text-lg md:text-xl leading-relaxed"
+              style={{ color: "color-mix(in oklab, var(--color-text) 85%, transparent)" }}
+            >
               Our philosophy centers on creating technology that evolves with time, solving tomorrow’s problems with
               today’s innovation. We architect systems that grow more valuable with each iteration.
             </p>
           </MotionDiv>
         </section>
 
-
         {/* Final CTA */}
-        <section
-          id="cta"
-          aria-labelledby="cta-title"
-          className="text-center scroll-mt-[calc(var(--header-h,64px)+16px)]"
-        >
+        <section id="cta" aria-labelledby="cta-title" className="text-center scroll-mt-[calc(var(--header-h,64px)+16px)]">
           <MotionDiv
             initial={prefersReduced ? false : { opacity: 0 }}
             whileInView={prefersReduced ? {} : { opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true, amount: 0.2 }}
           >
-            <h3
-              id="cta-title"
-              className="text-[clamp(1.4rem,3.2vw,2.1rem)] font-bold text-cyan-400 mb-8"
-            >
+            <h3 id="cta-title" className="text-[clamp(1.4rem,3.2vw,2.1rem)] font-bold mb-8" style={{ color: "var(--brand-cyan)" }}>
               Ready to Build the Future With Us?
             </h3>
-            <p className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
+            <p
+              className="text-base sm:text-lg md:text-xl mb-10 max-w-2xl mx-auto"
+              style={{ color: "color-mix(in oklab, var(--color-text) 80%, transparent)" }}
+            >
               Whether you’re looking to collaborate, invest, or join our team, we’re excited to connect.
             </p>
-            <MotionDiv
-              whileHover={{ scale: prefersReduced ? 1 : 1.05 }}
-              whileTap={{ scale: prefersReduced ? 1 : 0.95 }}
-              className="inline-block"
-            >
+            <MotionDiv whileHover={{ scale: prefersReduced ? 1 : 1.05 }} whileTap={{ scale: prefersReduced ? 1 : 0.95 }} className="inline-block">
               <Link
                 to="/contact"
-                className="inline-block px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-lg md:text-xl font-semibold shadow-lg shadow-cyan-500/30 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                className="btn-primary inline-block  text-lg md:text-xl font-semibold focus:outline-none focus-visible:ring-2"
                 aria-label="Go to contact page to get started"
                 data-persona={persona}
               >

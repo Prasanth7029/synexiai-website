@@ -1,34 +1,104 @@
-// src/components/privacy/CookieConsent.jsx
-import React, { useEffect, useState, useMemo } from "react";
+// src/components/privacy/PrivacyPrefs.jsx
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { getConsent, setConsent, applyConsentIntegrations } from "@/lib/consent";
 
-/**
- * Mobile-first cookie consent
- * - Respects iOS safe area
- * - Leaves room for chatbot/FAB on the bottom-right
- * - Stacks actions on small screens; row layout on md+
- */
-export default function CookieConsent({
-  // extra space to avoid overlapping your chatbot / FAB
-  // tweak if your chat button size changes
-  bottomReservedPx = 88,
-  // z-index kept high but still below your chat widget if it uses > 60k
+export default function PrivacyPrefs({
+  reserveAnchorSelector = ".synexiai-chat, #chat-widget, [data-chat-widget], .chat-fab",
+  anchorPaddingPx = 12,
+  mobileFallbackBottom = 112, // a touch higher by default
+  desktopFallbackBottom = 24,
   zIndex = 50000,
 }) {
   const [visible, setVisible] = useState(false);
   const [prefOpen, setPrefOpen] = useState(false);
   const [prefs, setPrefs] = useState(getConsent());
   const [showPill, setShowPill] = useState(false);
+  const [bottomExtra, setBottomExtra] = useState(0);
+  const [pillHidden, setPillHidden] = useState(false); // ← NEW: hide while typing / keyboard up
 
-  // Compute safe bottom offset (accounts for iOS notch area)
-  const bottomInsetStyle = useMemo(() => {
-    // env(safe-area-inset-bottom) is supported on iOS Safari; other browsers treat it as 0
-    return {
-      bottom: `calc(env(safe-area-inset-bottom, 0px) + ${bottomReservedPx}px)`,
-      zIndex,
+  const roRef = useRef(null);
+  const anchorRef = useRef(null);
+  const isMobileRef = useRef(false);
+
+  // breakpoint helper
+  const computeIsMobile = () =>
+    (isMobileRef.current =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(max-width: 767px)").matches);
+
+  // --- measure chat widget / FAB and keep a gap above it
+  useEffect(() => {
+    const anchor =
+      document.querySelector(reserveAnchorSelector);
+    anchorRef.current = anchor || null;
+
+    const updateOffset = () => {
+      const isMobile = computeIsMobile();
+
+      if (!anchorRef.current) {
+        setBottomExtra(isMobile ? mobileFallbackBottom : desktopFallbackBottom);
+        return;
+      }
+      const rect = anchorRef.current.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const gapToAnchor = Math.max(0, vh - rect.top) + anchorPaddingPx;
+      setBottomExtra(gapToAnchor);
     };
-  }, [bottomReservedPx, zIndex]);
 
+    updateOffset();
+    const onResize = () => updateOffset();
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+
+    // observe anchor changes
+    if (anchorRef.current && "ResizeObserver" in window) {
+      roRef.current = new ResizeObserver(updateOffset);
+      roRef.current.observe(anchorRef.current);
+    }
+
+    // hide pill when keyboard opens (mobile visualViewport height shrinks)
+    let vv;
+    if ("visualViewport" in window) {
+      vv = window.visualViewport;
+      const onVV = () => {
+        // if the viewport height is much smaller, assume keyboard visible
+        const keyboardLikely = vv.height < window.innerHeight - 100;
+        setPillHidden(keyboardLikely);
+        updateOffset();
+      };
+      vv.addEventListener("resize", onVV);
+      vv.addEventListener("scroll", onVV);
+    }
+
+    // hide pill when focus moves inside the chat widget
+    const onFocusIn = (e) => {
+      if (anchorRef.current && e.target instanceof Element) {
+        if (e.target.closest(reserveAnchorSelector)) setPillHidden(true);
+      }
+    };
+    const onFocusOut = (e) => {
+      if (anchorRef.current && e.target instanceof Element) {
+        if (e.target.closest(reserveAnchorSelector)) setPillHidden(false);
+      }
+    };
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("focusout", onFocusOut);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+      if (roRef.current && anchorRef.current) roRef.current.disconnect();
+      if (vv) {
+        vv.removeEventListener("resize", () => {});
+        vv.removeEventListener("scroll", () => {});
+      }
+      document.removeEventListener("focusin", onFocusIn);
+      document.removeEventListener("focusout", onFocusOut);
+    };
+  }, [reserveAnchorSelector, anchorPaddingPx, mobileFallbackBottom, desktopFallbackBottom]);
+
+  // consent boot
   useEffect(() => {
     const stored = getConsent();
     const decided =
@@ -39,10 +109,8 @@ export default function CookieConsent({
       setVisible(true);
       setShowPill(false);
     } else {
-      setShowPill(true); // let users reopen preferences later
+      setShowPill(true);
     }
-
-    // Apply on mount if previously consented
     applyConsentIntegrations();
   }, []);
 
@@ -76,28 +144,34 @@ export default function CookieConsent({
     applyConsentIntegrations();
   };
 
-  // Nothing to show
+  // --- positions
+  const commonBottom = useMemo(
+    () => `calc(env(safe-area-inset-bottom, 0px) + ${Math.round(bottomExtra)}px)`,
+    [bottomExtra]
+  );
+
+  const bannerStyle = useMemo(
+    () => ({ bottom: commonBottom, zIndex }),
+    [commonBottom, zIndex]
+  );
+
+  // On mobile we dock the pill to the **left**, away from the send button.
+  const pillStyle = useMemo(() => {
+    const isMobile = isMobileRef.current;
+    return isMobile
+      ? { bottom: commonBottom, left: "12px", right: "auto", zIndex }
+      : { bottom: commonBottom, right: "16px", zIndex };
+  }, [commonBottom, zIndex]);
+
   if (!visible && !prefOpen && !showPill) return null;
 
   return (
     <>
-      {/* Compact reopen pill (won't block the chatbot) */}
-      {showPill && !visible && !prefOpen && (
-        <button
-          aria-label="Open privacy preferences"
-          onClick={() => setPrefOpen(true)}
-          className="fixed right-3 md:right-4 rounded-full border border-zinc-700/50 bg-[var(--bg-elevated,#0b0b0f)] px-3 py-2 text-xs text-[var(--text-color,#eaeaea)] shadow-lg hover:opacity-90"
-          style={bottomInsetStyle}
-        >
-          Privacy
-        </button>
-      )}
-
-      {/* Banner (bottom sheet) */}
+      {/* Banner */}
       {visible && (
         <div
           className="fixed inset-x-2 md:inset-x-0 md:mx-auto md:max-w-5xl rounded-2xl md:rounded-t-2xl border border-zinc-700/40 bg-[var(--bg-elevated,#0b0b0f)] p-4 md:p-5 shadow-xl"
-          style={bottomInsetStyle}
+          style={bannerStyle}
           role="region"
           aria-label="Cookie consent"
         >
@@ -105,13 +179,11 @@ export default function CookieConsent({
             <p className="text-[13px] leading-5 md:text-sm text-[var(--text-color,#eaeaea)]">
               We use cookies and similar technologies for <b>technical/necessary</b> purposes and,
               with your consent, for <b>analytics</b> and <b>marketing</b>, as described in our{" "}
-              <a href="/privacy/cookie-policy" className="underline hover:opacity-80">
+              <a href="/legal/cookies" className="underline hover:opacity-80">
                 Cookie Policy
-              </a>. Use “Accept” or close this notice to consent. You can change your preferences
-              anytime.
+              </a>. Use “Accept” or close this notice to consent. You can change your preferences anytime.
             </p>
 
-            {/* Actions: stacked on mobile, inline on md+ */}
             <div className="grid gap-2 md:flex md:items-center">
               <button
                 onClick={() => setPrefOpen(true)}
@@ -130,68 +202,6 @@ export default function CookieConsent({
                 className="rounded-xl bg-white/10 px-4 py-2 text-sm backdrop-blur hover:opacity-90 w-full md:w-auto"
               >
                 Accept
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Preferences Modal */}
-      {prefOpen && (
-        <div
-          className="fixed inset-0 grid place-items-end md:place-items-center bg-black/60 p-0 md:p-4"
-          style={{ zIndex }}
-          aria-modal="true"
-          role="dialog"
-          aria-label="Privacy Preferences"
-        >
-          {/* Bottom sheet on mobile, centered modal on md+ */}
-          <div className="w-full md:max-w-lg rounded-t-2xl md:rounded-2xl border border-zinc-700/40 bg-[var(--bg-elevated,#0b0b0f)] p-5 shadow-2xl"
-               style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}>
-            <h2 className="mb-1 text-lg md:text-xl font-semibold">Privacy Preferences</h2>
-            <p className="mb-4 text-sm opacity-80">
-              Choose which categories you want to allow. Necessary cookies are always on.
-            </p>
-
-            <div className="space-y-3">
-              <PrefRow
-                label="Necessary"
-                description="Required for the site to function (security, preferences)."
-                checked
-                disabled
-              />
-              <PrefRow
-                label="Analytics"
-                description="Helps us understand traffic and improve the website."
-                checked={!!prefs.analytics}
-                onChange={(v) => setPrefs((p) => ({ ...p, analytics: v }))}
-              />
-              <PrefRow
-                label="Marketing"
-                description="Used by advertising/retargeting platforms."
-                checked={!!prefs.marketing}
-                onChange={(v) => setPrefs((p) => ({ ...p, marketing: v }))}
-              />
-            </div>
-
-            <div className="mt-5 grid gap-2 md:flex md:justify-end">
-              <button
-                onClick={() => setPrefOpen(false)}
-                className="rounded-xl border px-4 py-2 text-sm w-full md:w-auto"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={rejectAll}
-                className="rounded-xl border px-4 py-2 text-sm w-full md:w-auto"
-              >
-                Reject All
-              </button>
-              <button
-                onClick={savePrefs}
-                className="rounded-xl bg-white/10 px-4 py-2 text-sm backdrop-blur w-full md:w-auto"
-              >
-                Save Preferences
               </button>
             </div>
           </div>

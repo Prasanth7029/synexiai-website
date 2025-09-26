@@ -282,7 +282,7 @@ export default function ChatWidget({
       const payload = e.detail || {};
       const key = `${payload.type || "ask"}::${payload.project?.id || payload.title || ""}`;
       const ts = Date.now();
-      if (lastBridgeRef.current.key === key && ts - lastBridgeRef.current.ts < 800) return;
+      if (lastBridgeRef.current.key === key && ts - lastBridgeRef.current.ts < 200) return;
       lastBridgeRef.current = { key, ts };
 
       contextRef.current = payload;

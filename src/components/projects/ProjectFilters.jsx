@@ -6,7 +6,7 @@ export default function ProjectFilters({ state, setState, allTags = [] }) {
  const tags = useMemo(() => allTags.slice(0, 16), [allTags]);
 
  return (
- <div className="rounded-2xl border border-white/10 bg-white/5 p-4 mb-6">
+ <div className="rounded-2xl border p-4 mb-6">
  <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
  {/* categories */}
  <div className="flex flex-wrap gap-2">

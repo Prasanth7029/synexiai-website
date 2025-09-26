@@ -3,7 +3,12 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { projects } from "../content/projects.js";
-import ProjectsSection from "../components/projects/ProjectsSection.jsx";
+
+
+// NEW: extracted GitHub UI + Explain wiring
+import GitHubSection from "@/components/github/GitHubSection.jsx";
+import { repoToExplainPayload } from "@/lib/githubExplainAdapter.js";
+import { useExplainWithAI } from "@/hooks/useExplainWithAI"; // use your existing hook
 
 const MotionDiv = motion.div;
 
@@ -19,105 +24,28 @@ const baseHeaders = {
   ...(GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {}),
 };
 
-function getLanguageColor(language) {
-  const colors = {
-    JavaScript: "#f1e05a",
-    Java: "#b07219",
-    Python: "#3572A5",
-    HTML: "#e34c26",
-    CSS: "#563d7c",
-    TypeScript: "#2b7489",
-    Shell: "#89e051",
-    "Jupyter Notebook": "#DA5B0B",
-  };
-  return colors[language] || "#ccc";
+function textVarStyle(varName, fallback) {
+  // lets you tap into index.css variables for light/dark while remaining safe if undefined
+  return { color: `var(${varName}, ${fallback})` };
 }
 
-function formatDate(date) {
-  try {
-    return new Date(date).toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  } catch {
-    return "—";
-  }
-}
-
-/* ------------------------------ UI Components ----------------------------- */
-
-const StatCard = ({ icon, label, value }) => (
-  <MotionDiv
-    whileHover={{ y: -3 }}
-    className="rounded-lg border border-white/10 bg-white/5 p-3 sm:p-4 shadow-lg xs-card xs-shadow"
-  >
-    <div className="text-cyan-400 text-lg sm:text-2xl mb-1.5" aria-hidden="true">
-      {icon}
-    </div>
-    <div className="font-bold text-[15px] sm:text-3xl">{value}</div>
-    <div className="text-gray-400 xs-text">{label}</div>
-  </MotionDiv>
-);
-
-const ProjectCard = ({ repo, index }) => (
-  <MotionDiv
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: index * 0.08 }}
-    whileHover={{ y: -5 }}
-    className="rounded-xl p-3 sm:p-6 border border-white/10 bg-white/5 shadow-lg hover:shadow-cyan-500/20 transition-all h-full xs-card"
-  >
-    <div className="flex justify-between items-start mb-2.5 gap-2 min-w-0">
-      <h3 className="text-[13.5px] sm:text-xl font-semibold text-cyan-400 min-w-0 leading-tight">
-        <a
-          href={repo.html_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline break-words line-clamp-2"
-        >
-          {repo.name}
-        </a>
-      </h3>
-      <span className="xs-text text-gray-400 shrink-0">
-        {formatDate(repo.updated_at)}
-      </span>
-    </div>
-
-    {/* Description: visible ≥381px, hidden on ultra-small phones */}
-    <p className="text-gray-300 mb-2 sm:mb-3 line-clamp-2 text-[12px] sm:text-[14px] xs-hide">
-      {repo.description || "No description provided"}
-    </p>
-
-    {repo.language && (
-      <div className="flex items-center gap-2 mb-2">
-        <span
-          className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full"
-          style={{ backgroundColor: getLanguageColor(repo.language) }}
-          aria-hidden="true"
-        />
-        <span className="xs-text text-gray-400">{repo.language}</span>
-      </div>
-    )}
-
-    <div className="mt-auto flex justify-between xs-text text-gray-400">
-      <span>⭐ {repo.stargazers_count}</span>
-      <span>🔀 {repo.forks_count}</span>
-      <span>👁️ {repo.watchers_count}</span>
-    </div>
-  </MotionDiv>
-);
+/* ------------------------------ Local UI --------------------------------- */
 
 const VisionCard = ({ title, description, icon, color }) => (
   <MotionDiv
     whileHover={{ y: -5 }}
-    className="p-3 sm:p-6 md:p-8 rounded-xl border border-white/10 bg-white/5 shadow-lg h-full flex flex-col xs-card"
+    className="p-3 sm:p-6 md:p-8 rounded-xl border border-white/10 shadow-lg h-full flex flex-col xs-card"
+    style={{ background: "var(--card, color-mix(in oklab, #0b1220 8%, transparent))" }}
   >
     <div className={`text-2xl sm:text-3xl mb-3 ${color}`} aria-hidden="true">
       {icon}
     </div>
-    <h3 className="xs-text-md sm:text-xl font-bold mb-2">{title}</h3>
-    <p className="text-gray-300 xs-text-sm sm:text-[14px]">{description}</p>
+    <h3 className="xs-text-md sm:text-xl font-bold mb-2" style={textVarStyle("--fg", "#e5f2ff")}>
+      {title}
+    </h3>
+    <p className="xs-text-sm sm:text-[14px]" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+      {description}
+    </p>
   </MotionDiv>
 );
 
@@ -134,10 +62,16 @@ const RoadmapPhase = ({ phase, title, focus, timeline, icon, color }) => (
     >
       {icon}
     </div>
-    <div className="text-cyan-400 xs-text sm:text-sm">{phase}</div>
-    <h3 className="xs-text-md sm:text-xl font-bold mb-1.5 sm:mb-2">{title}</h3>
-    <p className="text-gray-300 mb-2 sm:mb-3 xs-text-sm sm:text-[14px]">{focus}</p>
-    <div className="xs-text sm:text-sm text-gray-400 flex items-center gap-2">
+    <div className="xs-text sm:text-sm" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+      {phase}
+    </div>
+    <h3 className="xs-text-md sm:text-xl font-bold mb-1.5 sm:mb-2" style={textVarStyle("--fg", "#e5f2ff")}>
+      {title}
+    </h3>
+    <p className="mb-2 sm:mb-3 xs-text-sm sm:text-[14px]" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+      {focus}
+    </p>
+    <div className="xs-text sm:text-sm flex items-center gap-2" style={textVarStyle("--muted-fg", "#a8b3cf")}>
       <span aria-hidden="true">📅</span> {timeline}
     </div>
   </MotionDiv>
@@ -147,11 +81,14 @@ const PartnerLogo = ({ name, logo }) => (
   <MotionDiv
     whileHover={{ scale: 1.05 }}
     className="flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4 shadow-lg h-full xs-card"
+    style={{ background: "var(--card, color-mix(in oklab, #0b1220 8%, transparent))" }}
   >
     <div className="text-2xl sm:text-4xl mb-2 sm:mb-3" aria-hidden="true">
       {logo}
     </div>
-    <span className="text-gray-300 xs-text-sm sm:text-[14px]">{name}</span>
+    <span className="xs-text-sm sm:text-[14px]" style={textVarStyle("--fg", "#e5f2ff")}>
+      {name}
+    </span>
   </MotionDiv>
 );
 
@@ -162,6 +99,24 @@ export default function Portfolio() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+
+  // Use your existing Explain flow (modal, drawer, etc.)
+  const explain = useExplainWithAI();
+
+  // Handler the GitHub cards call
+  const onExplain = (repo) => {
+    const payload = repoToExplainPayload(repo);
+    // Call in the format your hook expects:
+    if (typeof explain === "function") {
+      explain(payload);
+    } else if (explain?.explainWithObject) {
+      explain.explainWithObject(payload);
+    } else if (explain?.run) {
+      explain.run(payload.text);
+    } else if (explain?.openWith) {
+      explain.openWith(payload);
+    }
+  };
 
   useEffect(() => {
     const ac = new AbortController();
@@ -272,7 +227,7 @@ export default function Portfolio() {
       <div className="min-h-svh flex items-center justify-center px-3 xs-px">
         <div className="flex flex-col items-center text-center">
           <div className="w-10 h-10 sm:w-16 sm:h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-3" />
-          <div className="text-cyan-500 xs-text-md sm:text-lg">
+          <div className="xs-text-md sm:text-lg" style={textVarStyle("--fg", "#e5f2ff")}>
             Building the future...
           </div>
         </div>
@@ -283,7 +238,7 @@ export default function Portfolio() {
   return (
     <div className="min-h-svh py-10 sm:py-16 px-3 sm:px-6 xs-px safe-top">
       <div className="max-w-7xl mx-auto">
-        {/* Hero */}
+        {/* ========================= Hero ========================= */}
         <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -299,18 +254,25 @@ export default function Portfolio() {
               initial={{ scale: 0.94 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-4 py-1.5 rounded-full mb-4 sm:px-6 sm:py-2 sm:mb-6 text-[12px] sm:text-sm font-medium"
+              className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 px-4 py-1.5 rounded-full mb-4 sm:px-6 sm:py-2 sm:mb-6 text-[12px] sm:text-sm font-medium"
+              style={{ color: "white" }}
             >
               SynexisAI Visionary Portfolio
             </MotionDiv>
 
-            <h1 className="font-bold mb-3 sm:mb-6 text-[clamp(1.1rem,5vw,3.25rem)] xs-h1">
+            <h1
+              className="font-bold mb-3 sm:mb-6 text-[clamp(1.1rem,5vw,3.25rem)] xs-h1"
+              style={textVarStyle("--fg", "#e5f2ff")}
+            >
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-400">
                 Beyond Code. Beyond Limits.
               </span>
             </h1>
 
-            <p className="mx-auto leading-relaxed mb-6 sm:mb-8 xs-text-sm sm:text-[14px] md:text-xl text-gray-300">
+            <p
+              className="mx-auto leading-relaxed mb-6 sm:mb-8 xs-text-sm sm:text-[14px] md:text-xl"
+              style={textVarStyle("--muted-fg", "#a8b3cf")}
+            >
               Building a future where AI, sustainable infrastructure, and
               renewable energy converge to transform industries and empower
               humanity.
@@ -319,8 +281,9 @@ export default function Portfolio() {
             <div className="flex flex-col-1 sm:flex-row justify-center xs-gap gap-3 sm:gap-4">
               <a
                 href="#vision"
-                className="bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg xs-btn xs-btn-full sm:w-auto sm:px-6 sm:py-3 sm:text-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                className="bg-cyan-600 hover:bg-cyan-700 rounded-lg xs-btn xs-btn-full sm:w-auto sm:px-6 sm:py-3 sm:text-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                 aria-label="Jump to the vision section"
+                style={{ color: "#fff" }}
               >
                 Explore the Vision
               </a>
@@ -328,8 +291,9 @@ export default function Portfolio() {
                 href={`https://github.com/${GITHUB_USER}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-transparent border border-cyan-500 text-cyan-400 hover:bg-cyan-500/10 rounded-lg xs-btn xs-btn-full sm:w-auto sm:px-6 sm:py-3 sm:text-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                className="bg-transparent border border-cyan-500 hover:bg-cyan-500/10 rounded-lg xs-btn xs-btn-full sm:w-auto sm:px-6 sm:py-3 sm:text-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                 aria-label="Open GitHub profile in new tab"
+                style={textVarStyle("--fg", "#e5f2ff")}
               >
                 View GitHub
               </a>
@@ -338,12 +302,15 @@ export default function Portfolio() {
         </MotionDiv>
 
         {errorMsg && (
-          <div className="border border-rose-500/30 bg-rose-900/20 text-rose-300 p-3 sm:p-4 rounded-lg mb-6 sm:mb-8 max-w-3xl mx-auto text-center xs-text-sm sm:text-[14px]">
+          <div
+            className="border border-rose-500/30 bg-rose-900/20 text-rose-300 p-3 sm:p-4 rounded-lg mb-6 sm:mb-8 max-w-3xl mx-auto text-center xs-text-sm sm:text-[14px]"
+            role="status"
+          >
             {errorMsg}
           </div>
         )}
 
-        {/* Core Vision */}
+        {/* ========================= The SynexisAI Trinity ========================= */}
         <MotionDiv
           id="vision"
           initial={{ opacity: 0 }}
@@ -352,16 +319,19 @@ export default function Portfolio() {
           className="mb-14 sm:mb-20 scroll-mt-[calc(var(--header-h,64px)+12px)]"
         >
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="font-bold mb-3 sm:mb-4 text-[clamp(1.05rem,4.2vw,2.1rem)] xs-h2">
+            <h2
+              className="font-bold mb-3 sm:mb-4 text-[clamp(1.05rem,4.2vw,2.1rem)] xs-h2"
+              style={textVarStyle("--fg", "#e5f2ff")}
+            >
               The SynexisAI Trinity
             </h2>
-            <p className="text-gray-400 max-w-3xl mx-auto xs-text-sm">
+            <p className="max-w-3xl mx-auto xs-text-sm" style={textVarStyle("--muted-fg", "#a8b3cf")}>
               Three interconnected pillars that will revolutionize technology
               and sustainability
             </p>
           </div>
 
-          <div className="grid grid-cols-2  md:grid-cols-3 gap-4 sm:gap-8 items-stretch">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8 items-stretch">
             <VisionCard
               icon="🤖"
               title="AI Innovation"
@@ -383,102 +353,16 @@ export default function Portfolio() {
           </div>
         </MotionDiv>
 
-        {/* Projects showcase from content */}
-        <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-8 md:py-20 text-gray-100">
-          <ProjectsSection items={projects} title="Project Showcase" />
-        </div>
+        {/* ========================= GitHub / Foundation (separate component) ========================= */}
+        <GitHubSection
+          profile={profile}
+          repos={repos}
+          totals={totals}
+          githubUser={GITHUB_USER}
+          onExplain={onExplain}
+        />
 
-        {/* GitHub / Foundation */}
-        <MotionDiv
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.35 }}
-          className="mb-14 sm:mb-20"
-        >
-          <div className="flex flex-col md:flex-row gap-6 sm:gap-8 items-center mb-8 sm:mb-12">
-            <div className="md:w-1/2">
-              <h2 className="font-bold mb-3 sm:mb-4 text-[clamp(1.1rem,4vw,2.1rem)] xs-h2">
-                The Foundation: Code
-              </h2>
-              <p className="text-gray-300 mb-4 sm:mb-6 xs-text-sm">
-                GitHub represents the first step in our journey—the technical
-                foundation upon which we’re building the SynexisAI vision. These
-                projects demonstrate our commitment to excellence in software
-                engineering and innovative problem-solving.
-              </p>
-              <p className="text-gray-400 xs-text-sm">
-                <span className="text-cyan-500 font-medium">Remember:</span>{" "}
-                This is just the beginning. These repositories are the building
-                blocks for the revolutionary technologies that will power our
-                AI-optimized databases and renewable energy systems.
-              </p>
-            </div>
-
-            <div className="md:w-1/2 rounded-xl p-4 sm:p-8 border border-white/10 bg-white/5 shadow-lg w-full xs-card">
-              <div className="flex items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
-                <img
-                  src={
-                    profile?.avatar_url ||
-                    "https://avatars.githubusercontent.com/u/583231?v=4"
-                  }
-                  alt={`${profile?.login || GITHUB_USER} GitHub avatar`}
-                  className="w-12 h-12 sm:w-20 sm:h-20 rounded-full border-2 border-cyan-400 object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "https://avatars.githubusercontent.com/u/583231?v=4";
-                  }}
-                />
-                <div className="min-w-0">
-                  <h2 className="text-[16px] sm:text-2xl font-bold truncate">
-                    {profile?.name || profile?.login || GITHUB_USER}
-                  </h2>
-                  <p className="text-gray-400 mb-1.5 sm:mb-2 line-clamp-2 xs-text-sm sm:text-[14px]">
-                    {profile?.bio || "Building the future of technology"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <StatCard
-                  icon="📦"
-                  label="Repos"
-                  value={profile?.public_repos ?? repos.length}
-                />
-                <StatCard icon="👥" label="Followers" value={profile?.followers ?? 0} />
-                <StatCard icon="⭐" label="Stars" value={totals.stars} />
-                <StatCard icon="🔀" label="Forks" value={totals.forks} />
-              </div>
-            </div>
-          </div>
-
-          {/* Repos Grid */}
-          <div className="mb-8 sm:mb-12">
-            <h3 className="text-[16px] sm:text-2xl font-bold mb-4 sm:mb-6 text-center">
-              Phase 1: Technical Foundations
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8 items-stretch">
-              {repos.map((repo, index) => (
-                <ProjectCard
-                  key={repo.id || `${repo.name}-${index}`}
-                  repo={repo}
-                  index={index}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-xl p-4 text-center border border-cyan-500/20 bg-gradient-to-r from-cyan-900/20 to-teal-900/20">
-            <p className="text-[13px] sm:text-xl text-cyan-300">
-              “These projects are the seeds from which our AI-optimized
-              databases and renewable energy systems will grow.”
-            </p>
-            <p className="text-gray-400 mt-1 xs-text">
-              — Venkat Sai Prasanth, SynexisAI Visionary
-            </p>
-          </div>
-        </MotionDiv>
-
-        {/* Roadmap */}
+        {/* ========================= Our Strategic Roadmap ========================= */}
         <MotionDiv
           id="roadmap"
           initial={{ opacity: 0, y: 20 }}
@@ -487,17 +371,21 @@ export default function Portfolio() {
           className="mb-14 sm:mb-20 scroll-mt-[calc(var(--header-h,64px)+12px)]"
         >
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="font-bold mb-3 sm:mb-4 text-[clamp(1.1rem,4vw,2.1rem)] xs-h2">
+            <h2
+              className="font-bold mb-3 sm:mb-4 text-[clamp(1.1rem,4vw,2.1rem)] xs-h2"
+              style={textVarStyle("--fg", "#e5f2ff")}
+            >
               Our Strategic Roadmap
             </h2>
-            <p className="text-gray-400 max-w-3xl mx-auto xs-text-sm">
+            <p className="max-w-3xl mx-auto xs-text-sm" style={textVarStyle("--muted-fg", "#a8b3cf")}>
               The journey from code to global impact follows a carefully
               designed three-phase approach
             </p>
           </div>
 
           <div className="grid grid-cols lg:grid-cols-3 gap-3 sm:gap-8 items-stretch">
-            <div className="rounded-xl p-4 sm:p-8 border border-white/10 bg-white/5 shadow-lg h-full xs-card">
+            <div className="rounded-xl p-4 sm:p-8 border border-white/10 bg-white/5 shadow-lg h-full xs-card"
+                 style={{ background: "var(--card, color-mix(in oklab, #0b1220 8%, transparent))" }}>
               <h3 className="text-[16px] sm:text-2xl font-bold mb-4 sm:mb-6 text-cyan-400">
                 Phase 1: AI Innovation Lab
               </h3>
@@ -527,7 +415,8 @@ export default function Portfolio() {
               />
             </div>
 
-            <div className="rounded-xl p-4 sm:p-8 border border-white/10 bg-white/5 shadow-lg h-full xs-card">
+            <div className="rounded-xl p-4 sm:p-8 border border-white/10 bg-white/5 shadow-lg h-full xs-card"
+                 style={{ background: "var(--card, color-mix(in oklab, #0b1220 8%, transparent))" }}>
               <h3 className="text-[16px] sm:text-2xl font-bold mb-4 sm:mb-6 text-teal-400">
                 Phase 2: Hybrid Database Centers
               </h3>
@@ -557,7 +446,8 @@ export default function Portfolio() {
               />
             </div>
 
-            <div className="rounded-xl p-4 sm:p-8 border border-white/10 bg-white/5 shadow-lg h-full xs-card">
+            <div className="rounded-xl p-4 sm:p-8 border border-white/10 bg-white/5 shadow-lg h-full xs-card"
+                 style={{ background: "var(--card, color-mix(in oklab, #0b1220 8%, transparent))" }}>
               <h3 className="text-[16px] sm:text-2xl font-bold mb-4 sm:mb-6 text-emerald-400">
                 Phase 3: Renewable Energy Integration
               </h3>
@@ -589,7 +479,7 @@ export default function Portfolio() {
           </div>
         </MotionDiv>
 
-        {/* Partnerships */}
+        {/* ========================= Global Partnerships ========================= */}
         <MotionDiv
           id="partnerships"
           initial={{ opacity: 0, y: 20 }}
@@ -598,10 +488,13 @@ export default function Portfolio() {
           className="mb-14 sm:mb-20 scroll-mt-[calc(var(--header-h,64px)+12px)]"
         >
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="font-bold mb-3 sm:mb-4 text-[clamp(1.1rem,4vw,2.1rem)] xs-h2">
+            <h2
+              className="font-bold mb-3 sm:mb-4 text-[clamp(1.1rem,4vw,2.1rem)] xs-h2"
+              style={textVarStyle("--fg", "#e5f2ff")}
+            >
               Global Partnerships
             </h2>
-            <p className="text-gray-400 max-w-3xl mx-auto xs-text-sm">
+            <p className="max-w-3xl mx-auto xs-text-sm" style={textVarStyle("--muted-fg", "#a8b3cf")}>
               Building alliances with industry leaders to accelerate our mission
             </p>
           </div>
@@ -614,17 +507,18 @@ export default function Portfolio() {
           </div>
         </MotionDiv>
 
-        {/* CTA */}
+        {/* ========================= CTA ========================= */}
         <MotionDiv
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="rounded-2xl p-8 sm:p-12 text-center border border-cyan-500/20 bg-gradient-to-r from-cyan-900/20 to-teal-900/20"
+          className="rounded-2xl p-8 sm:p-12 text-center from-cyan-900/20 to-teal-900/20"
+          style={{ background: "var(--card, color-mix(in oklab, #0b1220 8%, transparent))" }}
         >
-          <h2 className="text-[18px] sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
+          <h2 className="text-[18px] sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6" style={textVarStyle("--fg", "#e5f2ff")}>
             Join the Revolution
           </h2>
-          <p className="mx-auto mb-6 sm:mb-8 xs-text-md sm:text-xl text-gray-300 max-w-3xl">
+          <p className="mx-auto mb-6 sm:mb-8 xs-text-md sm:text-xl max-w-3xl" style={textVarStyle("--muted-fg", "#a8b3cf")}>
             We’re building more than a company—we’re creating a movement that
             will redefine how technology serves humanity while protecting our
             planet.
@@ -646,7 +540,7 @@ export default function Portfolio() {
           </div>
 
           <div className="mt-6 sm:mt-10 flex justify-center">
-            <div className="text-gray-400 xs-text sm:text-sm max-w-2xl">
+            <div className="xs-text sm:text-sm max-w-2xl" style={textVarStyle("--muted-fg", "#a8b3cf")}>
               <p className="italic mb-1.5 sm:mb-2">
                 “The future belongs to those who understand that technology must
                 serve humanity without compromising our planet.”

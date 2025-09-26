@@ -40,7 +40,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="relative bg-gradient-to-b from-black to-[#0a0a0a] dark:bg-gradient-to-b dark:from-black dark:to-gray-900 text-white pt-20 pb-12 px-6 overflow-hidden border-t border-cyan-500/20"
+      className="relative  from-black to-[#0a0a0a]   pt-20 pb-12 px-6 overflow-hidden border-t border-cyan-500/20"
       aria-labelledby={headingId}
     >
       {/* Animated Background Elements */}

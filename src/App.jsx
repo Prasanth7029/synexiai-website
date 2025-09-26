@@ -3,7 +3,7 @@ import React, { useEffect, Suspense, lazy } from "react";
 import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import LoaderScreen from "./components/LoaderScreen.jsx";
-import CookieConsent from "@/components/privacy/CookieConsent.jsx";
+import CookieConsent from "@/components/privacy/PrivacyPrefs.jsx";
 import EdgeScrollButtons from "./components/EdgeScrollButtons.jsx"; // ⬅️ mount once at App level
 
 // Lazier: even Layout & legal pages
