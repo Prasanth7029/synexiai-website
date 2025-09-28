@@ -113,7 +113,7 @@ const ArchitectureDiagram = () => (
  id="architecture"
  className="rounded-2xl p-4 sm:p-6 mb-16 border border-cyan-500/20 bg-white/5 shadow-lg scroll-mt-[calc(var(--header-h,64px)+16px)]"
  >
- <h3 className="text-[clamp(1.25rem,3.5vw,1.75rem)] font-bold text-cyan-400 mb-6 text-center">
+ <h3 className="text-[clamp(1.25rem,3.5vw,1.75rem)] font-bold  mb-6 text-center">
  SynexisAI Architecture Blueprint
  </h3>
 
@@ -277,7 +277,7 @@ export default function TechStackPage() {
  </span>
  </h1>
 
- <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+ <p className="text-lg max-w-3xl mx-auto">
  Our cutting-edge stack combines AI optimization, sustainable infrastructure, and blockchain security to build the future of
  database technology.
  </p>
@@ -313,7 +313,7 @@ export default function TechStackPage() {
  const labelledBy = `tab-${key}`;
  return (
  <TabPanel key={key} id={id} labelledBy={labelledBy} active={activeTab === key}>
- <p className="text-gray-300 mb-8 text-center max-w-2xl mx-auto">{techStack[key].description}</p>
+ <p className="mb-8 text-center max-w-2xl mx-auto">{techStack[key].description}</p>
 
  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 items-stretch [grid-auto-rows:1fr]">
  {techStack[key].tools.map((tool, idx) => (
@@ -323,14 +323,14 @@ export default function TechStackPage() {
  whileInView={prefersReduced ? {} : { opacity: 1, y: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.3, delay: idx * 0.05 }}
- className="flex flex-col items-center justify-start bg-gray-800/50 border border-cyan-500/10 rounded-xl p-5 hover:border-cyan-400/30 transition-all group h-full min-w-0"
+ className="flex flex-col items-center justify-start bg-gray-200/50 border border-cyan-500/10 rounded-xl p-5 hover:border-cyan-400/30 transition-all group h-full min-w-0"
  whileHover={prefersReduced ? {} : { y: -5 }}
  >
  <div className={`text-4xl mb-2 ${tool.color} group-hover:scale-110 transition-transform`} aria-hidden="true">
  {tool.icon}
  </div>
- <p className="text-sm text-gray-300 text-center font-medium break-words">{tool.name}</p>
- <p className="text-xs text-gray-500 mt-1 text-center line-clamp-2">{tool.description}</p>
+ <p className="text-sm text-center font-medium break-words">{tool.name}</p>
+ <p className="text-xs mt-1 text-center line-clamp-2">{tool.description}</p>
  </MotionDiv>
  ))}
  </div>
@@ -345,41 +345,41 @@ export default function TechStackPage() {
  className="rounded-2xl p-8 border border-cyan-500/20 bg-white/5 shadow-lg scroll-mt-[calc(var(--header-h,64px)+16px)]"
  >
  <h3 className="text-[clamp(1.25rem,3.5vw,1.75rem)] font-bold text-cyan-400 mb-6 text-center">🚀 Future Technology Roadmap</h3>
- <p className="text-gray-300 mb-8 text-center max-w-3xl mx-auto">
+ <p className="mb-8 text-center max-w-3xl mx-auto">
  We're continuously researching and integrating emerging technologies to stay at the forefront of innovation
  </p>
 
  <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-stretch">
- <div className="bg-gray-800/50 rounded-xl p-6 border border-green-500/20 h-full">
+ <div className="bg-gray-200/50 rounded-xl p-6 border border-green-500/20 h-full">
  <h4 className="text-xl font-bold text-green-400 mb-4 flex items-center">
  <FaBolt className="mr-2" /> Quantum Computing
  </h4>
- <p className="text-gray-400">
+ <p>
  Exploring quantum algorithms for database optimization and AI model training acceleration.
  </p>
  </div>
 
- <div className="bg-gray-800/50 rounded-xl p-6 border border-purple-500/20 h-full">
+ <div className="bg-gray-200/50 rounded-xl p-6 border border-purple-500/20 h-full">
  <h4 className="text-xl font-bold text-purple-400 mb-4 flex items-center">
  <FaLink className="mr-2" /> Decentralized AI
  </h4>
- <p className="text-gray-400">
+ <p>
  Developing federated learning systems that preserve privacy while training AI models across distributed nodes.
  </p>
  </div>
 
- <div className="bg-gray-800/50 rounded-xl p-6 border border-yellow-500/20 h-full">
+ <div className="bg-gray-200/50 rounded-xl p-6 border border-yellow-500/20 h-full">
  <h4 className="text-xl font-bold text-yellow-400 mb-4 flex items-center">
  <FaSolarPanel className="mr-2" /> Advanced Energy Harvesting
  </h4>
- <p className="text-gray-400">
+ <p>
  Researching next-gen energy solutions like piezoelectric systems and advanced solar technologies.
  </p>
  </div>
  </div>
 
  <div className="mt-10 text-center">
- <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-8 py-3 rounded-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400">
+ <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 px-8 py-3 rounded-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400">
  Explore Our Research Papers
  </button>
  </div>
@@ -393,7 +393,7 @@ export default function TechStackPage() {
  <div className="bg-gradient-to-br from-cyan-900/20 to-cyan-800/10 border border-cyan-500/20 rounded-2xl p-6 h-full">
  <div className="text-cyan-400 text-3xl mb-4" aria-hidden="true">⚙️</div>
  <h4 className="text-xl font-bold mb-3">AI-Driven Optimization</h4>
- <p className="text-gray-300">
+ <p>
  Our systems continuously learn and adapt, applying machine learning to optimize database performance in real-time.
  </p>
  </div>
@@ -401,7 +401,7 @@ export default function TechStackPage() {
  <div className="bg-gradient-to-br from-teal-900/20 to-teal-800/10 border border-teal-500/20 rounded-2xl p-6 h-full">
  <div className="text-teal-400 text-3xl mb-4" aria-hidden="true">♻️</div>
  <h4 className="text-xl font-bold mb-3">Sustainable Architecture</h4>
- <p className="text-gray-300">
+ <p >
  Every component is designed for energy efficiency, powered by renewable sources with minimal carbon footprint.
  </p>
  </div>
@@ -409,7 +409,7 @@ export default function TechStackPage() {
  <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 border border-purple-500/20 rounded-2xl p-6 h-full">
  <div className="text-purple-400 text-3xl mb-4" aria-hidden="true">🔐</div>
  <h4 className="text-xl font-bold mb-3">Blockchain Security</h4>
- <p className="text-gray-300">
+ <p >
  Zero-trust architecture with immutable blockchain audit trails ensures unparalleled data integrity and security.
  </p>
  </div>

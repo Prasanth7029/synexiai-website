@@ -1,12 +1,18 @@
 // src/App.jsx
 import React, { useEffect, Suspense, lazy } from "react";
-import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import LoaderScreen from "./components/LoaderScreen.jsx";
 import CookieConsent from "@/components/privacy/PrivacyPrefs.jsx";
 import EdgeScrollButtons from "./components/EdgeScrollButtons.jsx"; // ⬅️ mount once at App level
 
-// Lazier: even Layout & legal pages
+
+// Lazy imports
 const Layout         = lazy(() => import("./components/Layout.jsx"));
 const HomePage       = lazy(() => import("./pages/HomePage.jsx"));
 const AboutPage      = lazy(() => import("./pages/AboutPage.jsx"));
@@ -38,10 +44,17 @@ function useDeferredAOS() {
           import("aos/dist/aos.css"),
         ]);
         if (!cancelled) {
-          AOS.init({ duration: 1000, easing: "ease-out", once: true, mirror: false });
+          AOS.init({
+            duration: 1000,
+            easing: "ease-out",
+            once: true,
+            mirror: false,
+          });
           AOS.refresh();
         }
-      } catch { /* noop */ }
+      } catch {
+        /* noop */
+      }
     };
 
     if ("requestIdleCallback" in window) {
@@ -52,7 +65,8 @@ function useDeferredAOS() {
 
     return () => {
       cancelled = true;
-      if (idleId && "cancelIdleCallback" in window) window.cancelIdleCallback(idleId);
+      if (idleId && "cancelIdleCallback" in window)
+        window.cancelIdleCallback(idleId);
       if (timeoutId) window.clearTimeout(timeoutId);
     };
   }, []);
@@ -77,7 +91,12 @@ function RoutePrefetcher() {
 
     // Idle-preload most visited
     let idleId;
-    const idlePreload = () => { try { map["/"]?.(); map["/games"]?.(); } catch {} };
+    const idlePreload = () => {
+      try {
+        map["/"]?.();
+        map["/games"]?.();
+      } catch {}
+    };
     if ("requestIdleCallback" in window) {
       idleId = window.requestIdleCallback(idlePreload, { timeout: 2500 });
     } else {
@@ -89,14 +108,22 @@ function RoutePrefetcher() {
       const el = e.target?.closest?.("[data-prefetch]");
       if (!el) return;
       const p = el.getAttribute("data-prefetch");
-      if (p && map[p]) { try { map[p](); } catch {} }
+      if (p && map[p]) {
+        try {
+          map[p]();
+        } catch {}
+      }
     };
 
     document.addEventListener("mouseover", handler, true);
-    document.addEventListener("touchstart", handler, { passive: true, capture: true });
+    document.addEventListener("touchstart", handler, {
+      passive: true,
+      capture: true,
+    });
 
     return () => {
-      if (idleId && "cancelIdleCallback" in window) window.cancelIdleCallback(idleId);
+      if (idleId && "cancelIdleCallback" in window)
+        window.cancelIdleCallback(idleId);
       document.removeEventListener("mouseover", handler, true);
       document.removeEventListener("touchstart", handler, true);
     };
@@ -104,6 +131,7 @@ function RoutePrefetcher() {
   return null;
 }
 
+/* ------------------------------- App Root -------------------------------- */
 export default function App() {
   useDeferredAOS();
 
@@ -114,42 +142,41 @@ export default function App() {
       <RoutePrefetcher />
 
       {/* ⬇️ Floating arrows mounted ABOVE Layout. Nothing can clip them. */}
-     <EdgeScrollButtons
-       // Let it auto-detect the scroller; do NOT pass scrollContainerSelector
-       scrollContainerSelector="#main"
-       forceVisible
-       debug
-       posDown="left-6 top-32 z-[200000]"   // ⬅ sit clearly under navbar
-       posUp="left-6 bottom-10 z-[200000]" // ⬅ left side, well above chatbot/dock
-     />
+      <EdgeScrollButtons
+        scrollContainerSelector="#main"
+        forceVisible
+        debug
+        posDown="left-6 top-32 z-[200000]"
+        posUp="left-6 bottom-10 z-[200000]"
+      />
 
       <Suspense fallback={<LoaderScreen />}>
-        <Layout>
-          <Suspense fallback={<LoaderScreen />}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/projects" element={<Navigate to="/portfolio" replace />} />
-              <Route path="/portfolio" element={<PortfolioPage />} />
-              <Route path="/vision" element={<VisionPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/tech" element={<TechStackPage />} />
-              <Route path="/ai-news" element={<NewsPage />} />
+        <Routes>
+          {/* Layout is the parent route wrapper */}
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/projects" element={<Navigate to="/portfolio" replace />} />
+            <Route path="/portfolio" element={<PortfolioPage />} />
+            <Route path="/vision" element={<VisionPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/tech" element={<TechStackPage />} />
+            <Route path="/ai-news" element={<NewsPage />} />
 
-              {/* Games */}
-              <Route path="/games" element={<GamesPage />} />
-              <Route path="/games/:id" element={<PlayGameRoute />} />
+            {/* Games */}
+            <Route path="/games" element={<GamesPage />} />
+            <Route path="/games/:id" element={<PlayGameRoute />} />
 
-              {/* Legal */}
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/terms" element={<TermsOfService />} />
-              <Route path="/cookie-policy" element={<CookiePolicy />} />
+            {/* Legal */}
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/cookie-policy" element={<CookiePolicy />} />
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-          <CookieConsent />
-        </Layout>
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+        <CookieConsent />
       </Suspense>
     </Router>
   );

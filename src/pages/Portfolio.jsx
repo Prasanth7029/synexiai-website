@@ -40,10 +40,10 @@ const VisionCard = ({ title, description, icon, color }) => (
     <div className={`text-2xl sm:text-3xl mb-3 ${color}`} aria-hidden="true">
       {icon}
     </div>
-    <h3 className="xs-text-md sm:text-xl font-bold mb-2" style={textVarStyle("--fg", "#e5f2ff")}>
+    <h3 className="xs-text-md sm:text-xl font-bold mb-2" >
       {title}
     </h3>
-    <p className="xs-text-sm sm:text-[14px]" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+    <p className="xs-text-sm sm:text-[14px]" >
       {description}
     </p>
   </MotionDiv>
@@ -62,16 +62,16 @@ const RoadmapPhase = ({ phase, title, focus, timeline, icon, color }) => (
     >
       {icon}
     </div>
-    <div className="xs-text sm:text-sm" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+    <div className="xs-text sm:text-sm" >
       {phase}
     </div>
-    <h3 className="xs-text-md sm:text-xl font-bold mb-1.5 sm:mb-2" style={textVarStyle("--fg", "#e5f2ff")}>
+    <h3 className="xs-text-md sm:text-xl font-bold mb-1.5 sm:mb-2" >
       {title}
     </h3>
-    <p className="mb-2 sm:mb-3 xs-text-sm sm:text-[14px]" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+    <p className="mb-2 sm:mb-3 xs-text-sm sm:text-[14px]" >
       {focus}
     </p>
-    <div className="xs-text sm:text-sm flex items-center gap-2" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+    <div className="xs-text sm:text-sm flex items-center gap-2" >
       <span aria-hidden="true">📅</span> {timeline}
     </div>
   </MotionDiv>
@@ -86,7 +86,7 @@ const PartnerLogo = ({ name, logo }) => (
     <div className="text-2xl sm:text-4xl mb-2 sm:mb-3" aria-hidden="true">
       {logo}
     </div>
-    <span className="xs-text-sm sm:text-[14px]" style={textVarStyle("--fg", "#e5f2ff")}>
+    <span className="xs-text-sm sm:text-[14px]" >
       {name}
     </span>
   </MotionDiv>
@@ -222,18 +222,7 @@ export default function Portfolio() {
     [repos]
   );
 
-  if (loading) {
-    return (
-      <div className="min-h-svh flex items-center justify-center px-3 xs-px">
-        <div className="flex flex-col items-center text-center">
-          <div className="w-10 h-10 sm:w-16 sm:h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-3" />
-          <div className="xs-text-md sm:text-lg" style={textVarStyle("--fg", "#e5f2ff")}>
-            Building the future...
-          </div>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="min-h-svh py-10 sm:py-16 px-3 sm:px-6 xs-px safe-top">
@@ -262,7 +251,6 @@ export default function Portfolio() {
 
             <h1
               className="font-bold mb-3 sm:mb-6 text-[clamp(1.1rem,5vw,3.25rem)] xs-h1"
-              style={textVarStyle("--fg", "#e5f2ff")}
             >
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-400">
                 Beyond Code. Beyond Limits.
@@ -271,7 +259,6 @@ export default function Portfolio() {
 
             <p
               className="mx-auto leading-relaxed mb-6 sm:mb-8 xs-text-sm sm:text-[14px] md:text-xl"
-              style={textVarStyle("--muted-fg", "#a8b3cf")}
             >
               Building a future where AI, sustainable infrastructure, and
               renewable energy converge to transform industries and empower
@@ -281,9 +268,8 @@ export default function Portfolio() {
             <div className="flex flex-col-1 sm:flex-row justify-center xs-gap gap-3 sm:gap-4">
               <a
                 href="#vision"
-                className="bg-cyan-600 hover:bg-cyan-700 rounded-lg xs-btn xs-btn-full sm:w-auto sm:px-6 sm:py-3 sm:text-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                className="bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg xs-btn xs-btn-full sm:w-auto sm:px-6 sm:py-3 sm:text-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                 aria-label="Jump to the vision section"
-                style={{ color: "#fff" }}
               >
                 Explore the Vision
               </a>
@@ -293,7 +279,6 @@ export default function Portfolio() {
                 rel="noopener noreferrer"
                 className="bg-transparent border border-cyan-500 hover:bg-cyan-500/10 rounded-lg xs-btn xs-btn-full sm:w-auto sm:px-6 sm:py-3 sm:text-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                 aria-label="Open GitHub profile in new tab"
-                style={textVarStyle("--fg", "#e5f2ff")}
               >
                 View GitHub
               </a>
@@ -321,7 +306,6 @@ export default function Portfolio() {
           <div className="text-center mb-8 sm:mb-12">
             <h2
               className="font-bold mb-3 sm:mb-4 text-[clamp(1.05rem,4.2vw,2.1rem)] xs-h2"
-              style={textVarStyle("--fg", "#e5f2ff")}
             >
               The SynexisAI Trinity
             </h2>
@@ -373,11 +357,10 @@ export default function Portfolio() {
           <div className="text-center mb-8 sm:mb-12">
             <h2
               className="font-bold mb-3 sm:mb-4 text-[clamp(1.1rem,4vw,2.1rem)] xs-h2"
-              style={textVarStyle("--fg", "#e5f2ff")}
             >
               Our Strategic Roadmap
             </h2>
-            <p className="max-w-3xl mx-auto xs-text-sm" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+            <p className="max-w-3xl mx-auto xs-text-sm" >
               The journey from code to global impact follows a carefully
               designed three-phase approach
             </p>
@@ -490,11 +473,10 @@ export default function Portfolio() {
           <div className="text-center mb-8 sm:mb-12">
             <h2
               className="font-bold mb-3 sm:mb-4 text-[clamp(1.1rem,4vw,2.1rem)] xs-h2"
-              style={textVarStyle("--fg", "#e5f2ff")}
             >
               Global Partnerships
             </h2>
-            <p className="max-w-3xl mx-auto xs-text-sm" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+            <p className="max-w-3xl mx-auto xs-text-sm" >
               Building alliances with industry leaders to accelerate our mission
             </p>
           </div>
@@ -515,10 +497,10 @@ export default function Portfolio() {
           className="rounded-2xl p-8 sm:p-12 text-center from-cyan-900/20 to-teal-900/20"
           style={{ background: "var(--card, color-mix(in oklab, #0b1220 8%, transparent))" }}
         >
-          <h2 className="text-[18px] sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6" style={textVarStyle("--fg", "#e5f2ff")}>
+          <h2 className="text-[18px] sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6" >
             Join the Revolution
           </h2>
-          <p className="mx-auto mb-6 sm:mb-8 xs-text-md sm:text-xl max-w-3xl" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+          <p className="mx-auto mb-6 sm:mb-8 xs-text-md sm:text-xl max-w-3xl" >
             We’re building more than a company—we’re creating a movement that
             will redefine how technology serves humanity while protecting our
             planet.
@@ -540,7 +522,7 @@ export default function Portfolio() {
           </div>
 
           <div className="mt-6 sm:mt-10 flex justify-center">
-            <div className="xs-text sm:text-sm max-w-2xl" style={textVarStyle("--muted-fg", "#a8b3cf")}>
+            <div className="xs-text sm:text-sm max-w-2xl" >
               <p className="italic mb-1.5 sm:mb-2">
                 “The future belongs to those who understand that technology must
                 serve humanity without compromising our planet.”
