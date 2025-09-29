@@ -24,13 +24,6 @@ export const teamMembers = [
     image: "/assets/team/teja.jpg",
     linkedin: "https://www.linkedin.com/in/teja-peddiboyina-5bb68b140/",
   },
-  {
-    name: "Prakash Chowdary",
-    role: "Database Engineer, JPMC",
-    bio: "Database specialist with strong expertise in large-scale data systems and financial-grade infrastructure.",
-    expertise: ["Database Engineering", "Data Systems", "Optimization"],
-    image: "/assets/team/prakash.jpg",
-  },
 ];
 
 export const coreValues = [
