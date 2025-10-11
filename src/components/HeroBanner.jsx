@@ -11,9 +11,7 @@ const MotionLink = motion(Link);
 
 const ROTATING_TEXTS = [
   "Welcome to SynexiAI",
-  "We Build the Future",
-  "AI • Vision • Innovation",
-  "Zero to Forever",
+  "AI • Sustainability • Innovation",
 ];
 
 const SCROLL_PROMPT_THRESHOLD = 50;
@@ -126,46 +124,25 @@ export default function HeroBanner({ className = "" }) {
         className
       }
     >
-      {/* Background (desktop only) — DARK only, invisible in LIGHT */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 z-0 pointer-events-none hidden md:block
-                   dark:opacity-70 opacity-0
-                   bg-[conic-gradient(from_180deg_at_50%_50%,rgba(0,255,255,0.30),rgba(0,122,255,0.30),rgba(0,255,255,0.30))]
-                   bg-[length:200%_200%] animate-[gradient-rotate_15s_linear_infinite]"
-      />
-
-      {/* Floating glows */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 z-10 pointer-events-none overflow-hidden hidden md:block"
-      >
-        <div className="absolute z-10 w-[450px] h-[450px] bg-cyan-500/20 blur-[90px] rounded-full left-[5%] top-[15%] animate-float-slow" />
-        <div className="absolute z-10 w-[550px] h-[550px] bg-blue-500/10 blur-[110px] rounded-full right-[5%] bottom-[5%] animate-float" />
-      </div>
 
       {/* Video overlay: faint in LIGHT, stronger in DARK; no black veil in LIGHT */}
-      <div aria-hidden="true" className="absolute inset-0 z-[12] pointer-events-none">
+      <div aria-hidden="true" className="absolute inset-0 z-10 pointer-events-none ">
         <video
           autoPlay
           loop
           muted
           playsInline
           preload="metadata"
-          className={`hero-video w-full h-full object-cover transition-opacity duration-1000 ${
-            isLoaded ? "opacity-70 md:opacity-90 dark:opacity-100" : "opacity-0"
-          }`}
-          poster="/hero-poster.jpg"
+          className={`hero-video w-full h-full object-cover blur-sm md:blur-md transition-opacity duration-1000`}
           tabIndex={-1}
         >
-          <source src="/hero-bg.mp4" type="video/mp4" />
+          <source src="/hero-video.mp4" type="video/mp4" />
         </video>
-        {/* dark veil is injected by .hero-veil via CSS var; keep transparent layer minimal */}
-        <div className="absolute inset-0 bg-transparent dark:bg-transparent" />
+
       </div>
 
       {/* Desktop particles */}
-      {mountParticles && (
+      {/* {mountParticles && (
         <Suspense fallback={null}>
           <Particles
             id="tsparticles"
@@ -175,7 +152,7 @@ export default function HeroBanner({ className = "" }) {
             className="absolute inset-0 z-[18] pointer-events-none hidden md:block"
           />
         </Suspense>
-      )}
+      )} */}
 
       {/* Foreground */}
       <div className="relative z-30 flex items-center w-full min-h-[100svh] px-4 sm:px-6">
@@ -202,39 +179,47 @@ export default function HeroBanner({ className = "" }) {
             )}
 
             {/* Rotating headline */}
-            <div className="h-16 xs:h-20 sm:h-28 md:h-40 flex items-center justify-center md:justify-start mb-2 sm:mb-4">
+            <div className="h-auto md:h-40 flex flex-col items-center md:items-start justify-center text-center md:text-left mb-4 sm:mb-6">
               <AnimatePresence mode="wait">
                 <motion.h1
                   key={currentTextIndex}
-                  initial={{ opacity: 0, y: 18 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -18 }}
-                  transition={{ duration: 0.45, ease: "easeOut" }}
-                  className="font-extrabold leading-[0.98] tracking-tight subpixel-antialiased
-                             text-[clamp(1.4rem,6.2vw,3rem)] md:text-[clamp(2.25rem,4vw,4.25rem)]
-                             bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="font-semibold tracking-tight subpixel-antialiased
+                             bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-emerald-400
+                             drop-shadow-[0_1px_6px_rgba(34,211,238,0.35)]
                              whitespace-normal"
                 >
                   {ROTATING_TEXTS[currentTextIndex]}
                 </motion.h1>
-              </AnimatePresence>
-            </div>
 
-            {/* Subtitle (theme-aware via CSS var) */}
-            <motion.p
-              className="text-base sm:text-lg md:text-2xl mx-auto md:mx-0 max-w-2xl md:max-w-none
-                         text-[color:var(--color-muted)]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.25, duration: 0.6 }}
-            >
-              SynexiAI is the next-generation innovation hub where{" "}
-              <span className="font-medium text-[color:var(--brand-cyan)]">
+              </AnimatePresence>
+               <motion.p
+                  className="text-base sm:text-lg md:text-2xl mt-3 md:mt-4 text-[color:var(--color-muted)] max-w-2xl md:max-w-none"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.7, ease: 'easeOut' }}
+               >
+              <span className="text-[color:var(--brand-cyan)]">
+                SynexiAI
+              </span>{" "}
+              merges{" "}
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
                 Artificial Intelligence
               </span>
-              , futuristic IT, and bold ideas converge.
+              ,{" "}
+              <span className="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+                Cloud Systems
+              </span>{" "}
+              and{" "}
+              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                Renewable Energy
+              </span>{" "}
+              to create intelligent, sustainable solutions shaping a smarter future.
             </motion.p>
-
+            </div>
             {/* CTAs (reuse global button classes from index.css) */}
             <motion.div
               className="flex flex-col sm:flex-row md:justify-start justify-center gap-3 sm:gap-4 mt-4"
@@ -248,16 +233,16 @@ export default function HeroBanner({ className = "" }) {
                 whileTap={{ scale: 0.97 }}
                 className="btn-primary md:active:scale-95"
               >
-                Explore Our Vision →
+                Discover Our Vision →
               </MotionLink>
 
               <MotionLink
                 to="/projects"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className="btn-ghost md:active:scale-95"
+                className="btn-ghost md:active:scale-95 text-[color:var(--brand-cyan)]"
               >
-                View Projects
+                Join the Movement
               </MotionLink>
             </motion.div>
 

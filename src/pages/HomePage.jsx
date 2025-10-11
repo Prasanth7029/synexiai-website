@@ -102,80 +102,11 @@ export default function HomePage() {
       {/* Hero */}
       <HeroBanner className="hero-no-grid hero-veil" title={p.heroTitle} subtitle={p.heroSubtitle} />
 
-      {/* AI Fact Rotator */}
-      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 my-6">
-        <AIFactRotator size="sm" className="sx-chat" />
-      </div>
-
-      {/* Build With SynexiAI */}
-      <BuildWithSynexiAI />
-
-      {/* Games CTA */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-12" aria-labelledby="games-cta-title">
-        <div className="section p-6 sm:p-8 text-center">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <FaGamepad className="text-2xl" aria-hidden="true" style={{ color: "var(--brand-cyan)" }} />
-            <h2 id="games-cta-title" className="text-xl sm:text-2xl font-bold">
-              Play Our Games & Puzzles
-            </h2>
-          </div>
-          <p
-            className="max-w-2xl mx-auto"
-            style={{ opacity: 0.85, color: "color-mix(in oklab, var(--color-text) 85%, transparent)" }}
-          >
-            Try our interactive mini-games — logic, energy routing, pipeline building, and more — all curated in one
-            place.
-          </p>
-          <div className="mt-4">
-            <Link
-              to="/games"
-              className="btn-ghost inline-flex items-center gap-2 px-5 py-3 text-sm sm:text-base"
-              aria-label="Open the Games page"
-            >
-              Open Games <span aria-hidden>→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Main content container */}
       <div
         className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20"
         style={{ color: "var(--color-text)" }}
       >
-        {/* Intro row */}
-        <section id="intro" className="mb-8 sm:mb-12 scroll-mt-[calc(var(--header-h,64px)+12px)]">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch">
-            {/* AIPipeline */}
-            <div className="lg:col-span-2 min-w-0 scale-[.92] sm:scale-100 origin-top-left sx-chat">
-              <Suspense fallback={<SectionSkeleton className="h-48 sm:h-64" />}>
-                <AIPipeline density="compact" />
-              </Suspense>
-            </div>
-
-            {/* MetricCard */}
-            <div className="lg:col-span-1 min-w-0 scale-[.92] sm:scale-100 origin-top-left sx-chat">
-              <Suspense fallback={<SectionSkeleton className="h-48 sm:h-64" />}>
-                <MetricCard autoUpdate size="sm" />
-              </Suspense>
-            </div>
-          </div>
-        </section>
-
-        {/* Social Proof */}
-        <section id="proof" className="scroll-mt-[calc(var(--header-h,64px)+16px)]">
-          <Suspense fallback={<SectionSkeleton className="h-48" />}>
-            <SocialProofSection logos={partnerOrgs} stats={milestones} quotes={testimonials} />
-          </Suspense>
-        </section>
-
-        {/* Projects */}
-        <section id="portfolio" className="scroll-mt-[calc(var(--header-h,64px)+16px)]">
-          <Suspense fallback={<SectionSkeleton className="h-56" />}>
-            <ProjectsSection items={portfolio} title="Featured portfolio" preview limit={6} />
-          </Suspense>
-        </section>
-
         {/* Tri-Force */}
         <section id="tri-force" aria-labelledby="tri-force-title" className="mb-24 scroll-mt-[calc(var(--header-h,64px)+16px)]">
           <MotionDiv
@@ -292,6 +223,51 @@ export default function HomePage() {
             </p>
           </MotionDiv>
         </section>
+        {/* AI Fact Rotator */}
+      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 my-6">
+        <AIFactRotator size="sm" className="sx-chat" />
+      </div>
+        {/* Social Proof */}
+        <section id="proof" className="scroll-mt-[calc(var(--header-h,64px)+16px)]">
+          <Suspense fallback={<SectionSkeleton className="h-48" />}>
+            <SocialProofSection logos={partnerOrgs} stats={milestones} quotes={testimonials} />
+          </Suspense>
+        </section>
+
+        {/* Projects */}
+        <section id="portfolio" className="scroll-mt-[calc(var(--header-h,64px)+16px)]">
+          <Suspense fallback={<SectionSkeleton className="h-56" />}>
+            <ProjectsSection items={portfolio} title="Featured portfolio" preview limit={6} />
+          </Suspense>
+        </section>
+
+          {/* Games CTA */}
+          <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-12" aria-labelledby="games-cta-title">
+            <div className="section p-6 sm:p-8 text-center">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <FaGamepad className="text-2xl" aria-hidden="true" style={{ color: "var(--brand-cyan)" }} />
+                <h2 id="games-cta-title" className="text-xl sm:text-2xl font-bold">
+                  Play Our Games & Puzzles
+                </h2>
+              </div>
+              <p
+                className="max-w-2xl mx-auto"
+                style={{ opacity: 0.85, color: "color-mix(in oklab, var(--color-text) 85%, transparent)" }}
+              >
+                Try our interactive mini-games — logic, energy routing, pipeline building, and more — all curated in one
+                place.
+              </p>
+              <div className="mt-4">
+                <Link
+                  to="/games"
+                  className="btn-ghost inline-flex items-center gap-2 px-5 py-3 text-sm sm:text-base"
+                  aria-label="Open the Games page"
+                >
+                  Open Games <span aria-hidden>→</span>
+                </Link>
+              </div>
+            </div>
+          </section>
 
         {/* Final CTA */}
         <section id="cta" aria-labelledby="cta-title" className="text-center scroll-mt-[calc(var(--header-h,64px)+16px)]">
