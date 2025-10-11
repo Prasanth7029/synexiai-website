@@ -134,6 +134,7 @@ export default function HeroBanner({ className = "" }) {
           playsInline
           preload="metadata"
           className={`hero-video w-full h-full object-cover blur-sm md:blur-md transition-opacity duration-1000`}
+          poster="/hero-poster.jpg"
           tabIndex={-1}
         >
           <source src="/hero-video.mp4" type="video/mp4" />
