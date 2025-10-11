@@ -172,14 +172,15 @@ export default function HomePage() {
             viewport={{ once: true, margin: "-100px" }}
             className="text-center mb-16"
           >
-            <h2
-              id="powers-title"
-              className="text-[clamp(1.65rem,3.8vw,2.75rem)] font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500"
-            >
-              What Powers SynexiAI
+            <h2 className="text-3xl sm:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
+              Why SynexiAI Exists
             </h2>
-            <p className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto" style={{ color: "color-mix(in oklab, var(--color-text) 80%, transparent)" }}>
-              Solutions born from the fusion of AI, cloud systems, and renewable intelligence
+            <p className="max-w-3xl mx-auto text-lg md:text-xl leading-relaxed text-[color:var(--color-muted)]">
+              Technology should not only advance our world — it should preserve it.{" "}
+              <span className="text-[color:var(--brand-cyan)] font-medium">
+                SynexiAI bridges Artificial Intelligence with Renewable Energy
+              </span>{" "}
+              to create systems that think intelligently and act sustainably.
             </p>
           </MotionDiv>
 
