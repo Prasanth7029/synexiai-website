@@ -1,104 +1,99 @@
-// src/pages/NewsPage.jsx
-/* eslint-disable react/prop-types */
 import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
+ useState,
+ useEffect,
+ useMemo,
+ useCallback,
+ useRef,
 } from "react";
 import axios from "axios";
 import { fnUrl } from "../lib/api";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FaRobot,
-  FaDatabase,
-  FaLeaf,
-  FaSearch,
-  FaChartLine,
-  FaRegNewspaper,
-  FaRegClock,
-  FaVideo,
-  FaNewspaper,
-  FaExclamationTriangle,
-  FaArrowRight,
-  FaChevronLeft,
-  FaChevronRight,
-  FaArrowUp,
-  FaTimes,
-  FaSpinner,
+ FaRobot,
+ FaDatabase,
+ FaLeaf,
+ FaSearch,
+ FaChartLine,
+ FaRegNewspaper,
+ FaRegClock,
+ FaVideo,
+ FaNewspaper,
+ FaExclamationTriangle,
+ FaArrowRight,
+ FaChevronLeft,
+ FaChevronRight,
+ FaArrowUp,
+ FaTimes,
+ FaSpinner,
 } from "react-icons/fa";
 import { useMediaQuery } from "react-responsive";
 import AIFactRotator from "../components/AIFactRotator.jsx";
 
-/* ============================ Constants ============================ */
+// --------------------------- Constants ---------------------------
 const CATEGORIES = [
-  { id: "all", name: "All News", icon: <FaRegNewspaper /> },
-  { id: "ai", name: "AI", icon: <FaRobot /> },
-  { id: "database", name: "Database", icon: <FaDatabase /> },
-  { id: "renewable", name: "Renewable", icon: <FaLeaf /> },
-  { id: "innovation", name: "Innovation", icon: <FaChartLine /> },
+ { id: "all", name: "All News", icon: <FaRegNewspaper /> },
+ { id: "ai", name: "AI", icon: <FaRobot /> },
+ { id: "database", name: "Database", icon: <FaDatabase /> },
+ { id: "renewable", name: "Renewable", icon: <FaLeaf /> },
+ { id: "innovation", name: "Innovation", icon: <FaChartLine /> },
 ];
 
 const CONTENT_TYPES = [
-  { id: "all", name: "All" },
-  { id: "video", name: "Videos" },
-  { id: "blog", name: "Articles" },
+ { id: "all", name: "All" },
+ { id: "video", name: "Videos" },
+ { id: "blog", name: "Articles" },
 ];
 
-/* ============================ Hooks & Helpers ============================ */
-const useDebounce = (value, delay = 300) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-  useEffect(() => {
-    const t = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-  return debouncedValue;
+// --------------------------- Hooks & Helpers ---------------------------
+const useDebounce = (value, delay) => {
+ const [debouncedValue, setDebouncedValue] = useState(value);
+ useEffect(() => {
+ const t = setTimeout(() => setDebouncedValue(value), delay);
+ return () => clearTimeout(t);
+ }, [value, delay]);
+ return debouncedValue;
 };
 
 const formatDate = (dateString) => {
-  if (!dateString) return "N/A";
-  const t = Date.parse(dateString);
-  if (!Number.isFinite(t)) return "N/A";
-  const d = new Date(t);
-  return d.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+ if (!dateString) return "N/A";
+ const t = Date.parse(dateString);
+ if (!Number.isFinite(t)) return "N/A";
+ const d = new Date(t);
+ return d.toLocaleDateString("en-US", {
+ month: "short",
+ day: "numeric",
+ year: "numeric",
+ });
 };
 
 const getCategoryColor = (category) => {
-  const colors = {
-    ai: "from-purple-500 to-indigo-500",
-    database: "from-cyan-500 to-blue-500",
-    renewable: "from-green-500 to-emerald-500",
-    innovation: "from-orange-500 to-amber-500",
-    default: "from-gray-500 to-slate-500",
-  };
-  return colors[category] || colors.default;
+ const colors = {
+ ai: "from-purple-500 to-indigo-500",
+ database: "from-cyan-500 to-blue-500",
+ renewable: "from-green-500 to-emerald-500",
+ innovation: "from-orange-500 to-amber-500",
+ default: "from-gray-500 to-slate-500",
+ };
+ return colors[category] || colors.default;
 };
 
 const getCategoryIcon = (categoryId) => {
-  const icons = {
-    ai: <FaRobot className="text-purple-400" />,
-    database: <FaDatabase className="text-cyan-400" />,
-    renewable: <FaLeaf className="text-green-400" />,
-    innovation: <FaChartLine className="text-orange-400" />,
-  };
-  return icons[categoryId] || null;
+ const icons = {
+ ai: <FaRobot className="text-purple-400" />,
+ database: <FaDatabase className="text-cyan-400" />,
+ renewable: <FaLeaf className="text-green-400" />,
+ innovation: <FaChartLine className="text-orange-400" />,
+ };
+ return icons[categoryId] || null;
 };
 
-/* ============================ Inline Video Embed ============================ */
+// --------------------------- Inline Video Embed (lazy) ---------------------------
 function VideoEmbed({ src, title }) {
   const [active, setActive] = useState(false);
-
   const videoId = useMemo(() => {
-    if (!src) return null;
-    const m1 = src.match(/embed\/([a-zA-Z0-9_-]+)/);
-    if (m1) return m1[1];
-    const m2 = src.match(/[?&]v=([a-zA-Z0-9_-]+)/);
-    return m2 ? m2[1] : null;
+    const match = src.match(/embed\/([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : null;
   }, [src]);
 
   const thumbnail = videoId
@@ -107,698 +102,889 @@ function VideoEmbed({ src, title }) {
 
   return (
     <div className="relative pt-[56.25%] overflow-hidden rounded-t-xl group">
+      {/* Thumbnail */}
       {!active && (
         <>
           <img
             src={thumbnail}
-            alt={title || "Video thumbnail"}
+            alt={title}
             loading="lazy"
-            decoding="async"
             className="absolute inset-0 w-full h-full object-cover brightness-90 group-hover:brightness-100 transition duration-300"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/50 opacity-70 group-hover:opacity-60 transition" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/50 opacity-70 group-hover:opacity-60 transition"></div>
+
+          {/* Play Button */}
           <button
             onClick={() => setActive(true)}
-            aria-label={title ? `Play ${title}` : "Play video"}
+            aria-label={`Play ${title}`}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="w-16 h-16 bg-white/20 border border-white/30 rounded-full flex items-center justify-center text-white text-3xl group-hover:scale-110 group-hover:bg-cyan-500/70 transition-all duration-300 animate-pulse">
+            <div className="w-16 h-16 bg-white/20 border border-white/30 rounded-full flex items-center justify-center
+              text-white text-3xl group-hover:scale-110 group-hover:bg-cyan-500/70 transition-all duration-300 animate-pulse">
               ▶
             </div>
           </button>
         </>
       )}
 
+      {/* Iframe player */}
       {active && (
         <iframe
-          title={title || "Video player"}
-          src={`${src}${src.includes("?") ? "&" : "?"}autoplay=1`}
+          title={title}
+          src={`${src}?autoplay=1`}
           className="absolute inset-0 w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-          loading="lazy"
         />
       )}
     </div>
   );
 }
 
-/* ============================ Content Card ============================ */
+// --------------------------- Content Card ---------------------------
 const ContentCard = React.memo(function ContentCard({
-  article,
-  categories = [],
-  layout = "grid",
+ article,
+ categories = [],
+ layout = "grid",
 }) {
-  const [imageError, setImageError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+ const [imageError, setImageError] = useState(false);
+ const [imageLoaded, setImageLoaded] = useState(false);
+ const isMobile = useMediaQuery({ maxWidth: 767 });
 
-  const categoryMap = useMemo(
-    () => Object.fromEntries(categories.map((c) => [c.id, c.name])),
-    [categories]
-  );
+ const categoryMap = useMemo(
+ () => Object.fromEntries(categories.map((c) => [c.id, c.name])),
+ [categories],
+ );
 
-  const isArticleLike = article.type === "article" || article.type === "blog";
+ return (
+ <motion.div
+whileHover={{ scale: 1.02, y: -6 }}
+ whileTap={{ scale: 0.98 }}
+ transition={{ type: "spring", stiffness: 300 }}
+ className={`relative dark:bg-white/10 border rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${
+ layout === "carousel" ? (isMobile ? "w-[85vw]" : "w-[320px]") : "w-full"
+ } ${isMobile ? "h-[360px]" : "h-[420px]"}`}
+ >
+ {/* Video */}
+ {article.type === "video" && (
+ <VideoEmbed src={article.url} title={`Video: ${article.title}`} />
+ )}
 
-  return (
-    <motion.div
-      whileHover={{ scale: 1.02, y: -6 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 300, damping: 22 }}
-      className={`relative card overflow-hidden shadow-lg hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${
-        layout === "carousel" ? (isMobile ? "w-[85vw]" : "w-[320px]") : "w-full"
-      } ${isMobile ? "h-[360px]" : "h-[420px]"}`}
-    >
-      {article.type === "video" && (
-        <VideoEmbed src={article.url} title={`Video: ${article.title || ""}`} />
-      )}
+ {/* Image for article/blog */}
+ {(article.type === "article" || article.type === "blog") &&
+   article.imageUrl &&
+   !imageError && (
+     <div className="relative h-44 sm:h-48 overflow-hidden rounded-t-xl group bg-black/40">
+       {/* Loading Spinner */}
+       {!imageLoaded && (
+         <div className="absolute inset-0 flex items-center justify-center">
+           <FaSpinner className="animate-spin text-cyan-400 text-xl" />
+         </div>
+       )}
 
-      {isArticleLike && article.imageUrl && !imageError && (
-        <div className="relative h-44 sm:h-48 overflow-hidden rounded-t-xl group bg-black/40">
-          {!imageLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <FaSpinner className="animate-spin text-cyan-400 text-xl" />
-            </div>
-          )}
+       {/* Article Image */}
+       <img
+         loading="lazy"
+         decoding="async"
+         width={640}
+         height={192}
+         src={article.imageUrl}
+         srcSet={`${article.imageUrl} 640w`}
+         sizes="(max-width: 640px) 90vw, 360px"
+         alt={article.title || "Article image"}
+         className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 ${
+           imageLoaded ? "opacity-100" : "opacity-0"
+         }`}
+         onError={() => setImageError(true)}
+         onLoad={() => setImageLoaded(true)}
+       />
 
-          <img
-            loading="lazy"
-            decoding="async"
-            width={640}
-            height={192}
-            src={article.imageUrl}
-            srcSet={`${article.imageUrl} 640w`}
-            sizes="(max-width: 640px) 90vw, 360px"
-            alt={article.title || "Article image"}
-            className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 ${
-              imageLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            onError={() => setImageError(true)}
-            onLoad={() => setImageLoaded(true)}
-          />
+       {/* Gradient Overlay */}
+       <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-gradient)]/90 via-black/10 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-500"></div>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-gradient)]/90 via-black/10 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-500" />
+       {/* Category Accent Strip */}
+       <div
+         className={`absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r ${getCategoryColor(
+           article.category
+         )}`}
+       ></div>
 
-          <div
-            className={`absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r ${getCategoryColor(
-              article.category
-            )}`}
-          />
+       {/* Floating Label (Optional for Engagement) */}
+       <div className="absolute bottom-2 left-3 text-xs font-medium bg-white/10 backdrop-blur-md text-white px-2 py-1 rounded-md border border-white/10">
+         {article.source || "SynexiAI News"}
+       </div>
+     </div>
+   )}
 
-          <div className="absolute bottom-2 left-3 text-xs font-medium bg-white/10 backdrop-blur-md text-white px-2 py-1 rounded-md border border-white/10">
-            {article.source || "SynexiAI News"}
-          </div>
-        </div>
-      )}
 
-      {isArticleLike && (!article.imageUrl || imageError) && (
-        <div className="h-48 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 flex items-center justify-center">
-          <div className="text-4xl text-cyan-500 opacity-30">
-            {article.type === "blog" ? <FaNewspaper /> : <FaRegNewspaper />}
-          </div>
-        </div>
-      )}
+ {/* Fallback box */}
+ {(article.type === "article" || article.type === "blog") &&
+ (!article.imageUrl || imageError) && (
+ <div className="h-48 bg-gradient-to-r from-cyan-900/20 to-teal-900/20 flex items-center justify-center">
+ <div className="text-4xl text-cyan-500 opacity-30">
+ {article.type === "blog" ? <FaNewspaper /> : <FaRegNewspaper />}
+ </div>
+ </div>
+ )}
 
-      <div className="p-5 flex-grow flex flex-col">
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex items-center space-x-2">
-            <span
-              className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ring-1 ring-white/10 ${getCategoryColor(
-                article.category
-              )}`}
-            >
-              {categoryMap[article.category] || article.category || "General"}
-            </span>
-            <span className="text-xs text-gray-600 dark:text-gray-400 flex items-center">
-              {article.type === "video" ? (
-                <FaVideo className="mr-1" />
-              ) : (
-                <FaNewspaper className="mr-1" />
-              )}
-              {article.type}
-            </span>
-          </div>
+ <div className="p-5 flex-grow flex flex-col">
+ <div className="flex justify-between items-start mb-3">
+ <div className="flex items-center space-x-2">
+ <span
+ className={`px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ring-1 ring-white/10 ${getCategoryColor(article.category)}`}
+ >
+ {categoryMap[article.category] || article.category}
+ </span>
+ <span className="text-xs text-gray-600 dark:text-gray-400 flex items-center">
+ {article.type === "video" ? (
+ <FaVideo className="mr-1" />
+ ) : (
+ <FaNewspaper className="mr-1" />
+ )}
+ {article.type}
+ </span>
+ </div>
+ <span className="text-xs text-gray-600 dark:text-gray-400 flex items-center">
+ <FaRegClock className="mr-1" /> {formatDate(article.date)}
+ </span>
+ </div>
 
-          <span className="text-xs text-gray-600 dark:text-gray-400 flex items-center">
-            <FaRegClock className="mr-1" /> {formatDate(article.date)}
-          </span>
-        </div>
+<h3 className="text-lg font-semibold text-white line-clamp-2 hover:text-cyan-400 transition-colors">
+  {article.title}
+</h3>
 
-        <h3 className="text-lg font-semibold text-[var(--card-text)] line-clamp-2 hover:text-cyan-500 transition-colors">
-          {article.title}
-        </h3>
+ {article.description && (
+ <p className="text-gray-300 text-sm mt-2 line-clamp-3">
+ {article.description}
+ </p>
+ )}
 
-        {article.description && (
-          <p className="text-gray-600 dark:text-gray-300 text-sm mt-2 line-clamp-3">
-            {article.description}
-          </p>
-        )}
-
-        <div className="flex justify-between items-center mt-auto pt-3">
-          <span className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-white/5 border border-white/10 px-2 py-1 rounded">
-            {article.source || "Unknown source"}
-          </span>
-          {article.url ? (
-            <a
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-cyan-500 hover:text-cyan-400 text-sm font-medium flex items-center group"
-            >
-              {article.type === "video" ? "Watch" : "Read"}
-              <FaArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-            </a>
-          ) : (
-            <span className="text-xs text-gray-400">No link available</span>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
+ <div className="flex justify-between items-center mt-auto">
+ <span className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-white/5 border border-white/10 px-2 py-1 rounded">
+ {article.source || "Unknown source"}
+ </span>
+ <a
+ href={article.url}
+ target="_blank"
+ rel="noopener noreferrer"
+ className="text-cyan-500 hover:text-cyan-400 text-sm font-medium flex items-center group"
+ >
+ {article.type === "video" ? "Watch" : "Read"}
+ <FaArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+ </a>
+ </div>
+ </div>
+ </motion.div>
+ );
 });
 
-/* ============================ Carousel ============================ */
+// --------------------------- Carousel ---------------------------
 const ContentCarousel = React.memo(function ContentCarousel({
-  items,
-  title,
-  onViewAll,
-  type,
-  categories,
+ items,
+ title,
+ onViewAll,
+ type,
+ categories,
 }) {
-  const isMobile = useMediaQuery({ maxWidth: 767 });
-  const carouselRef = useRef(null);
+ const isMobile = useMediaQuery({ maxWidth: 767 });
+ const carouselRef = useRef(null);
 
-  const scrollByAmount = useCallback(
-    (dir = 1) => {
-      if (!carouselRef.current) return;
-      const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;
-      carouselRef.current.scrollBy({ left: dir * scrollAmount, behavior: "smooth" });
-    },
-    [isMobile]
-  );
+ const scrollLeft = useCallback(() => {
+ if (carouselRef.current) {
+ const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;
+ carouselRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+ }
+ }, [isMobile]);
 
-  return (
-    <div className="mb-12 relative group">
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-[var(--card-text)]">
-          {title}
-        </h2>
-        {onViewAll && (
-          <button
-            onClick={onViewAll}
-            className="text-cyan-600 dark:text-cyan-400 hover:opacity-90 flex items-center text-sm font-medium active:scale-95 transition-transform"
-          >
-            View all <FaArrowRight className="ml-1 h-3 w-3" />
-          </button>
-        )}
-      </div>
+ const scrollRight = useCallback(() => {
+ if (carouselRef.current) {
+ const scrollAmount = isMobile ? carouselRef.current.clientWidth : 300;
+ carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+ }
+ }, [isMobile]);
 
-      <div className="relative">
-        <div
-          ref={carouselRef}
-          className="flex space-x-4 sm:space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory [scroll-snap-type:x_proximity] [scroll-behavior:smooth] [-webkit-overflow-scrolling:touch]"
-        >
-          {items.map((item, index) => (
-            <div
-              key={`${type}-${item.url || item.id || index}-${index}`}
-              className="flex-shrink-0 snap-start w-[85vw] sm:w-[360px] h-[480px]"
-            >
-              <ContentCard article={item} layout="carousel" categories={categories} />
-            </div>
-          ))}
-        </div>
+ return (
+ <div className="mb-12 relative group">
+ <div className="flex justify-between items-center mb-5">
+ <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+ {title}
+ </h2>
+ {onViewAll && (
+ <button
+ onClick={onViewAll}
+ className="text-cyan-500 hover:text-cyan-400 flex items-center text-sm font-medium active:scale-95 transition-transform"
+ >
+ View all <FaArrowRight className="ml-1 h-3 w-3" />
+ </button>
+ )}
+ </div>
 
-        {items.length > (isMobile ? 1 : 3) && (
-          <>
-            <button
-              onClick={() => scrollByAmount(-1)}
-              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${
-                isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-              } transition-opacity active:scale-90`}
-              aria-label="Scroll left"
-            >
-              <FaChevronLeft className="text-white text-lg" />
-            </button>
-            <button
-              onClick={() => scrollByAmount(1)}
-              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${
-                isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-              } transition-opacity active:scale-90`}
-              aria-label="Scroll right"
-            >
-              <FaChevronRight className="text-white text-lg" />
-            </button>
-          </>
-        )}
-      </div>
-    </div>
-  );
+ <div className="relative">
+ <div
+ ref={carouselRef}
+ className="flex space-x-4 sm:space-x-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory
+ [scroll-snap-type:x_proximity] [scroll-behavior:smooth] [-webkit-overflow-scrolling:touch]"
+ >
+ {items.map((item, index) => (
+ <div
+ key={`${type}-${item.url || item.id || index}-${index}`}
+ className="flex-shrink-0 snap-start w-[85vw] sm:w-[360px] h-[480px]"
+ >
+ <ContentCard
+ article={item}
+ layout="carousel"
+ categories={categories}
+ />
+ </div>
+ ))}
+ </div>
+
+ {items.length > (isMobile ? 1 : 3) && (
+ <>
+ <button
+ onClick={scrollLeft}
+ className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${
+ isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+ } transition-opacity active:scale-90 `}
+ aria-label="Scroll left"
+ >
+ <FaChevronLeft className="text-white text-lg" />
+ </button>
+ <button
+ onClick={scrollRight}
+ className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 shadow-lg z-10 ${
+ isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+ } transition-opacity active:scale-90 `}
+ aria-label="Scroll right"
+ >
+ <FaChevronRight className="text-white text-lg" />
+ </button>
+ </>
+ )}
+ </div>
+ </div>
+ );
 });
 
-/* ============================ Category Section ============================ */
+// --------------------------- Category Section ---------------------------
 const CategorySection = React.memo(function CategorySection({
-  category,
-  articles,
-  categories,
-  onViewAll,
-  activeContentType,
-  setActiveContentType,
+ category,
+ articles,
+ categories,
+ onViewAll,
+ activeContentType,
+ setActiveContentType,
 }) {
-  const [filteredArticles, videos, blogs] = useMemo(() => {
-    const filtered = articles.filter((a) => a.category === category.id);
-    return [
-      filtered,
-      filtered.filter((a) => a.type === "video"),
-      filtered.filter((a) => a.type === "blog" || a.type === "article"),
-    ];
-  }, [articles, category.id]);
+ const [filteredArticles, videos, blogs] = useMemo(() => {
+ const filtered = articles.filter((a) => a.category === category.id);
+ return [
+ filtered,
+ filtered.filter((a) => a.type === "video"),
+ filtered.filter((a) => a.type === "blog" || a.type === "article"),
+ ];
+ }, [articles, category.id]);
 
-  const VISIBLE_MAX = 21;
+ const VISIBLE_MAX = 21; // defensive cap for slower devices
 
-  return (
-    <section id={category.id} className="mb-16 scroll-mt-16">
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[var(--card-text)] flex items-center">
-          {getCategoryIcon(category.id) && <span className="mr-3">{getCategoryIcon(category.id)}</span>}
-          <span className={`bg-clip-text text-transparent bg-gradient-to-r ${getCategoryColor(category.id)}`}>
-            {category.name}
-          </span>
-        </h2>
-        {onViewAll && (
-          <button
-            onClick={() => onViewAll(category.id)}
-            className="text-cyan-600 dark:text-cyan-400 hover:opacity-90 flex items-center text-sm font-medium active:scale-95 transition-transform"
-          >
-            View all <FaArrowRight className="ml-1 h-3 w-3" />
-          </button>
-        )}
-      </div>
+ return (
+ <section id={category.id} className="mb-16 scroll-mt-16">
+ <div className="flex justify-between items-center mb-5">
+ <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+ {getCategoryIcon(category.id) && (
+ <span className="mr-3">{getCategoryIcon(category.id)}</span>
+ )}
+ <span
+ className={`bg-gradient-to-r bg-clip-text text-transparent ${getCategoryColor(category.id)}`}
+ >
+ {category.name}
+ </span>
+ </h2>
+ {onViewAll && (
+ <button
+ onClick={() => onViewAll(category.id)}
+ className="text-cyan-500 hover:text-cyan-400 flex items-center text-sm font-medium active:scale-95 transition-transform"
+ >
+ View all <FaArrowRight className="ml-1 h-3 w-3" />
+ </button>
+ )}
+ </div>
 
-      <div className="mb-6 flex space-x-1 bg-white/5 rounded-lg p-1 border border-white/10">
-        {CONTENT_TYPES.map((type) => (
-          <button
-            key={type.id}
-            onClick={() => setActiveContentType(type.id)}
-            aria-pressed={activeContentType === type.id}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center active:scale-95 ${
-              activeContentType === type.id
-                ? "bg-white/10 text-[var(--card-text)] shadow"
-                : "text-gray-700 dark:text-gray-300 hover:text-[var(--card-text)] hover:bg-white/5"
-            }`}
-          >
-            {type.name}
-          </button>
-        ))}
-      </div>
+ <div className="mb-6 flex space-x-1 bg-white/5 rounded-lg p-1 border border-white/10">
+ {CONTENT_TYPES.map((type) => (
+ <button
+ key={type.id}
+ onClick={() => setActiveContentType(type.id)}
+ aria-pressed={activeContentType === type.id}
+ className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex-1 text-center active:scale-95 ${
+ activeContentType === type.id
+ ? "bg-white/10 text-gray-900 dark:text-white shadow"
+ : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5"
+ }`}
+ >
+ {type.name}
+ </button>
+ ))}
+ </div>
 
-      {activeContentType === "all" && (
-        <>
-          {videos.length > 0 && (
-            <ContentCarousel
-              items={videos}
-              title="Featured Videos"
-              type="video"
-              categories={categories}
-              onViewAll={() => onViewAll?.(category.id)}
-            />
-          )}
-          {blogs.length > 0 && (
-            <ContentCarousel
-              items={blogs}
-              title="Latest Articles"
-              type="blog"
-              categories={categories}
-              onViewAll={() => onViewAll?.(category.id)}
-            />
-          )}
-          {filteredArticles.length === 0 && (
-            <div className="text-center py-12 text-gray-600 dark:text-gray-400">No content found in this category</div>
-          )}
-        </>
-      )}
+ {activeContentType === "all" && (
+ <>
+ {videos.length > 0 && (
+ <ContentCarousel
+ items={videos}
+ title="Featured Videos"
+ type="video"
+ categories={categories}
+ />
+ )}
+ {blogs.length > 0 && (
+ <ContentCarousel
+ items={blogs}
+ title="Latest Articles"
+ type="blog"
+ categories={categories}
+ />
+ )}
+ {filteredArticles.length === 0 && (
+ <div className="text-center py-12 text-gray-600 dark:text-gray-400">
+ No content found in this category
+ </div>
+ )}
+ </>
+ )}
 
-      {activeContentType === "video" && (
-        <>
-          {videos.length > 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ staggerChildren: 0.06 }}
-              className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
-            >
-              {videos.slice(0, VISIBLE_MAX).map((article) => (
-                <div key={`video-${article.url || article.id}`} className="h-full flex">
-                  <ContentCard article={article} categories={categories} />
-                </div>
-              ))}
-            </motion.div>
-          ) : (
-            <div className="text-center py-12 text-gray-600 dark:text-gray-400">No videos found in this category</div>
-          )}
-        </>
-      )}
+ {activeContentType === "video" && (
+ <>
+ {videos.length > 0 ? (
+ <motion.div
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ transition={{ staggerChildren: 0.06 }}
+ className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
+ >
+ {videos.slice(0, VISIBLE_MAX).map((article) => (
+ <div
+ key={`video-${article.url || article.id}`}
+ className="h-full flex"
+ >
+ <ContentCard article={article} categories={categories} />
+ </div>
+ ))}
+ </motion.div>
+ ) : (
+ <div className="text-center py-12 text-gray-600 dark:text-gray-400">
+ No videos found in this category
+ </div>
+ )}
+ </>
+ )}
 
-      {activeContentType === "blog" && (
-        <>
-          {blogs.length > 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ staggerChildren: 0.06 }}
-              className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
-            >
-              {blogs.slice(0, VISIBLE_MAX).map((article) => (
-                <div key={`blog-${article.url || article.id}`} className="h-full flex">
-                  <ContentCard article={article} categories={categories} />
-                </div>
-              ))}
-            </motion.div>
-          ) : (
-            <div className="text-center py-12 text-gray-600 dark:text-gray-400">No articles found in this category</div>
-          )}
-        </>
-      )}
-    </section>
-  );
+ {activeContentType === "blog" && (
+ <>
+ {blogs.length > 0 ? (
+ <motion.div
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ transition={{ staggerChildren: 0.06 }}
+ className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
+ >
+ {blogs.slice(0, VISIBLE_MAX).map((article) => (
+ <div
+ key={`blog-${article.url || article.id}`}
+ className="h-full flex"
+ >
+ <ContentCard article={article} categories={categories} />
+ </div>
+ ))}
+ </motion.div>
+ ) : (
+ <div className="text-center py-12 text-gray-600 dark:text-gray-400">
+ No articles found in this category
+ </div>
+ )}
+ </>
+ )}
+ </section>
+ );
 });
 
-/* ============================ Page ============================ */
+// --------------------------- Page ---------------------------
 export default function NewsPage() {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [activeContentType, setActiveContentType] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const [errorCount, setErrorCount] = useState(0);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+ const [articles, setArticles] = useState([]);
+ const [loading, setLoading] = useState(true); // kept for logic (e.g., back-to-top visibility)
+ const [activeCategory, setActiveCategory] = useState("all");
+ const [activeContentType, setActiveContentType] = useState("all");
+ const [searchTerm, setSearchTerm] = useState("");
+ const debouncedSearchTerm = useDebounce(searchTerm, 300);
+ const [errorCount, setErrorCount] = useState(0);
+ const [showMobileMenu, setShowMobileMenu] = useState(false);
+ const isMobile = useMediaQuery({ maxWidth: 767 });
 
-  useEffect(() => {
-    const ac = new AbortController();
-    const key = "synexiai:news:v1";
+ useEffect(() => {
+ const ac = new AbortController();
+ const key = "synexiai:news:v1";
 
-    const cached = sessionStorage.getItem(key);
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed)) {
-          setArticles(parsed);
-          setLoading(false);
-          return () => ac.abort();
-        }
-      } catch {
-        // ignore and refetch
-      }
-    }
+ const cached = sessionStorage.getItem(key);
+ if (cached) {
+ try {
+ setArticles(JSON.parse(cached));
+ setLoading(false);
+ return () => ac.abort();
+ } catch {
+ /* no-op */
+ }
+ }
 
-    const fetchNews = async () => {
-      setLoading(true);
-      setErrorCount(0);
-      const categoriesToFetch = CATEGORIES.filter((c) => c.id !== "all").map((c) => c.id);
-      const wrap = (p) => p.catch(() => ({ data: [] }));
+ const fetchNews = async () => {
+ setLoading(true);
+ setErrorCount(0);
+ const categoriesToFetch = CATEGORIES.filter((c) => c.id !== "all").map(
+ (c) => c.id,
+ );
+ const wrap = (p) => p.catch(() => ({ data: [] }));
 
-      try {
-        const [newsResults, videoResults, rssResults] = await Promise.all([
-          Promise.all(
-            categoriesToFetch.map((cat) =>
-              wrap(axios.get(`${fnUrl("news-proxy")}?category=${encodeURIComponent(cat)}`, { signal: ac.signal }))
-            )
-          ),
-          Promise.all(
-            categoriesToFetch.map((cat) =>
-              wrap(axios.get(`${fnUrl("video-proxy")}?category=${encodeURIComponent(cat)}`, { signal: ac.signal }))
-            )
-          ),
-          Promise.all(
-            categoriesToFetch.map((cat) =>
-              wrap(axios.get(`${fnUrl("rss-proxy")}?category=${encodeURIComponent(cat)}`, { signal: ac.signal }))
-            )
-          ),
-        ]);
+ try {
+ const [newsResults, videoResults, rssResults] = await Promise.all([
+ Promise.all(
+ categoriesToFetch.map((cat) =>
+ wrap(
+ axios.get(`${fnUrl("news-proxy")}?category=${cat}`, {
+ signal: ac.signal,
+ }),
+ ),
+ ),
+ ),
+ Promise.all(
+ categoriesToFetch.map((cat) =>
+ wrap(
+ axios.get(`${fnUrl("video-proxy")}?category=${cat}`, {
+ signal: ac.signal,
+ }),
+ ),
+ ),
+ ),
+ Promise.all(
+ categoriesToFetch.map((cat) =>
+ wrap(
+ axios.get(`${fnUrl("rss-proxy")}?category=${cat}`, {
+ signal: ac.signal,
+ }),
+ ),
+ ),
+ ),
+ ]);
 
-        const merged = [
-          ...newsResults.flatMap((r) => (r?.data || []).map((item) => ({ ...item, type: "article" }))),
-          ...videoResults.flatMap((r) => r?.data || []),
-          ...rssResults.flatMap((r) => r?.data || []),
-        ].filter(Boolean);
+ const merged = [
+ ...newsResults.flatMap((r) =>
+ (r.data || []).map((item) => ({ ...item, type: "article" })),
+ ),
+ ...videoResults.flatMap((r) => r.data || []),
+ ...rssResults.flatMap((r) => r.data || []),
+ ].filter(Boolean);
 
-        const seen = new Set();
-        const deduped = [];
-        for (const it of merged) {
-          const k = it.url || it.id;
-          if (!k || seen.has(k)) continue;
-          seen.add(k);
-          deduped.push(it);
-        }
+ // Dedupe by URL/id
+ const seen = new Set();
+ const deduped = [];
+ for (const it of merged) {
+ const k = it.url || it.id;
+ if (!k || seen.has(k)) continue;
+ seen.add(k);
+ deduped.push(it);
+ }
 
-        setArticles(deduped);
-        sessionStorage.setItem(key, JSON.stringify(deduped));
-      } catch {
-        setErrorCount((prev) => prev + 1);
-      } finally {
-        setLoading(false);
-      }
-    };
+ setArticles(deduped);
+ sessionStorage.setItem(key, JSON.stringify(deduped));
+ } catch {
+ setErrorCount((prev) => prev + 1);
+ } finally {
+ setLoading(false);
+ }
+ };
 
-    fetchNews();
-    return () => ac.abort();
-  }, []);
+ fetchNews();
+ return () => ac.abort();
+ }, []);
 
-  const filteredArticles = useMemo(() => {
-    const term = debouncedSearchTerm.trim().toLowerCase();
-    return articles.filter((article) => {
-      if (activeCategory !== "all" && article.category !== activeCategory) return false;
-      if (term) {
-        return (
-          (article.title || "").toLowerCase().includes(term) ||
-          (article.description || "").toLowerCase().includes(term) ||
-          (article.source || "").toLowerCase().includes(term)
-        );
-      }
-      return true;
-    });
-  }, [articles, activeCategory, debouncedSearchTerm]);
+ const filteredArticles = useMemo(() => {
+ return articles.filter((article) => {
+ if (activeCategory !== "all" && article.category !== activeCategory)
+ return false;
+ if (debouncedSearchTerm) {
+ const term = debouncedSearchTerm.toLowerCase();
+ return (
+ (article.title || "").toLowerCase().includes(term) ||
+ (article.description || "").toLowerCase().includes(term) ||
+ (article.source || "").toLowerCase().includes(term)
+ );
+ }
+ return true;
+ });
+ }, [articles, activeCategory, debouncedSearchTerm]);
 
-  const trendingArticles = useMemo(() => {
-    const safeParse = (d) => {
-      const t = Date.parse(d || "");
-      return Number.isFinite(t) ? t : 0;
-    };
-    return [...articles].sort((a, b) => safeParse(b.date) - safeParse(a.date)).slice(0, 3);
-  }, [articles]);
+ const trendingArticles = useMemo(() => {
+ return [...articles]
+ .sort((a, b) => Date.parse(b.date || "") - Date.parse(a.date || ""))
+ .slice(0, 3);
+ }, [articles]);
 
-  const handleViewAll = useCallback((categoryId) => {
-    setActiveCategory((prev) => {
-      if (prev === categoryId) {
-        document.getElementById(categoryId)?.scrollIntoView({ behavior: "smooth" });
-      }
-      return categoryId;
-    });
-  }, []);
+ const handleViewAll = useCallback((categoryId) => {
+ setActiveCategory((prev) => {
+ if (prev === categoryId) {
+ document
+ .getElementById(categoryId)
+ ?.scrollIntoView({ behavior: "smooth" });
+ }
+ return categoryId;
+ });
+ }, []);
 
-  const clearSearch = useCallback(() => setSearchTerm(""), []);
+ const clearSearch = useCallback(() => setSearchTerm(""), []);
 
-  return (
-    <main id="main" className="min-h-screen text-[var(--text-color)] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col">
-          <div className="flex justify-between items-center py-3">
-            <motion.h1
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-2xl font-bold"
-            >
-              <span className="brand-gradient bg-clip-text text-transparent hover:glow">Tech Pulse</span>
-            </motion.h1>
+ return (
+ <div className="min-h-screen text-gray-900 dark:text-gray-100">
+ {/* Sticky Header */}
+ <header className="sticky top-0 z-50 bg-black/10 dark:bg-black/20 border-b border-white/10">
+ <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+ <div className="flex flex-col">
+ <div className="flex justify-between items-center py-4">
+ <motion.h1
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ className="text-2xl font-bold"
+ >
+ <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-teal-500">
+ Tech Pulse
+ </span>
+ </motion.h1>
 
-            <div className="flex items-center gap-3">
-              {!isMobile && (
-                <nav
-                  className="hidden md:flex space-x-1 bg-white/5 dark:bg-white/5 rounded-lg p-1 border border-white/10"
-                  aria-label="Categories"
-                >
-                  {CATEGORIES.map((cat) => (
-                    <button
-                      key={cat.id}
-                      onClick={() => setActiveCategory(cat.id)}
-                      aria-current={activeCategory === cat.id ? "page" : undefined}
-                      className={`px-4 py-2 rounded-md text-sm font-medium transition-colors active:scale-95 ${
-                        activeCategory === cat.id
-                          ? "bg-white/10 text-[var(--card-text)] shadow"
-                          : "text-gray-700 dark:text-gray-300 hover:text-[var(--card-text)] hover:bg-white/5"
-                      }`}
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
-                </nav>
-              )}
+ {/* Right side: theme + categories (desktop) */}
+ <div className="flex items-center gap-3">
+ {!isMobile && (
+ <div className="hidden md:flex space-x-1 bg-white/5 dark:bg-white/5 rounded-lg p-1 border border-white/10">
+ {CATEGORIES.map((cat) => (
+ <button
+ key={cat.id}
+ onClick={() => setActiveCategory(cat.id)}
+ aria-current={
+ activeCategory === cat.id ? "page" : undefined
+ }
+ className={`px-4 py-2 rounded-md text-sm font-medium transition-colors active:scale-95 ${
+ activeCategory === cat.id
+ ? "bg-white/10 text-gray-900 dark:text-white shadow"
+ : "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/5"
+ }`}
+ >
+ {cat.name}
+ </button>
+ ))}
+ </div>
+ )}
+ {isMobile && (
+ <button
+ onClick={() => setShowMobileMenu(!showMobileMenu)}
+ className="p-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors active:scale-95 "
+ aria-label="Toggle menu"
+ >
+ {showMobileMenu ? (
+ <FaTimes className="w-5 h-5 text-white/90" />
+ ) : (
+ <svg
+ className="w-5 h-5 text-white/90"
+ fill="none"
+ stroke="currentColor"
+ viewBox="0 0 24 24"
+ >
+ <path
+ strokeLinecap="round"
+ strokeLinejoin="round"
+ strokeWidth={2}
+ d="M4 6h16M4 12h16M4 18h16"
+ />
+ </svg>
+ )}
+ </button>
+ )}
+ </div>
+ </div>
 
-              {isMobile && (
-                <button
-                  onClick={() => setShowMobileMenu((s) => !s)}
-                  className="p-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors active:scale-95"
-                  aria-label="Toggle menu"
-                  aria-expanded={showMobileMenu}
-                >
-                  {showMobileMenu ? (
-                    <FaTimes className="w-5 h-5 text-white/90" />
-                  ) : (
-                    <svg className="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                  )}
-                </button>
-              )}
+ {/* Search bar */}
+ <div className="pb-4">
+ <div className="relative">
+ <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+ <FaSearch />
+ </div>
+ <input
+ type="text"
+ placeholder="Search AI, database, or renewable energy content..."
+ className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-white/5 dark:bg-white/5 text-gray-900 dark:text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+ value={searchTerm}
+ onChange={(e) => setSearchTerm(e.target.value)}
+ />
+ {searchTerm && (
+ <button
+ onClick={clearSearch}
+ className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200 active:scale-95"
+ aria-label="Clear search"
+ >
+ <FaTimes className="w-4 h-4" />
+ </button>
+ )}
+ </div>
+ </div>
+ </div>
+ </div>
+
+ {/* Mobile menu */}
+ <AnimatePresence>
+ {showMobileMenu && isMobile && (
+ <motion.div
+ initial={{ opacity: 0, height: 0 }}
+ animate={{ opacity: 1, height: "auto" }}
+ exit={{ opacity: 0, height: 0 }}
+ transition={{ type: "spring", stiffness: 300, damping: 30 }}
+ className="overflow-hidden bg-black/20 dark:bg-black/30 border-t border-white/10"
+ >
+ <div className="px-4 pb-4 grid grid-cols-2 gap-2">
+ {CATEGORIES.map((cat) => (
+ <button
+ key={cat.id}
+ onClick={() => {
+ setActiveCategory(cat.id);
+ setShowMobileMenu(false);
+ }}
+ className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors active:scale-95 ${
+ activeCategory === cat.id
+ ? "bg-gradient-to-r from-cyan-600 to-teal-500 text-white"
+ : "bg-white/10 text-white/90 hover:bg-white/20 border border-white/10"
+ }`}
+ >
+ <span className="mr-2">{cat.icon}</span>
+ {cat.name}
+ </button>
+ ))}
+ </div>
+ </motion.div>
+ )}
+ </AnimatePresence>
+ </header>
+
+ <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+ {/* Error Notice */}
+ {errorCount > 0 && (
+ <motion.div
+ initial={{ opacity: 0, y: -20 }}
+ animate={{ opacity: 1, y: 0 }}
+ className="bg-yellow-50/70 dark:bg-yellow-900/30 border border-yellow-400/30 rounded-lg p-3 mb-6 flex items-center "
+ >
+ <FaExclamationTriangle className="text-yellow-600 dark:text-yellow-400 mr-3 flex-shrink-0" />
+ <p className="text-yellow-800 dark:text-yellow-300 text-sm">
+ {errorCount} data source{errorCount > 1 ? "s" : ""} failed to
+ load. Some content may be missing.
+ </p>
+ </motion.div>
+ )}
+
+ {/* Hero Section */}
+ {activeCategory === "all" && (
+ <motion.section
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ className="mb-16 text-center"
+ >
+ <motion.div
+ initial={{ scale: 0.9 }}
+ animate={{ scale: 1 }}
+ transition={{ type: "spring", stiffness: 300 }}
+ className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-5 py-1.5 rounded-full mb-5 text-xs font-medium tracking-wide"
+ >
+ Industry Insights
+ </motion.div>
+ <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5">
+ <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400">
+ Tech & Innovation Pulse
+ </span>
+ </h1>
+ <p className="text-gray-800 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg">
+ Stay updated with the latest news, videos, and blogs in AI,
+ database technologies, and renewable energy.
+ </p>
+ </motion.section>
+ )}
+
+         {/* AI Fact Rotator */}
+         {activeCategory === "all" && (
+         <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 my-6">
+            <AIFactRotator size="sm" className="sx-chat" />
             </div>
-          </div>
+         )}
 
-          <div className="pb-3">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <FaSearch />
-              </div>
-              <input
-                type="text"
-                placeholder="Search AI, database, or renewable energy content..."
-                className="w-full pl-10 pr-10 py-2.5 rounded-lg bg-white/5 dark:bg-white/5 text-[var(--text-color)] border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              {searchTerm && (
-                <button
-                  onClick={clearSearch}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200 active:scale-95"
-                  aria-label="Clear search"
-                >
-                  <FaTimes className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+ {/* Trending Section */}
+ {activeCategory === "all" && trendingArticles.length > 0 && (
+ <motion.section
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ transition={{ delay: 0.2 }}
+ className="mb-16"
+ >
+ <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5">
+ Trending Now
+ </h2>
+ <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+ {trendingArticles.map((article, i) => (
+ <ContentCard
+ key={`trending-${article.url || article.id || i}`}
+ article={article}
+ categories={CATEGORIES}
+ />
+ ))}
+ </div>
+ </motion.section>
+ )}
 
-      <AnimatePresence>
-        {showMobileMenu && isMobile && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="overflow-hidden bg-black/20 dark:bg-black/30 border-t border-white/10"
-          >
-            <div className="px-4 pb-4 grid grid-cols-2 gap-2">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => {
-                    setActiveCategory(cat.id);
-                    setShowMobileMenu(false);
-                  }}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center transition-colors active:scale-95 ${
-                    activeCategory === cat.id
-                      ? "bg-gradient-to-r from-cyan-600 to-teal-500 text-white"
-                      : "bg-white/10 text-white/90 hover:bg-white/20 border border-white/10"
-                  }`}
-                >
-                  <span className="mr-2">{cat.icon}</span>
-                  {cat.name}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+ {/* Category Content */}
+ {activeCategory === "all" ? (
+ CATEGORIES.filter((cat) => cat.id !== "all").map((category) => {
+ const catArticles = articles.filter(
+ (a) => a.category === category.id,
+ );
+ if (catArticles.length === 0) return null;
+ return (
+ <CategorySection
+ key={category.id}
+ category={category}
+ articles={articles}
+ categories={CATEGORIES}
+ onViewAll={handleViewAll}
+ activeContentType={activeContentType}
+ setActiveContentType={setActiveContentType}
+ />
+ );
+ })
+ ) : (
+ <CategorySection
+ category={CATEGORIES.find((c) => c.id === activeCategory)}
+ articles={filteredArticles}
+ categories={CATEGORIES}
+ activeContentType={activeContentType}
+ setActiveContentType={setActiveContentType}
+ />
+ )}
 
-      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 my-6">
-        <AIFactRotator size="sm" className="sx-chat" />
-      </div>
+ {/* No results */}
+ {filteredArticles.length === 0 && !loading && (
+ <motion.div
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
+ className="text-center py-16"
+ >
+ <div className="text-5xl mb-3 text-gray-500">🔍</div>
+ <h3 className="text-xl font-bold text-gray-900 dark:text-gray-300 mb-2">
+ No content found
+ </h3>
+ <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+ {debouncedSearchTerm
+ ? "Try a different search term"
+ : "No articles available for this category"}
+ </p>
+ </motion.div>
+ )}
 
-      {errorCount > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-yellow-50/70 dark:bg-yellow-900/30 border border-yellow-400/30 rounded-lg p-3 mb-6 flex items-center"
-        >
-          <FaExclamationTriangle className="text-yellow-600 dark:text-yellow-400 mr-3 flex-shrink-0" />
-          <p className="text-yellow-800 dark:text-yellow-300 text-sm">
-            {errorCount} data source{errorCount > 1 ? "s" : ""} failed to load. Some content may be
-            missing.
-          </p>
-        </motion.div>
-      )}
+ {/* Market Insights */}
+ {activeCategory === "all" && (
+ <motion.section
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ delay: 0.1 }}
+ className="mt-16 bg-white/5 border border-white/10 rounded-xl p-6 "
+ >
+ <h3 className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-5 text-center">
+ Market Insights
+ </h3>
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+ {[
+ {
+ title: "AI Market Growth",
+ value: "$1.8T",
+ description: "Projected market value by 2030 at 38% CAGR",
+ color: "from-purple-500 to-indigo-500",
+ },
+ {
+ title: "Database Industry",
+ value: "+24%",
+ description:
+ "Annual growth for AI-optimized database solutions",
+ color: "from-cyan-500 to-blue-500",
+ },
+ {
+ title: "Renewable Energy",
+ value: "$2T",
+ description:
+ "Global investment by 2030, mostly in solar and wind",
+ color: "from-green-500 to-emerald-500",
+ },
+ ].map((item, index) => (
+ <motion.div
+ key={index}
+ whileHover={{ y: -5 }}
+ whileTap={{ scale: 0.98 }}
+ className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}
+ >
+ <h4 className="text-lg font-bold text-white mb-2">
+ {item.title}
+ </h4>
+ <div className="text-2xl font-bold text-white mb-2">
+ {item.value}
+ </div>
+ <p className="text-white/90 text-sm">{item.description}</p>
+ </motion.div>
+ ))}
+ </div>
+ </motion.section>
+ )}
 
-      {activeCategory === "all" && trendingArticles.length > 0 && (
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="mb-16"
-        >
-          <h2 className="text-xl sm:text-2xl font-bold mb-5 text-[var(--card-text)]">Trending Now</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {trendingArticles.map((article, i) => (
-              <ContentCard
-                key={`trending-${article.url || article.id || i}`}
-                article={article}
-                categories={CATEGORIES}
-              />
-            ))}
-          </div>
-        </motion.section>
-      )}
+ {/* Newsletter */}
+ {activeCategory === "all" && (
+ <motion.section
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ delay: 0.2 }}
+ className="mt-16 text-center"
+ >
+ <div className="bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl mx-auto ">
+ <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-300 mb-3">
+ Stay Informed
+ </h3>
+ <p className="text-gray-800 dark:text-gray-300 mb-5 text-base sm:text-lg">
+ Get weekly insights on AI breakthroughs, database innovations,
+ and renewable energy advancements.
+ </p>
+ <div className="flex flex-col sm:flex-row gap-3 justify-center">
+ <input
+ type="email"
+ placeholder="Your email address"
+ className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-900 dark:text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"
+ />
+ <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors active:scale-95">
+ Subscribe
+ </button>
+ </div>
+ </div>
+ </motion.section>
+ )}
 
-      {activeCategory === "all" ? (
-        CATEGORIES.filter((cat) => cat.id !== "all").map((category) => {
-          const catArticles = articles.filter((a) => a.category === category.id);
-          if (catArticles.length === 0) return null;
-          return (
-            <CategorySection
-              key={category.id}
-              category={category}
-              articles={articles}
-              categories={CATEGORIES}
-              onViewAll={handleViewAll}
-              activeContentType={activeContentType}
-              setActiveContentType={setActiveContentType}
-            />
-          );
-        })
-      ) : (
-        <CategorySection
-          category={CATEGORIES.find((c) => c.id === activeCategory) || CATEGORIES[0]}
-          articles={filteredArticles}
-          categories={CATEGORIES}
-          activeContentType={activeContentType}
-          setActiveContentType={setActiveContentType}
-        />
-      )}
-
-      {filteredArticles.length === 0 && !loading && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-          <div className="text-5xl mb-3 text-gray-500">🔍</div>
-          <h3 className="text-xl font-bold mb-2 text-[var(--card-text)]">No content found</h3>
-          <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-            {debouncedSearchTerm ? "Try a different search term" : "No articles available for this category"}
-          </p>
-        </motion.div>
-      )}
-
-      {!loading && (
-        <motion.button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className={`fixed ${isMobile ? "bottom-20" : "bottom-6"} right-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-3 shadow-lg z-50 transition-all`}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          aria-label="Back to top"
-        >
-          <FaArrowUp className="text-cyan-400" />
-        </motion.button>
-      )}
-    </main>
-  );
+ {/* Back to top button */}
+ {!loading && (
+ <motion.button
+ onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+ className={`fixed ${isMobile ? "bottom-20" : "bottom-6"} right-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-3 shadow-lg z-50 transition-all`}
+ initial={{ opacity: 0, y: 20 }}
+ animate={{ opacity: 1, y: 0 }}
+ whileHover={{ scale: 1.1 }}
+ whileTap={{ scale: 0.95 }}
+ aria-label="Back to top"
+ >
+ </motion.button>
+ )}
+ </main>
+ </div>
+ );
 }

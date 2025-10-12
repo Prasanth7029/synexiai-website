@@ -36,6 +36,8 @@ export default function Footer() {
     { label: "Vision",   path: "/vision" },
     { label: "Tech",     path: "/tech" },
     { label: "Contact",  path: "/contact" },
+    { label: "Games", path: "/games" },
+    { label: "AI News", path: "/ai-news" },
   ];
 
   return (
