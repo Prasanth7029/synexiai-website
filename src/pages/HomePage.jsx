@@ -7,7 +7,7 @@ import { FaReact, FaServer, FaBell, FaChartLine, FaBrain, FaGamepad } from "reac
 import HeroBanner from "../components/HeroBanner";
 import FeatureCard from "../components/FeatureCard";
 import BuildWithSynexiAI from "../components/sections/BuildWithSynexiAI.jsx";
-import AIFactRotator from "../components/AIFactRotator.jsx";
+
 
 // Content
 import { projects as portfolio } from "../content/projects.js";
@@ -224,10 +224,7 @@ export default function HomePage() {
             </p>
           </MotionDiv>
         </section>
-        {/* AI Fact Rotator */}
-      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 my-6">
-        <AIFactRotator size="sm" className="sx-chat" />
-      </div>
+
         {/* Social Proof */}
         <section id="proof" className="scroll-mt-[calc(var(--header-h,64px)+16px)]">
           <Suspense fallback={<SectionSkeleton className="h-48" />}>
