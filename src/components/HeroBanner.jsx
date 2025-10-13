@@ -126,34 +126,21 @@ export default function HeroBanner({ className = "" }) {
     >
 
       {/* Video overlay: faint in LIGHT, stronger in DARK; no black veil in LIGHT */}
-      <div aria-hidden="true" className="absolute inset-0 z-10 pointer-events-none ">
+      <div aria-hidden="true" className="absolute inset-0 z-10 pointer-events-none">
         <video
           autoPlay
           loop
           muted
           playsInline
           preload="metadata"
-          className={`hero-video w-full h-full object-cover blur-sm md:blur-md transition-opacity duration-1000`}
           poster="/hero-poster.jpg"
           tabIndex={-1}
+          className="hero-video w-full h-full object-cover blur-[10px]  md:blur-[5px]  transition-all duration-1000"
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
+        <source src="/hero-video.mp4" type="video/mp4" />
         </video>
-
       </div>
 
-      {/* Desktop particles */}
-      {/* {mountParticles && (
-        <Suspense fallback={null}>
-          <Particles
-            id="tsparticles"
-            init={particlesInit}
-            loaded={particlesLoaded}
-            options={particleOptions}
-            className="absolute inset-0 z-[18] pointer-events-none hidden md:block"
-          />
-        </Suspense>
-      )} */}
 
       {/* Foreground */}
       <div className="relative z-30 flex items-center w-full min-h-[100svh] px-4 sm:px-6">
@@ -288,10 +275,10 @@ export default function HeroBanner({ className = "" }) {
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
             >
-              <p className="text-sm text-[color:var(--color-text)]/85 mb-1">
+              <p className="text-sm text-white mb-1">
                 Scroll down
               </p>
-              <FaArrowDown className="text-[color:var(--color-text)] text-xl opacity-80" />
+              <FaArrowDown className=" text-xl text-white " />
             </motion.div>
           </motion.div>
         )}

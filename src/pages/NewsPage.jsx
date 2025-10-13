@@ -783,39 +783,12 @@ export default function NewsPage() {
  </motion.div>
  )}
 
- {/* Hero Section */}
+ {/* AI Fact Rotator */}
  {activeCategory === "all" && (
- <motion.section
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- className="mb-16 text-center"
- >
- <motion.div
- initial={{ scale: 0.9 }}
- animate={{ scale: 1 }}
- transition={{ type: "spring", stiffness: 300 }}
- className="inline-block bg-gradient-to-r from-cyan-600 to-teal-500 text-white px-5 py-1.5 rounded-full mb-5 text-xs font-medium tracking-wide"
- >
- Industry Insights
- </motion.div>
- <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-5">
- <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-teal-400">
- Tech & Innovation Pulse
- </span>
- </h1>
- <p className="text-gray-800 dark:text-gray-300 max-w-3xl mx-auto text-base sm:text-lg">
- Stay updated with the latest news, videos, and blogs in AI,
- database technologies, and renewable energy.
- </p>
- </motion.section>
+ <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 my-6">
+    <AIFactRotator size="sm" className="sx-chat" />
+ </div>
  )}
-
-         {/* AI Fact Rotator */}
-         {activeCategory === "all" && (
-         <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 my-6">
-            <AIFactRotator size="sm" className="sx-chat" />
-            </div>
-         )}
 
  {/* Trending Section */}
  {activeCategory === "all" && trendingArticles.length > 0 && (
@@ -888,102 +861,6 @@ export default function NewsPage() {
  </motion.div>
  )}
 
- {/* Market Insights */}
- {activeCategory === "all" && (
- <motion.section
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.1 }}
- className="mt-16 bg-white/5 border border-white/10 rounded-xl p-6 "
- >
- <h3 className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-5 text-center">
- Market Insights
- </h3>
- <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
- {[
- {
- title: "AI Market Growth",
- value: "$1.8T",
- description: "Projected market value by 2030 at 38% CAGR",
- color: "from-purple-500 to-indigo-500",
- },
- {
- title: "Database Industry",
- value: "+24%",
- description:
- "Annual growth for AI-optimized database solutions",
- color: "from-cyan-500 to-blue-500",
- },
- {
- title: "Renewable Energy",
- value: "$2T",
- description:
- "Global investment by 2030, mostly in solar and wind",
- color: "from-green-500 to-emerald-500",
- },
- ].map((item, index) => (
- <motion.div
- key={index}
- whileHover={{ y: -5 }}
- whileTap={{ scale: 0.98 }}
- className={`bg-gradient-to-br ${item.color} rounded-lg p-5 shadow-lg`}
- >
- <h4 className="text-lg font-bold text-white mb-2">
- {item.title}
- </h4>
- <div className="text-2xl font-bold text-white mb-2">
- {item.value}
- </div>
- <p className="text-white/90 text-sm">{item.description}</p>
- </motion.div>
- ))}
- </div>
- </motion.section>
- )}
-
- {/* Newsletter */}
- {activeCategory === "all" && (
- <motion.section
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.2 }}
- className="mt-16 text-center"
- >
- <div className="bg-white/5 border border-white/10 rounded-xl p-6 max-w-2xl mx-auto ">
- <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-700 dark:text-cyan-300 mb-3">
- Stay Informed
- </h3>
- <p className="text-gray-800 dark:text-gray-300 mb-5 text-base sm:text-lg">
- Get weekly insights on AI breakthroughs, database innovations,
- and renewable energy advancements.
- </p>
- <div className="flex flex-col sm:flex-row gap-3 justify-center">
- <input
- type="email"
- placeholder="Your email address"
- className="px-4 py-2.5 rounded-lg bg-white/5 text-gray-900 dark:text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent sm:flex-1"
- />
- <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-500 hover:to-teal-400 text-white px-5 py-2.5 rounded-lg font-medium transition-colors active:scale-95">
- Subscribe
- </button>
- </div>
- </div>
- </motion.section>
- )}
-
- {/* Back to top button */}
- {!loading && (
- <motion.button
- onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
- className={`fixed ${isMobile ? "bottom-20" : "bottom-6"} right-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-3 shadow-lg z-50 transition-all`}
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- whileHover={{ scale: 1.1 }}
- whileTap={{ scale: 0.95 }}
- aria-label="Back to top"
- >
- </motion.button>
- )}
  </main>
  </div>
  );
