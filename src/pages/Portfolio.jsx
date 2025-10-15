@@ -97,7 +97,7 @@ const PartnerLogo = ({ name, logo }) => (
 export default function Portfolio() {
   const [repos, setRepos] = useState([]);
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+
   const [errorMsg, setErrorMsg] = useState("");
 
   // Use your existing Explain flow (modal, drawer, etc.)
@@ -123,8 +123,7 @@ export default function Portfolio() {
     let unmounted = false;
 
     (async () => {
-      setLoading(true);
-      setErrorMsg("");
+
 
       const cfg = { headers: baseHeaders, timeout: 8000, signal: ac.signal };
 

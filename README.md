@@ -104,7 +104,7 @@ It supports **hot reload**, so any code or CSS changes update instantly.
 To test Netlify functions locally:
 
 ```bash
-netlify functions:serve --port=9999
+netlify functions:serve --port=9998
 ```
 
 This runs your API routes (e.g., `/api/ai-facts`, `/api/contact`) on

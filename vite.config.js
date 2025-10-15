@@ -27,7 +27,7 @@ export default ({ mode }) => {
       proxy: isDev
         ? {
             "/.netlify/functions": {
-              target: "http://localhost:9999",
+              target: "http://localhost:9998",
               changeOrigin: true,
               // (rewrite not strictly needed here, but harmless)
             },
