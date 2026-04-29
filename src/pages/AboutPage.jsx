@@ -66,7 +66,7 @@ export default function AboutPage() {
   return (
     <>
       <Helmet>
-        <title>About SynexiAI | Our Vision and Values</title>
+        <title>About | Our Vision and Values</title>
         <link rel="canonical" href="https://www.synexiai.online/about" />
         <meta
           name="description"

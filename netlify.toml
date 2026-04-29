@@ -12,7 +12,7 @@ node_bundler = "esbuild"
 command       = "npm run dev"
 targetPort    = 5173
 port          = 8888
-functionsPort = 9999
+functionsPort = 999
 
 # SPA fallback (works in dev and prod)
 [[redirects]]

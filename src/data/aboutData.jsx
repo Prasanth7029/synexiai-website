@@ -24,6 +24,14 @@ export const teamMembers = [
     image: "/assets/team/teja.jpg",
     linkedin: "https://www.linkedin.com/in/teja-peddiboyina-5bb68b140/",
   },
+    {
+    name: "Kowshik Bhasuru",
+    role: "Cloud Infrastructure & DevOps",
+    bio: "Expert in cloud infrastructure and DevOps, ensuring robust, scalable, and efficient systems for SynexiAI.",
+    expertise: ["Cloud Architecture", "DevOps", "Scalability"],
+    image: "/assets/team/Kowshik.jpg",
+    linkedin: "linkedin.com/in/bhasuru-kowshik-a380701a9",
+    },
 ];
 
 export const coreValues = [
