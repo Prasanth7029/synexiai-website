@@ -1,7 +1,3 @@
-
----
-
-```markdown
 # 🌐 SynexiAI Website
 
 > **A modern AI-driven portfolio and innovation hub built with React, Vite, Tailwind CSS, Framer Motion, and Netlify Functions.**  
@@ -31,7 +27,6 @@ It features interactive components, animations, light/dark themes, serverless fu
 ## 🧩 Folder Structure
 
 ```
-
 synexiai-website/
 ├── public/                # Static assets (images, videos, icons)
 ├── src/
@@ -47,8 +42,7 @@ synexiai-website/
 ├── tailwind.config.js
 ├── netlify.toml
 └── README.md
-
-````
+```
 
 ---
 
@@ -63,7 +57,7 @@ Make sure you have the following installed:
 Install Netlify CLI globally:
 ```bash
 npm install -g netlify-cli
-````
+```
 
 ---
 
@@ -228,16 +222,9 @@ This project is licensed under the **MIT License** — free to use, modify, and 
 
 ## 💬 Contact
 
-**Developer:** [Venkat Sai Prasanth Kunchanapalli](mailto:venkatsai.prasanth@gmail.com)
+**Developer:** [Venkat Sai Prasanth Kunchanapalli](https://github.com/Prasanth7029)  
 **Website:** [https://www.synexiai.online](https://www.synexiai.online)
 
 ---
 
 > *"Built with ❤️, caffeine, and an unstoppable dream — SynexiAI, where innovation meets identity."*
-
-```
-
----
-
-Would you like me to generate this as a **`README.md` file** you can directly drop into your project folder (I can also include a mini banner + badge section at the top — GitHub-ready)?
-```
